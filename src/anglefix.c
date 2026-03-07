@@ -72,6 +72,8 @@ void do_anglefix() {
         return;
     }
 
+    CHistory_MarkUndoPosition(GetHistory(), nullptr, "Anglefix", false);
+
     Vec3 *normal = &surfable_face->plane.normal;
 
     Euler euler;
@@ -95,6 +97,7 @@ void do_anglefix() {
     Vec3 displacement = {x, y, 0.0f};
 
     // copy before mutating original brush
+    CHistory_Keep(GetHistory(), item);
     CMapClass *copy = item->vtable->Copy(item, false);
 
     // change original brush to playerclip
@@ -113,4 +116,5 @@ void do_anglefix() {
     ent->vtable->AddChild(ent, copy);
 
     doc->vtable->AddObjectToWorld(doc, ent, nullptr);
+    CHistory_KeepNew(GetHistory(), ent, true);
 }

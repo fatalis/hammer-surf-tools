@@ -91,6 +91,8 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
 
     doc->vtable->AddObjectToWorld(doc, ent, false);
 
+    CHistory_KeepNew(GetHistory(), ent, true);
+
     return ent;
 }
 
@@ -109,6 +111,8 @@ void do_trigger_generator() {
         AfxMessageBoxF(MB_OK, "Select some faces with the texture tool first.");
         return;
     }
+
+    CHistory_MarkUndoPosition(GetHistory(), nullptr, "Trigger Generation", false);
 
     for (auto i = 0; i < faces->length; i++) {
         StoredFace *sf = &faces->list[i];

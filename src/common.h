@@ -210,6 +210,10 @@ typedef void (*CMapPoint_SetOrigin_t)(void *this_, Vec3 *pos);
 typedef void (*CMapFace_InitializeTextureAxes_t)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
 typedef bool (*CToolMaterial_OnMouseMove3D_t)(void *this_, void *pView, UINT flags, const float *vPoint);
 typedef FaceOrientation (*CMapFace_GetOrientation_t)(void *this_);
+typedef void (*CHistory_MarkUndoPosition_t)(void *this_, const void* pSelection, const char *pszName, bool);
+typedef void (*CHistory_KeepNew_t)(void *this_, CMapClass *pObject, bool bKeepChildren);
+typedef void (*CHistory_Keep_t)(void *this_, CMapClass *pObject);
+typedef void *(*GetHistory_t)();
 
 // msvc desctuctor flags, guessed name
 enum DeleteFlags {

@@ -25,6 +25,10 @@ CMapSolid_CreateFromPlanes_t CMapSolid_CreateFromPlanes;
 CMapFace_CreateFace_t CMapFace_CreateFace;
 CMapFace_InitializeTextureAxes_t CMapFace_InitializeTextureAxes;
 CMapFace_GetOrientation_t CMapFace_GetOrientation;
+CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
+CHistory_KeepNew_t CHistory_KeepNew;
+CHistory_Keep_t CHistory_Keep;
+GetHistory_t GetHistory;
 
 // AfxGetApp_t AfxGetApp;
 char *CMapEntityType;

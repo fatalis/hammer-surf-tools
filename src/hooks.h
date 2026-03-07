@@ -30,6 +30,10 @@ extern CMapSolid_CreateFromPlanes_t CMapSolid_CreateFromPlanes;
 extern CMapFace_CreateFace_t CMapFace_CreateFace;
 extern CMapFace_InitializeTextureAxes_t CMapFace_InitializeTextureAxes;
 extern CMapFace_GetOrientation_t CMapFace_GetOrientation;
+extern CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
+extern CHistory_KeepNew_t CHistory_KeepNew;
+extern CHistory_Keep_t CHistory_Keep;
+extern GetHistory_t GetHistory;
 
 // extern AfxGetApp_t AfxGetApp;
 extern char *CMapEntityType;

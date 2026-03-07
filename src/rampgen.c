@@ -76,12 +76,16 @@ static void rampgen(float degrees, int segments, char direction) {
             return;
         }
 
+        CHistory_MarkUndoPosition(GetHistory(), nullptr, "Ramp Generation", false);
+
         Vec3 orig_size;
         BBoxSize(&item->m_Render2DBox, &orig_size);
         Vec3 orig_pos = item->m_Origin;
 
         int n_items = 0;
         CMapClass *items[segments + 1];
+
+        CHistory_Keep(GetHistory(), item);
 
         items[0] = item;
         n_items++;
@@ -152,7 +156,6 @@ static void rampgen(float degrees, int segments, char direction) {
 #endif
 
             // rotate all segs including new seg back so that the new seg is axis aligned for next seg to copy and move
-            // Vec3 RefPoint;
             BBoxTrueCenter(*items, n_items, &ref);
             for (auto item_idx = 0; item_idx < n_items; item_idx++) {
                 Euler angles = {0.0f, 0.0f, 0.0f};
@@ -189,6 +192,7 @@ static void rampgen(float degrees, int segments, char direction) {
         assert(n_items == segments + 1);
         for (auto i = 1; i < n_items; i++) {
             doc->vtable->AddObjectToWorld(doc, items[i], nullptr);
+            CHistory_KeepNew(GetHistory(), items[i], false);
         }
     } else {
         log_msg("[hook] error: selection wasnt a solid\n");

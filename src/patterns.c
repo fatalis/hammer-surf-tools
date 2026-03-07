@@ -326,6 +326,20 @@ static Pattern_t g_patterns[] = {
         true
     },
     { 
+        // 48 89 5c 24 30  e8 ?? ?? ?? ??  48 8b 8f 88 0b 00 00
+        "GetHistory",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x30,
+            0xE8, 0x59, 0x7A, 0xFC, 0xFF,
+            0x48, 0x8B, 0x8F, 0x88, 0x0B, 0x00, 0x00
+        },
+        "xxxxxx????xxxxxxx",
+        (void **)&GetHistory,
+        nullptr,
+        5,
+        true
+    },
+    { 
         // 48 89 5c 24 10    48 89 4c 24 08    57    48 83 ec 20    48 8b f9    e8 ?? ?? ?? ??    90    48 8d 8f 90 01 00 00
         "CMapEntity::CMapEntity",
         (const uint8_t[]){
@@ -538,6 +552,55 @@ static Pattern_t g_patterns[] = {
         },
         "xxxxxxxxxxxxxxxxx",
         (void **)&CMapFace_GetOrientation
+    },
+    { 
+        // 48 89 5c 24 10  55  56  57  41 54  41 55  41 56  41 57  48 83 ec 20  49 8b d8  48 8b ea  48 8b f1  48 8b 41 30
+        "CHistory::MarkUndoPosition",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x55,
+            0x56,
+            0x57,
+            0x41, 0x54,
+            0x41, 0x55,
+            0x41, 0x56,
+            0x41, 0x57,
+            0x48, 0x83, 0xEC, 0x20,
+            0x49, 0x8B, 0xD8,
+            0x48, 0x8B, 0xEA,
+            0x48, 0x8B, 0xF1,
+            0x48, 0x8B, 0x41, 0x30
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CHistory_MarkUndoPosition
+    },
+    { 
+        // 48 89 5c 24 10  48 89 74 24 18  57  48 81 ec 40 01 00 00  48 83 39 00  41 0f b6 d8
+        "CHistory::KeepNew",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
+            0x57,
+            0x48, 0x81, 0xEC, 0x40, 0x01, 0x00, 0x00,
+            0x48, 0x83, 0x39, 0x00,
+            0x41, 0x0F, 0xB6, 0xD8
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CHistory_KeepNew
+    },
+    { 
+        // 48 89 5c 24 10  48 89 74 24 18  57  48 81 ec 40 01 00 00  48 83 39 00  48 8b f2
+        "CHistory::Keep",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
+            0x57,
+            0x48, 0x81, 0xEC, 0x40, 0x01, 0x00, 0x00,
+            0x48, 0x83, 0x39, 0x00,
+            0x48, 0x8B, 0xF2
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CHistory_Keep
     },
     { 
         "LoadMenuW",
