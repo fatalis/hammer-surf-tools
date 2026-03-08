@@ -39,24 +39,6 @@ static Pattern_t g_patterns[] = {
         13,
         PATTERN_REL
     },
-    { 
-        "AfxWndProc",
-        (const uint8_t[]){
-            0x48, 0x89, 0x5C, 0x24, 0x08,
-            0x48, 0x89, 0x6C, 0x24, 0x10,
-            0x48, 0x89, 0x74, 0x24, 0x18,
-            0x57,
-            0x48, 0x83, 0xEC, 0x30,
-            0x49, 0x8B, 0xF1,
-            0x49, 0x8B, 0xE8,
-            0x8B, 0xFA,
-            0x48, 0x8B, 0xD9,
-            0x81, 0xFA, 0x60, 0x03, 0x00, 0x00
-        },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        (void **)&orig_AfxWndProc,
-        hook_AfxWndProc
-    },
     // { 
     //     "AfxGetApp",
     //     (const uint8_t[]){
@@ -149,62 +131,6 @@ static Pattern_t g_patterns[] = {
         (void **)&CRender_DrawText
     },
     { 
-        "Clipper3D::DrawBrushExtents",
-        (const uint8_t[]){
-            0x48, 0x89, 0x5c, 0x24, 0x10,
-            0x48, 0x89, 0x74, 0x24, 0x18,
-            0x57,
-            0x48, 0x83, 0xec, 0x60,
-            0xf3, 0x0f, 0x10, 0x81, 0xfc, 0x00, 0x00, 0x00
-        },
-        "xxxxxxxxxxxxxxxxxxxxxxx",
-        (void **)&orig_Clipper3D_DrawBrushExtents,
-        hook_Clipper3D_DrawBrushExtents
-    },
-    { 
-        "Selection3D::RenderTool2D",
-        (const uint8_t[]){
-            0x48, 0x8b, 0xc4,
-            0x53,
-            0x56,
-            0x48, 0x83, 0xec, 0x68,
-            0x48, 0x8b, 0xd9,
-            0x48, 0x89, 0x78, 0x18
-        },
-        "xxxxxxxxxxxxxxxx",
-        (void **)&orig_Selection3D_RenderTool2D,
-        hook_Selection3D_RenderTool2D
-    },
-    { 
-        "CFaceEditSheet::ClickFace",
-        (const uint8_t[]){
-            0x48, 0x89, 0x6c, 0x24, 0x18,
-            0x48, 0x89, 0x7c, 0x24, 0x20,
-            0x41, 0x54,
-            0x41, 0x56,
-            0x41, 0x57,
-            0x48, 0x83, 0xec, 0x50
-        },
-        "xxxxxxxxxxxxxxxxxxxx",
-        (void **)&orig_CFaceEditSheet_ClickFace,
-        hook_CFaceEditSheet_ClickFace
-    },
-    //{ 
-    //    "RenderUtils::DrawBoundsText",
-    //    (const uint8_t[]){
-    //        0x48, 0x8b, 0xc4,
-    //        0x48, 0x89, 0x58, 0x20,
-    //        0x55,
-    //        0x56,
-    //        0x57,
-    //        0x41, 0x56,
-    //        0x41, 0x57, 0x48, 0x8d, 0x68, 0xb8
-    //    },
-    //    "xxxxxxxxxxxxxxxxxx",
-    //    (void **)&orig_DrawBoundsText,
-    //    hook_DrawBoundsText
-    //},
-    { 
         "CMapDoc::SetModifiedFlag",
         (const uint8_t[]){
             0x48, 0x89, 0x5C, 0x24, 0x08,
@@ -217,48 +143,6 @@ static Pattern_t g_patterns[] = {
         },
         "xxxxxxxxxxxxxxxxxxx",
         (void **)&SetModifiedFlag
-    },
-    // { 
-    //     "CStatusBar::SetPaneText",
-    //     (const uint8_t[]){
-    //         0x48, 0x89, 0x5C, 0x24, 0x10,
-    //         0x48, 0x89, 0x74, 0x24, 0x18,
-    //         0x57,
-    //         0x41, 0x54,
-    //         0x41, 0x55,
-    //         0x41, 0x56,
-    //         0x41, 0x57,
-    //         0x48, 0x83, 0xEC, 0x40,
-    //     },
-    //     "xxxxxxxxxxxxxxxxxxxxxxx",
-    //     (void **)&orig_SetPaneText,
-    //     hook_SetPaneText
-    // },
-    // { 
-    //     "CWnd::SetFocus",
-    //     (const uint8_t[]){
-    //         0x40, 0x53,
-    //         0x48, 0x83, 0xec, 0x20,
-    //         0x48, 0x8b, 0xd9,
-    //         0x48, 0x8b, 0x89, 0xd0, 0x00, 0x00, 0x00,
-    //         0x48, 0x85, 0xc9
-    //     },
-    //     "xxxxxxxxxxxxxxxxxxx",
-    //     (void **)&orig_SetFocus,
-    //     hook_SetFocus,
-    // },
-    { 
-        "CMapDoc::SetActiveMapDoc",
-        (const uint8_t[]){
-            0x40, 0x53,
-            0x41, 0x56,
-            0x48, 0x83, 0xEC, 0x48,
-            0x48, 0x8B, 0x1D, 0x39, 0x1D, 0xB7, 0x00,
-            0x4C, 0x8B, 0xF1,
-        },
-        "xxxxxxxxxxx???xxxx",
-        (void **)&orig_SetActiveMapDoc,
-        hook_SetActiveMapDoc
     },
     { 
         // 48 89 5c 24 18     56     57      41 56    48 81 ec 40 01 00 00        48 8b c2
@@ -564,6 +448,8 @@ static Pattern_t g_patterns[] = {
         "xxxxxxxxxxxxxxxxxxxxxxxxx",
         (void **)&CHistory_Keep
     },
+
+    // offsets
     {
         // 8b cb  41 bd 03 01 00 00  d1 e9  83 e1 08  48 8b a8 a0 17 00 00  8b d1
         "CMainFrame::m_pFaceEditSheet offset",
@@ -600,6 +486,8 @@ static Pattern_t g_patterns[] = {
         33,
         PATTERN_OFFSET
     },
+
+    // hooks
     { 
         "LoadMenuW",
         nullptr,
@@ -620,6 +508,122 @@ static Pattern_t g_patterns[] = {
         nullptr,
         (void **)&orig_EnableMenuItem,
         hook_EnableMenuItem,
+    },
+    { 
+        "Clipper3D::DrawBrushExtents",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5c, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
+            0x57,
+            0x48, 0x83, 0xec, 0x60,
+            0xf3, 0x0f, 0x10, 0x81, 0xfc, 0x00, 0x00, 0x00
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&orig_Clipper3D_DrawBrushExtents,
+        hook_Clipper3D_DrawBrushExtents
+    },
+    { 
+        "Selection3D::RenderTool2D",
+        (const uint8_t[]){
+            0x48, 0x8b, 0xc4,
+            0x53,
+            0x56,
+            0x48, 0x83, 0xec, 0x68,
+            0x48, 0x8b, 0xd9,
+            0x48, 0x89, 0x78, 0x18
+        },
+        "xxxxxxxxxxxxxxxx",
+        (void **)&orig_Selection3D_RenderTool2D,
+        hook_Selection3D_RenderTool2D
+    },
+    { 
+        "CFaceEditSheet::ClickFace",
+        (const uint8_t[]){
+            0x48, 0x89, 0x6c, 0x24, 0x18,
+            0x48, 0x89, 0x7c, 0x24, 0x20,
+            0x41, 0x54,
+            0x41, 0x56,
+            0x41, 0x57,
+            0x48, 0x83, 0xec, 0x50
+        },
+        "xxxxxxxxxxxxxxxxxxxx",
+        (void **)&orig_CFaceEditSheet_ClickFace,
+        hook_CFaceEditSheet_ClickFace
+    },
+    //{ 
+    //    "RenderUtils::DrawBoundsText",
+    //    (const uint8_t[]){
+    //        0x48, 0x8b, 0xc4,
+    //        0x48, 0x89, 0x58, 0x20,
+    //        0x55,
+    //        0x56,
+    //        0x57,
+    //        0x41, 0x56,
+    //        0x41, 0x57, 0x48, 0x8d, 0x68, 0xb8
+    //    },
+    //    "xxxxxxxxxxxxxxxxxx",
+    //    (void **)&orig_DrawBoundsText,
+    //    hook_DrawBoundsText
+    //},
+    // { 
+    //     "CStatusBar::SetPaneText",
+    //     (const uint8_t[]){
+    //         0x48, 0x89, 0x5C, 0x24, 0x10,
+    //         0x48, 0x89, 0x74, 0x24, 0x18,
+    //         0x57,
+    //         0x41, 0x54,
+    //         0x41, 0x55,
+    //         0x41, 0x56,
+    //         0x41, 0x57,
+    //         0x48, 0x83, 0xEC, 0x40,
+    //     },
+    //     "xxxxxxxxxxxxxxxxxxxxxxx",
+    //     (void **)&orig_SetPaneText,
+    //     hook_SetPaneText
+    // },
+    // { 
+    //     "CWnd::SetFocus",
+    //     (const uint8_t[]){
+    //         0x40, 0x53,
+    //         0x48, 0x83, 0xec, 0x20,
+    //         0x48, 0x8b, 0xd9,
+    //         0x48, 0x8b, 0x89, 0xd0, 0x00, 0x00, 0x00,
+    //         0x48, 0x85, 0xc9
+    //     },
+    //     "xxxxxxxxxxxxxxxxxxx",
+    //     (void **)&orig_SetFocus,
+    //     hook_SetFocus,
+    // },
+    { 
+        "CMapDoc::SetActiveMapDoc",
+        (const uint8_t[]){
+            0x40, 0x53,
+            0x41, 0x56,
+            0x48, 0x83, 0xEC, 0x48,
+            0x48, 0x8B, 0x1D, 0x39, 0x1D, 0xB7, 0x00,
+            0x4C, 0x8B, 0xF1,
+        },
+        "xxxxxxxxxxx???xxxx",
+        (void **)&orig_SetActiveMapDoc,
+        hook_SetActiveMapDoc
+    },
+    { 
+        "AfxWndProc",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x08,
+            0x48, 0x89, 0x6C, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
+            0x57,
+            0x48, 0x83, 0xEC, 0x30,
+            0x49, 0x8B, 0xF1,
+            0x49, 0x8B, 0xE8,
+            0x8B, 0xFA,
+            0x48, 0x8B, 0xD9,
+            0x81, 0xFA, 0x60, 0x03, 0x00, 0x00
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&orig_AfxWndProc,
+        hook_AfxWndProc
     },
 };
 
@@ -692,7 +696,11 @@ bool scan_all(uint8_t *base, size_t size) {
         }
 
 #ifndef TEST_PATTERNS
-        log_msg("[patterns] %-30s\tfound %c %p\n", p->name, (p->flags & PATTERN_OFFSET ? '=' : '@'), addr);
+        log_msg("[patterns] %-40s %-6s %c %p\n",
+                p->name,
+                p->hook ? "hooked" : "found",
+                (p->flags & PATTERN_OFFSET ? '=' : '@'),
+                addr);
 #endif
     }
 
