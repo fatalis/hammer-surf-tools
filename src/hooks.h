@@ -23,16 +23,9 @@ typedef bool (*EnableMenuItem_t)(HMENU hMenu, UINT uIDEnableItem, UINT uEnable);
 extern EnableMenuItem_t orig_EnableMenuItem;
 bool hook_EnableMenuItem(HMENU hMenu, UINT uIDEnableItem, UINT uEnable);
 
-// typedef bool (*CToolMaterial_OnMouseMove3D_t)(void *this_, void *pView, UINT flags, const float *vPoint);
-// extern CToolMaterial_OnMouseMove3D_t orig_CToolMaterial_OnMouseMove3D;
-// bool hook_CToolMaterial_OnMouseMove3D(void *this_, void *pView, UINT flags, const float *vPoint);
-
 typedef void (*Selection3D_RenderTool2D_t)(void *this_, void *pRender);
 extern Selection3D_RenderTool2D_t orig_Selection3D_RenderTool2D;
 void hook_Selection3D_RenderTool2D(void *this_, void *pRender);
-
-extern size_t CMainFrame_m_pFaceEditSheet_Offset;
-extern size_t CFaceEditSheet_m_Faces_Offset;
 
 CMapDoc *GetActiveMapDoc();
 

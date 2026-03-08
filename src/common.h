@@ -11,6 +11,8 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
+#include "offsets.h"
+
 void log_msg(const char *fmt, ...);
 
 #define ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
@@ -19,24 +21,6 @@ void log_msg(const char *fmt, ...);
 #define SURF_NORMAL 0.7f
 // an arbitrary cutoff for a very steep ramp that you can somewhat stay on
 #define UNSURF_NORMAL 0.28f
-
-// struct sizes
-#define CSTRDLG_SIZE 320
-#define CMAPFACE_SIZE                      0x360
-#define CMAPENTITY_SIZE                    0x280
-#define CMAPSOLID_SIZE                     0x230
-
-// struct offsets that are (hopefully) stable
-#define CLIPPER3D_OFFSET_PLANE_NORMAL      0x0FC
-#define CMAINFRAME_OFFSET_OBJECTPROPERTIES 0x1F8
-#define CMAPCLASS_OFFSET_FACES             0x1A0
-#define CMAPCLASS_OFFSET_ORIGIN            0x050
-#define CMAPCLASS_OFFSET_RENDER2DBOX       0x0A8
-#define CMAPDOC_OFFSET_MPWORLD             0xB30
-#define CMAPDOC_OFFSET_SELECTION           0xB88
-#define COBJECTPROPERTIES_OFFSET_HWND      0x040
-#define CSELECTION_OFFSET_SELECTIONLIST    0x018
-#define SELECTION3D_OFFSET_SELECTION       0x1A8
 
 // menu ids
 #define CMD_CURVED_RAMP_GENERATOR 42069

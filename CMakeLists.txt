@@ -38,6 +38,7 @@ add_library(hammer-surf-utils SHARED
   src/scriptfuncs.c
   src/hotkeys.c
   src/util.c
+  src/offsets.c
   src/testincludes.c
 )
 
@@ -60,6 +61,7 @@ add_executable(test-patterns
   src/scriptfuncs.c
   src/hotkeys.c
   src/util.c
+  src/offsets.c
   # src/testincludes.c
 )
 

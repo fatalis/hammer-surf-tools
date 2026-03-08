@@ -8,6 +8,7 @@
 #include "scriptfuncs.h"
 #include "hotkeys.h"
 #include "hammerfuncs.h"
+#include "offsets.h"
 
 static void *resolve_rel(void *call_addr, const uint8_t *insn) {
     if (insn[0] == 0xE8) { // call
@@ -175,22 +176,6 @@ static Pattern_t g_patterns[] = {
         (void **)&orig_Selection3D_RenderTool2D,
         hook_Selection3D_RenderTool2D
     },
-    // { 
-    //     "CToolMaterial::OnMouseMove3D",
-    //     (const uint8_t[]){
-    //         0x48, 0x89, 0x5C, 0x24, 0x08,
-    //         0x57,
-    //         0x48, 0x83, 0xEC, 0x20,
-    //         0x8D, 0x42, 0x01,
-    //         0x8B, 0xFA,
-    //         0x48, 0x8B, 0xD9,
-    //         0x83, 0xF8, 0x02,
-    //         0x77, 0x71
-    //     },
-    //     "xxxxxxxxxxxxxxxxxxxxxxx",
-    //     (void **)&orig_CToolMaterial_OnMouseMove3D,
-    //     hook_CToolMaterial_OnMouseMove3D
-    // },
     { 
         "CFaceEditSheet::ClickFace",
         (const uint8_t[]){
