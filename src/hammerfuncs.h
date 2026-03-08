@@ -107,9 +107,4 @@ extern SetModifiedFlag_t SetModifiedFlag;
 typedef void *(*ValveAlloc_t)(size_t size);
 extern ValveAlloc_t ValveAlloc;
 
-
-int AfxMessageBoxF(UINT nType, const char* fmt, ...);
-CMapClass *new_CMapEntity();
-CMapClass *new_CMapSolid();
-
 #endif // HAMMERFUNCS_H

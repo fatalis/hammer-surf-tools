@@ -8,8 +8,6 @@ static CMapDoc *active_map_doc;
 
 // TODO: dont do this
 static void *face_edit_sheet;
-// TODO: dont do this
-static void *selection3d;
 
 
 Clipper3D_DrawBrushExtents_t orig_Clipper3D_DrawBrushExtents;
@@ -34,11 +32,6 @@ CMapDoc *GetActiveMapDoc() {
 // TODO: dont do this
 void *GetFaceEditSheet() {
     return face_edit_sheet;
-}
-
-// TODO: dont do this
-void *GetSelection3D() {
-    return selection3d;
 }
 
 // enum {
@@ -99,7 +92,6 @@ bool hook_EnableMenuItem(HMENU hMenu, UINT uIDEnableItem, UINT uEnable) {
 void hook_Selection3D_RenderTool2D(void *this_, void *pRender) {
     /* log_msg("[hook] Selection3D::RenderTool2D %p %p\n", this_, pRender); */
     orig_Selection3D_RenderTool2D(this_, pRender);
-    selection3d = this_;
 
     measure_render_2d(this_, pRender);
 }

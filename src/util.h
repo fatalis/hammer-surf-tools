@@ -107,4 +107,9 @@ static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_su
     return surf_string;
 }
 
+int AfxMessageBoxF(UINT nType, const char* fmt, ...);
+CMapClass *new_CMapEntity();
+CMapClass *new_CMapSolid();
+RefVector *CMapDoc_GetSelection(CMapDoc *doc);
+
 #endif // UTIL_H

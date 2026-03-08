@@ -37,6 +37,7 @@ add_library(hammer-surf-utils SHARED
   src/triggergen.c
   src/scriptfuncs.c
   src/hotkeys.c
+  src/util.c
   src/testincludes.c
 )
 
@@ -58,6 +59,7 @@ add_executable(test-patterns
   src/triggergen.c
   src/scriptfuncs.c
   src/hotkeys.c
+  src/util.c
   # src/testincludes.c
 )
 

@@ -3,6 +3,7 @@
 #include "scriptfuncs.h"
 #include "hammerfuncs.h"
 #include "util.h"
+#include "hooks.h"
 
 void measure_clipper_plane(void *this_, void *pRender) {
     Vec3 *ptr = (void *)this_ + CLIPPER3D_OFFSET_PLANE_NORMAL;
@@ -20,8 +21,12 @@ void measure_clipper_plane(void *this_, void *pRender) {
 }
 
 void measure_render_2d(void *this_, void *pRender) {
-    void *selection = *(void **)((void *)this_ + SELECTION3D_OFFSET_SELECTION);
-    RefVector *selected = ((void *)selection + CSELECTION_OFFSET_SEL_LIST);
+    CMapDoc *doc = GetActiveMapDoc();
+    if (!doc) {
+        return;
+    }
+
+    RefVector *selected = CMapDoc_GetSelection(doc);
 
     if (selected->length != 1) {
         return;

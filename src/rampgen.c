@@ -46,8 +46,7 @@ static char GetRampOrientation(CMapClass *solid) {
 
 static void rampgen(float degrees, int segments, char direction) {
     CMapDoc *doc = GetActiveMapDoc();
-    void *selection3d = GetSelection3D();
-    if (!doc || !selection3d) {
+    if (!doc) {
         return;
     }
 
@@ -55,13 +54,12 @@ static void rampgen(float degrees, int segments, char direction) {
         degrees = -degrees;
     }
 
-    void *selection = *(void **)((void *)selection3d + SELECTION3D_OFFSET_SELECTION);
-    RefVector *selected = ((void *)selection + CSELECTION_OFFSET_SEL_LIST);
+    RefVector *selected = CMapDoc_GetSelection(doc);
 
-    log_msg("[hook] %p sel len %d\n", selected, selected->length);
+    // log_msg("[rampgen] %p sel len %d\n", selected, selected->length);
 
     if (selected->length != 1) {
-        log_msg("[hook] error: selection should be exactly 1 item\n");
+        log_msg("[rampgen] error: selection should be exactly 1 item\n");
         return;
     }
 
@@ -195,7 +193,7 @@ static void rampgen(float degrees, int segments, char direction) {
             CHistory_KeepNew(GetHistory(), items[i], false);
         }
     } else {
-        log_msg("[hook] error: selection wasnt a solid\n");
+        log_msg("[rampgen] error: selection wasnt a solid\n");
     }
 }
 

@@ -4,6 +4,7 @@
 #include "scriptfuncs.h"
 #include "hooks.h"
 #include "hammerfuncs.h"
+#include "util.h"
 
 #define PLAYER_SIZE 32.0f
 
@@ -41,13 +42,11 @@ static float move_distance(float theta) {
 
 void do_anglefix() {
     CMapDoc *doc = GetActiveMapDoc();
-    void *selection3d = GetSelection3D();
-    if (!doc || !selection3d) {
+    if (!doc) {
         return;
     }
 
-    void *selection = *(void **)((void *)selection3d + SELECTION3D_OFFSET_SELECTION);
-    RefVector *selected = ((void *)selection + CSELECTION_OFFSET_SEL_LIST);
+    RefVector *selected = CMapDoc_GetSelection(doc);
 
     if (selected->length != 1) {
         AfxMessageBoxF(MB_OK, "Selection should contain exactly 1 solid.");

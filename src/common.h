@@ -36,7 +36,7 @@ void log_msg(const char *fmt, ...);
 #define CMAPDOC_OFFSET_MPWORLD             0xB30
 #define CMAPDOC_OFFSET_SELECTION           0xB88
 #define COBJECTPROPERTIES_OFFSET_HWND      0x040
-#define CSELECTION_OFFSET_SEL_LIST         0x018
+#define CSELECTION_OFFSET_SELECTIONLIST    0x018
 #define SELECTION3D_OFFSET_SELECTION       0x1A8
 
 // menu ids
@@ -266,6 +266,14 @@ static_assert(offsetof(CMapFace, Points)             == 0x1C8, "CMapFace::Points
 static_assert(offsetof(CMapFace, nPoints_2)          == 0x1DC, "CMapFace::nPoints_2 offset wrong");
 static_assert(sizeof(CMapFace)               == CMAPFACE_SIZE, "CMapFace size wrong");
 
+typedef struct {
+    void *vtable;              // 0x00
+    void *unk1;                // 0x08
+    void *unk2;                // 0x10
+    RefVector m_SelectionList; // 0x18
+} CSelection; // incomplete sized type
+static_assert(offsetof(CSelection, m_SelectionList) == CSELECTION_OFFSET_SELECTIONLIST, "CSelection::m_SelectionList offset wrong");
+
 #define MAPDOC_VTABLE_ADDOBJECTTOWORLD 71
 typedef void (*CMapDoc_AddObjectToWorld_t)(void *this_, void *obj, void *parent);
 typedef struct {
@@ -280,7 +288,7 @@ typedef struct CMapDoc {
     uint8_t padding[CMAPDOC_OFFSET_MPWORLD - sizeof(CMapDocVTable *)];
     void *m_pWorld;
     uint8_t padding2[0x50];
-    void *m_pSelection;
+    CSelection *m_pSelection;
 } CMapDoc; // incomplete sized type
 static_assert(offsetof(CMapDoc, m_pWorld)     ==   CMAPDOC_OFFSET_MPWORLD, "CMapDoc::m_pWorld offset wrong");
 static_assert(offsetof(CMapDoc, m_pSelection) == CMAPDOC_OFFSET_SELECTION, "CMapDoc::m_pSelection offset wrong");

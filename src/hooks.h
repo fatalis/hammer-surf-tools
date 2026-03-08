@@ -34,6 +34,5 @@ void hook_Selection3D_RenderTool2D(void *this_, void *pRender);
 
 CMapDoc *GetActiveMapDoc();
 void *GetFaceEditSheet();
-void *GetSelection3D();
 
 #endif // HOOKS_H
