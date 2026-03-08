@@ -1,5 +1,3 @@
-#include <assert.h>
-
 #include <MinHook.h>
 
 #include "common.h"

@@ -1,10 +1,9 @@
-#include <assert.h>
-
 #include "common.h"
 #include "triggergen.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
 #include "hammerfuncs.h"
+#include "util.h"
 
 #define TRIGGER_HEIGHT 2.0f
 
@@ -105,7 +104,7 @@ void do_trigger_generator() {
         return;
     }
 
-    FaceEditSheetFaces *faces = (void *)sheet + FACEEDITSHEET_OFFSET_FACES;
+    FaceEditSheetFaces *faces = (void *)sheet + CFACEEDITSHEET_OFFSET_FACES;
 
     if (faces->length < 1) {
         AfxMessageBoxF(MB_OK, "Select some faces with the texture tool first.");

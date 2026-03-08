@@ -18,6 +18,8 @@ extern CHistory_Keep_t CHistory_Keep;
 typedef void (*CHistory_MarkUndoPosition_t)(void *this_, const void* pSelection, const char *pszName, bool);
 extern CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
 
+#define MAPVIEW_UPDATE_OBJECTS 0x001
+#define MAPVIEW_RENDER_NOW     0x800
 typedef void (*CMapDoc_UpdateAllViews_t)(void *this_, int nFlags, void *ub);
 extern CMapDoc_UpdateAllViews_t CMapDoc_UpdateAllViews;
 
@@ -30,9 +32,30 @@ extern CMapEntity_CMapEntity_t CMapEntity_CMapEntity;
 typedef bool (*CMapFace_CreateFace_t)(CMapFace *this_, Vec3 *points, int npoints, bool bIsCordonFace);
 extern CMapFace_CreateFace_t CMapFace_CreateFace;
 
+typedef enum {
+    FACE_ORIENTATION_FLOOR = 0,
+    FACE_ORIENTATION_CEILING,
+    FACE_ORIENTATION_NORTH_WALL,
+    FACE_ORIENTATION_SOUTH_WALL,
+    FACE_ORIENTATION_EAST_WALL,
+    FACE_ORIENTATION_WEST_WALL,
+    FACE_ORIENTATION_INVALID
+} FaceOrientation;
 typedef FaceOrientation (*CMapFace_GetOrientation_t)(void *this_);
 extern CMapFace_GetOrientation_t CMapFace_GetOrientation;
 
+typedef enum {
+    TEXTURE_ALIGN_NONE  = 0,
+    TEXTURE_ALIGN_WORLD = 1,
+    TEXTURE_ALIGN_FACE  = 2,
+    TEXTURE_ALIGN_QUAKE = 4
+} TextureAlignment;
+#define INIT_TEXTURE_FORCE    0x0001
+#define INIT_TEXTURE_AXES     0x0002
+#define INIT_TEXTURE_ROTATION 0x0004
+#define INIT_TEXTURE_SHIFT    0x0008
+#define INIT_TEXTURE_SCALE    0x0010
+#define INIT_TEXTURE_ALL      (INIT_TEXTURE_AXES | INIT_TEXTURE_ROTATION | INIT_TEXTURE_SHIFT | INIT_TEXTURE_SCALE)
 typedef void (*CMapFace_InitializeTextureAxes_t)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
 extern CMapFace_InitializeTextureAxes_t CMapFace_InitializeTextureAxes;
 

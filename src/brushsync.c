@@ -7,8 +7,13 @@
 // moves brushes in hammer when moved ingame with a vscript
 // proof of concept, vscript code isn't finished
 
+typedef struct {
+    int pos[3];
+    CMapClass *ent;
+} FindEntity;
+
 static bool find_ent_by_pos(CMapClass *ent, void *param) {
-    FindEntity_t *find = param;
+    FindEntity *find = param;
 
     char *name = ent->vtable->GetType(ent);
     if (!strcmp(name, "CMapEntity")) {
@@ -31,7 +36,7 @@ static void move_brush(int *start, int *end) {
         return;
     }
 
-    FindEntity_t find;
+    FindEntity find;
     find.pos[0] = start[0];
     find.pos[1] = start[1];
     find.pos[2] = start[2];

@@ -1,5 +1,3 @@
-#include <assert.h>
-
 #include "common.h"
 #include "scriptfuncs.h"
 

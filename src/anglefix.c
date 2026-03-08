@@ -1,6 +1,3 @@
-#include <assert.h>
-#include <float.h>
-
 #include "common.h"
 #include "anglefix.h"
 #include "hooks.h"
@@ -50,7 +47,7 @@ void do_anglefix() {
     }
 
     void *selection = *(void **)((void *)selection3d + SELECTION3D_OFFSET_SELECTION);
-    RefVector *selected = ((void *)selection + SELECTION_OFFSET_SEL_LIST);
+    RefVector *selected = ((void *)selection + CSELECTION_OFFSET_SEL_LIST);
 
     if (selected->length != 1) {
         AfxMessageBoxF(MB_OK, "Selection should contain exactly 1 solid.");

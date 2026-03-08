@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <math.h>
+#include <assert.h>
+#include <float.h>
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -13,49 +15,42 @@ void log_msg(const char *fmt, ...);
 
 #define ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
 
-#define MAPVIEW_UPDATE_OBJECTS 0x001
-#define MAPVIEW_RENDER_NOW 0x800
-// status bar ids
-#define SBI_SIZE 3
-#define SBI_PROMPT 0
-
+// minimum surf angle
 #define SURF_NORMAL 0.7f
 // an arbitrary cutoff for a very steep ramp that you can somewhat stay on
 #define UNSURF_NORMAL 0.28f
 
-#define OFFSET_OBJECT_PROPERTIES     0x1F8
-#define OFFSET_HWND                  0x40
-
+// struct sizes
 #define CSTRDLG_SIZE 320
-#define CMAPFACE_SIZE                    0x360
-#define CMAPENTITY_SIZE                  0x280
-#define CMAPSOLID_SIZE                   0x230
-#define CLIPPER3D_OFFSET_PLANE_NORMAL 0xFC
+#define CMAPFACE_SIZE                      0x360
+#define CMAPENTITY_SIZE                    0x280
+#define CMAPSOLID_SIZE                     0x230
 
-// found in Selection3D::RenderTool2D
-#define SELECTION3D_OFFSET_SELECTION  0x1A8
-#define SELECTION_OFFSET_SEL_LIST     0x18
-#define FACEEDITSHEET_OFFSET_FACES    0x2F98 // TODO: probably want to scan for this instead
-// #define FACE_OFFSET_ID               0x2B8
+// struct offsets
+#define CFACEEDITSHEET_OFFSET_FACES        0x2F98 // TODO: probably want to scan for this instead
+#define CLIPPER3D_OFFSET_PLANE_NORMAL      0x0FC
+#define CMAINFRAME_OFFSET_OBJECTPROPERTIES 0x1F8
+#define CMAPCLASS_OFFSET_FACES             0x1A0
+#define CMAPCLASS_OFFSET_ORIGIN            0x050
+#define CMAPCLASS_OFFSET_RENDER2DBOX       0x0A8
+#define CMAPDOC_OFFSET_MPWORLD             0xB30
+#define CMAPDOC_OFFSET_SELECTION           0xB88
+#define COBJECTPROPERTIES_OFFSET_HWND      0x040
+#define CSELECTION_OFFSET_SEL_LIST         0x018
+#define SELECTION3D_OFFSET_SELECTION       0x1A8
 
+// menu ids
 #define CMD_CURVED_RAMP_GENERATOR 42069
 #define CMD_TRIGGER_GENERATOR     42068
 #define CMD_ANGLEFIX              42067
+#define IDR_POPUPS                  182
+#define IDR_FORGEMAPTYPE            129
+#define IDD_FACEEDIT                194
 
-
-#define IDR_POPUPS                      182
-#define IDR_FORGEMAPTYPE                129
-#define IDD_FACEEDIT                    194
-
+// structs
 typedef struct CMapClass CMapClass;
 typedef struct CMapFace CMapFace;
 typedef struct CMapDoc CMapDoc;
-
-typedef struct { // TODO: find real size
-    uint8_t unk[320];
-    char *str;
-    uint8_t unk2[900];
-} CStrDlgInst;
 
 typedef struct {
     void **items;
@@ -111,61 +106,19 @@ typedef struct {
     Vec3 maxs;
 } BoundingBox;
 
-typedef struct {
-    int pos[3];
-    CMapClass *ent;
-} FindEntity_t;
-
-#define INIT_TEXTURE_FORCE			0x0001
-#define INIT_TEXTURE_AXES			0x0002
-#define INIT_TEXTURE_ROTATION		0x0004
-#define INIT_TEXTURE_SHIFT			0x0008
-#define INIT_TEXTURE_SCALE			0x0010
-#define INIT_TEXTURE_ALL			(INIT_TEXTURE_AXES | INIT_TEXTURE_ROTATION | INIT_TEXTURE_SHIFT | INIT_TEXTURE_SCALE)
-
-typedef enum {
-    TEXTURE_ALIGN_NONE	= 0x0000,
-    TEXTURE_ALIGN_WORLD = 0x0001,
-    TEXTURE_ALIGN_FACE	= 0x0002,
-    TEXTURE_ALIGN_QUAKE = 0x0004
-} TextureAlignment;
-
-typedef enum {
-    FACE_ORIENTATION_FLOOR = 0,
-    FACE_ORIENTATION_CEILING,
-    FACE_ORIENTATION_NORTH_WALL,
-    FACE_ORIENTATION_SOUTH_WALL,
-    FACE_ORIENTATION_EAST_WALL,
-    FACE_ORIENTATION_WEST_WALL,
-    FACE_ORIENTATION_INVALID
-} FaceOrientation;
+typedef struct { // TODO: find real size
+    uint8_t unk[320];
+    char *str;
+    uint8_t unk2[900];
+} CStrDlgInst;
 
 // msvc desctuctor flags, guessed name
-enum DeleteFlags {
+typedef enum {
     DELETE_NONE,
     DELETE_OBJ,
     DELETE_ARRAY
-};
-typedef void (*Dtor_t)(void *this_, int flags);
-
-static inline float Vec3Dot(const Vec3 *a) {
-    const Vec3 up = {0, 0, 1};
-    return a->x * up.x +
-           a->y * up.y +
-           a->z * up.z;
-}
-
-static inline void BBoxCenter(const BoundingBox *bbox, Vec3 *outCenter) {
-    outCenter->x = (bbox->mins.x + bbox->maxs.x) * 0.5f;
-    outCenter->y = (bbox->mins.y + bbox->maxs.y) * 0.5f;
-    outCenter->z = (bbox->mins.z + bbox->maxs.z) * 0.5f;
-}
-
-static inline void BBoxSize(const BoundingBox *bbox, Vec3 *out) {
-    out->x = bbox->maxs.x - bbox->mins.x;
-    out->y = bbox->maxs.y - bbox->mins.y;
-    out->z = bbox->maxs.z - bbox->mins.z;
-}
+} DeleteFlags;
+typedef void (*Dtor_t)(void *this_, DeleteFlags flags);
 
 typedef char *(*CMapClass_GetType_t)(void *);
 typedef void (*CMapPoint_SetOrigin_t)(void *this_, Vec3 *pos);
@@ -282,7 +235,11 @@ typedef struct CMapClass {
     void *CMapSolid_0x198;     // 0x198 EditGameClass data? union for CMapFace needed
     FaceVector Faces;          // 0x1A0
 } CMapClass; // incomplete sized type
+static_assert(offsetof(CMapClass, m_Origin)      == CMAPCLASS_OFFSET_ORIGIN,      "CMapClass::m_Origin offset wrong");
+static_assert(offsetof(CMapClass, m_Render2DBox) == CMAPCLASS_OFFSET_RENDER2DBOX, "CMapClass::m_Render2DBox offset wrong");
+static_assert(offsetof(CMapClass, Faces)         == CMAPCLASS_OFFSET_FACES,       "CMapClass::Faces offset wrong");
 
+// TODO: cleanup
 typedef struct __attribute__((packed, aligned(4))) {
     Vec3 vec;
     void *unk1;
@@ -312,109 +269,20 @@ static_assert(sizeof(CMapFace)               == CMAPFACE_SIZE, "CMapFace size wr
 #define MAPDOC_VTABLE_ADDOBJECTTOWORLD 71
 typedef void (*CMapDoc_AddObjectToWorld_t)(void *this_, void *obj, void *parent);
 typedef struct {
-    uint8_t padding[sizeof(void *) * (MAPDOC_VTABLE_ADDOBJECTTOWORLD)];
+    void *padding[MAPDOC_VTABLE_ADDOBJECTTOWORLD];
     CMapDoc_AddObjectToWorld_t AddObjectToWorld;
 } CMapDocVTable;
 static_assert(offsetof(CMapDocVTable, AddObjectToWorld)
-    == MAPDOC_VTABLE_ADDOBJECTTOWORLD * sizeof(void *), "CMapDoc::AddObjectToWorld offset wrong");
-#undef MAPDOC_VTABLE_ADDOBJECTTOWORLD
+    == MAPDOC_VTABLE_ADDOBJECTTOWORLD * sizeof(void *), "CMapDocVTable::AddObjectToWorld offset wrong");
 
-#define OFFSET_CMAPDOC_MPWORLD 0x166 * 8
 typedef struct CMapDoc {
     CMapDocVTable *vtable;
-    uint8_t padding[OFFSET_CMAPDOC_MPWORLD - sizeof(CMapDocVTable *)];
+    uint8_t padding[CMAPDOC_OFFSET_MPWORLD - sizeof(CMapDocVTable *)];
     void *m_pWorld;
+    uint8_t padding2[0x50];
+    void *m_pSelection;
 } CMapDoc; // incomplete sized type
-static_assert(offsetof(CMapDoc, m_pWorld) == OFFSET_CMAPDOC_MPWORLD, "CMapDoc::m_pWorld offset wrong");
-#undef OFFSET_CMAPDOC_MPWORLD
-
-static_assert(offsetof(CMapClass, m_Origin)          == 0x050, "CMapClass::m_Origin offset wrong");
-static_assert(offsetof(CMapClass, m_Render2DBox)     == 0x0A8, "CMapClass::m_Render2DBox offset wrong");
-static_assert(offsetof(CMapClass, Faces)             == 0x1A0, "CMapClass::Faces offset wrong");
-
-static inline void BBoxTrueCenter(CMapClass *ents, int count, Vec3 *outCenter) {
-    if (!ents || count <= 0 || !outCenter) {
-        if (outCenter) outCenter->x = outCenter->y = outCenter->z = 0.0f;
-        return;
-    }
-
-    // initialize min/max with the first entity's render box
-    float minX = ents[0].m_Render2DBox.mins.x;
-    float minY = ents[0].m_Render2DBox.mins.y;
-    float minZ = ents[0].m_Render2DBox.mins.z;
-    float maxX = ents[0].m_Render2DBox.maxs.x;
-    float maxY = ents[0].m_Render2DBox.maxs.y;
-    float maxZ = ents[0].m_Render2DBox.maxs.z;
-
-    // expand to include all remaining bounding boxes
-    for (auto i = 1; i < count; ++i) {
-        if (ents[i].m_Render2DBox.mins.x < minX) minX = ents[i].m_Render2DBox.mins.x;
-        if (ents[i].m_Render2DBox.mins.y < minY) minY = ents[i].m_Render2DBox.mins.y;
-        if (ents[i].m_Render2DBox.mins.z < minZ) minZ = ents[i].m_Render2DBox.mins.z;
-
-        if (ents[i].m_Render2DBox.maxs.x > maxX) maxX = ents[i].m_Render2DBox.maxs.x;
-        if (ents[i].m_Render2DBox.maxs.y > maxY) maxY = ents[i].m_Render2DBox.maxs.y;
-        if (ents[i].m_Render2DBox.maxs.z > maxZ) maxZ = ents[i].m_Render2DBox.maxs.z;
-    }
-
-    // compute center of the overall bounding box
-    outCenter->x = (minX + maxX) * 0.5f;
-    outCenter->y = (minY + maxY) * 0.5f;
-    outCenter->z = (minZ + maxZ) * 0.5f;
-}
-
-static inline bool Vec3Normalize(Vec3 *v) {
-    float len = sqrtf(v->x * v->x + v->y * v->y + v->z * v->z);
-    if (len == 0.0f) {
-        return false;
-    }
-
-    float inv = 1.0f / len;
-    v->x *= inv;
-    v->y *= inv;
-    v->z *= inv;
-
-    return true;
-}
-
-static inline void Vec3Mul(Vec3 v, float s, Vec3 *out) {
-    out->x = v.x * s;
-    out->y = v.y * s;
-    out->z = v.z * s;
-}
-
-static inline bool NormalSurfable(Vec3 *normal) {
-    return normal->z < SURF_NORMAL && normal->z >= UNSURF_NORMAL;
-}
-
-static inline bool NormalHeadSurfable(Vec3 *normal) {
-    return normal->z > -SURF_NORMAL && normal->z <= -UNSURF_NORMAL;
-}
-
-static inline float NormalDegrees(Vec3 *normal) {
-    return acosf(fabsf(Vec3Dot(normal))) * (180.0f / (float)M_PI);
-}
-
-static inline int SteepnessScore(Vec3 *normal) {
-    float znorm = fabsf(normal->z);
-    return (int)fmaxf(fminf(floorf((SURF_NORMAL - znorm) * 100.0f), 10.0f), 0.0f);
-}
-
-static char surf_string[128];
-static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_surfable) {
-    bool surfable = NormalSurfable(normal);
-    bool headsurfable = NormalHeadSurfable(normal);
-    if (!surfable && !headsurfable) {
-        snprintf(surf_string, sizeof(surf_string), "%s is not surfable", pfx);
-        *out_surfable = false;
-        return surf_string;
-    }
-
-    float degrees = NormalDegrees(normal);
-    int steepness = SteepnessScore(normal);
-    snprintf(surf_string, sizeof(surf_string), "%s is %s: steepness %d/10 (%.1f\xB0)", pfx, headsurfable ? "headsurfable" : "surfable", steepness, (double)degrees);
-    *out_surfable = true;
-    return surf_string;
-}
+static_assert(offsetof(CMapDoc, m_pWorld)     ==   CMAPDOC_OFFSET_MPWORLD, "CMapDoc::m_pWorld offset wrong");
+static_assert(offsetof(CMapDoc, m_pSelection) == CMAPDOC_OFFSET_SELECTION, "CMapDoc::m_pSelection offset wrong");
 
 #endif // COMMON_H

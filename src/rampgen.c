@@ -1,10 +1,9 @@
-#include <assert.h>
-
 #include "common.h"
 #include "rampgen.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
 #include "hammerfuncs.h"
+#include "util.h"
 
 // #define RAMPGEN_DEBUG
 static const char help[] = "Expecting <direction: l/r> <degrees> <segments>\r\nExample: l 3 30";
@@ -57,7 +56,7 @@ static void rampgen(float degrees, int segments, char direction) {
     }
 
     void *selection = *(void **)((void *)selection3d + SELECTION3D_OFFSET_SELECTION);
-    RefVector *selected = ((void *)selection + SELECTION_OFFSET_SEL_LIST);
+    RefVector *selected = ((void *)selection + CSELECTION_OFFSET_SEL_LIST);
 
     log_msg("[hook] %p sel len %d\n", selected, selected->length);
 

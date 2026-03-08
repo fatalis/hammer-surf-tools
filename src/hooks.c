@@ -20,7 +20,7 @@ Selection3D_RenderTool2D_t orig_Selection3D_RenderTool2D;
 SetActiveMapDoc_t orig_SetActiveMapDoc;
 // SetFocus_t orig_SetFocus;
 
-// hook because the getter func is too short to locate
+// hook because GetActiveMapDoc is compiled away
 void hook_SetActiveMapDoc(void *doc) {
     /* log_msg("[hook] SetActiveMapDoc %p\n", doc); */
     orig_SetActiveMapDoc(doc);
@@ -61,11 +61,11 @@ void hook_CFaceEditSheet_ClickFace(void *this_, CMapClass *pSolid, int faceIndex
 //     void *mainWnd = GetMainWnd();
 //
 //     if (mainWnd) {
-//         void *ObjectProperties = *(void **)(mainWnd + OFFSET_OBJECT_PROPERTIES);
+//         void *ObjectProperties = *(void **)(mainWnd + CMAINFRAME_OFFSET_OBJECTPROPERTIES);
 //
 //         if (ObjectProperties) {
 //             if (this_ != ObjectProperties) {
-//                 HWND properties_hwnd = *(HWND *)(ObjectProperties + OFFSET_HWND);
+//                 HWND properties_hwnd = *(HWND *)(ObjectProperties + COBJECTPROPERTIES_OFFSET_HWND);
 //                 bool visible = IsWindowVisible(properties_hwnd);
 //
 //                 if (visible) {
