@@ -28,11 +28,10 @@ add_library(hammer-surf-utils SHARED
   src/patterns.c
   src/wndproc.c
   src/hooks.c
-  src/clipper.c
+  src/hammerfuncs.c
   src/contextmenu.c
   src/brushsync.c
   src/rampgen.c
-  src/render.c
   src/measure.c
   src/anglefix.c
   src/triggergen.c
@@ -50,11 +49,10 @@ add_executable(test-patterns
   src/patterns.c
   src/wndproc.c
   src/hooks.c
-  src/clipper.c
+  src/hammerfuncs.c
   src/contextmenu.c
   # src/brushsync.c
   src/rampgen.c
-  src/render.c
   src/measure.c
   src/anglefix.c
   src/triggergen.c

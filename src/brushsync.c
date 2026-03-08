@@ -2,6 +2,7 @@
 #include "brushsync.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
+#include "hammerfuncs.h"
 
 // moves brushes in hammer when moved ingame with a vscript
 // proof of concept, vscript code isn't finished
@@ -9,13 +10,16 @@
 static bool find_ent_by_pos(CMapClass *ent, void *param) {
     FindEntity_t *find = param;
 
-    int rx = (int)roundf(ent->m_Origin.x);
-    int ry = (int)roundf(ent->m_Origin.y);
-    int rz = (int)roundf(ent->m_Origin.z);
+    char *name = ent->vtable->GetType(ent);
+    if (!strcmp(name, "CMapEntity")) {
+        int rx = (int)roundf(ent->m_Origin.x);
+        int ry = (int)roundf(ent->m_Origin.y);
+        int rz = (int)roundf(ent->m_Origin.z);
 
-    if (rx == find->pos[0] && ry == find->pos[1] && rz == find->pos[2]) {
-        find->ent = ent;
-        return false;
+        if (rx == find->pos[0] && ry == find->pos[1] && rz == find->pos[2]) {
+            find->ent = ent;
+            return false;
+        }
     }
 
     return true;
@@ -33,7 +37,7 @@ static void move_brush(int *start, int *end) {
     find.pos[2] = start[2];
     find.ent = nullptr;
 
-    EnumChildren(doc->m_pWorld, find_ent_by_pos, &find, CMapEntityType);
+    EnumChildren(doc->m_pWorld, find_ent_by_pos, &find, nullptr);
     /* log_msg("[hook] FindEnt = %p\n", find.ent); */
 
     if (find.ent) {

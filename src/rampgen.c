@@ -3,8 +3,8 @@
 #include "common.h"
 #include "rampgen.h"
 #include "hooks.h"
-#include "render.h"
 #include "scriptfuncs.h"
+#include "hammerfuncs.h"
 
 // #define RAMPGEN_DEBUG
 static const char help[] = "Expecting <direction: l/r> <degrees> <segments>\r\nExample: l 3 30";
@@ -47,6 +47,7 @@ static char GetRampOrientation(CMapClass *solid) {
 
 static void rampgen(float degrees, int segments, char direction) {
     CMapDoc *doc = GetActiveMapDoc();
+    void *selection3d = GetSelection3D();
     if (!doc || !selection3d) {
         return;
     }

@@ -3,3 +3,4 @@ versions/
 *.zip
 *.bak
 test-patterns.exe
+version.dll

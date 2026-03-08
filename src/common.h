@@ -1,8 +1,6 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define HOOK_DEBUG 1
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -11,11 +9,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#if HOOK_DEBUG
 void log_msg(const char *fmt, ...);
-#else
-#define log_msg(...) ((void)0)
-#endif
 
 #define ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
 
@@ -31,6 +25,8 @@ void log_msg(const char *fmt, ...);
 
 #define OFFSET_OBJECT_PROPERTIES     0x1F8
 #define OFFSET_HWND                  0x40
+
+#define CSTRDLG_SIZE 320
 #define CMAPFACE_SIZE                    0x360
 #define CMAPENTITY_SIZE                  0x280
 #define CMAPSOLID_SIZE                   0x230
@@ -46,7 +42,6 @@ void log_msg(const char *fmt, ...);
 #define CMD_TRIGGER_GENERATOR     42068
 #define CMD_ANGLEFIX              42067
 
-#define CSTRDLG_SIZE 320
 
 #define IDR_POPUPS                      182
 #define IDR_FORGEMAPTYPE                129
@@ -121,25 +116,6 @@ typedef struct {
     CMapClass *ent;
 } FindEntity_t;
 
-typedef struct {
-    void *unk[8];
-    HWND hWnd;
-} MainFrame;
-
-typedef struct {
-    void *unk[8];
-    MainFrame *MainFrame;
-} WndPtr;
-
-typedef struct {
-    void *vtable;
-    WndPtr *m_pMainWnd;
-    HINSTANCE hInst;
-    // ...there are more useful fields to implement
-} CWinApp;
-
-// typedef float mat4[4][4];
-
 #define INIT_TEXTURE_FORCE			0x0001
 #define INIT_TEXTURE_AXES			0x0002
 #define INIT_TEXTURE_ROTATION		0x0004
@@ -163,57 +139,6 @@ typedef enum {
     FACE_ORIENTATION_WEST_WALL,
     FACE_ORIENTATION_INVALID
 } FaceOrientation;
-
-// TODO: move these to respective files
-typedef char *(*CMapClass_GetType_t)(void *);
-typedef int (*SetPaneText_t)(void *this_, int nIndex, char *lpszNewText, int bUpdate);
-typedef void *(*SetFocus_t)(void *this_);
-typedef void *(*GetMainWnd_t)();
-typedef bool (*EnumChildrenCallback)(CMapClass *ent, void *param);
-typedef bool (*EnumChildren_t)(void *this_, EnumChildrenCallback cb, void *param, const char *type);
-typedef void (*SetActiveMapDoc_t)(void *doc);
-typedef void (*SetModifiedFlag_t)(void *this_, bool bModified);
-// typedef void (*CMapClass_DoTransform_t)(void *this_, mat4 *mtx);
-typedef void (*CMapDoc_UpdateAllViews_t)(void *this_, int nFlags, void *ub);
-typedef void (*CFaceEditSheet_ClickFace_t)(void *this_, CMapClass *pSolid, int faceIndex, int cmd, int clickMode);
-typedef void (*DrawBoundsText_t)(void *pRender, const float *Mins, const float *Maxs, int nFlags);
-typedef void (*CRender_DrawText_t)(void *this_, const char *text, int x, int y, int nFlags);
-typedef void (*Clipper3D_DrawBrushExtents_t)(void *this_, void *pRender, void *pSolid, int nFlags);
-// typedef void (*CMapSolid_DoTransform_t)(void *this_, const float *matrix);
-typedef void (*Selection3D_RenderTool2D_t)(void *this_, void *pRender);
-typedef CMapClass *(*CMapClass_Copy_t)(void *this_, bool bUpdateDependencies);
-typedef CMapClass *(*CMapClass_CopyFrom_t)(void *this_, CMapClass *from, bool bUpdateDependencies);
-typedef void (*CMapClass_CopyChildrenFrom_t)(void *this_, void *from, bool bUpdateDependencies);
-typedef void (*CMapDoc_AddObjectToWorld_t)(void *this_, void *obj, void *parent);
-typedef void (*CMapClass_CalcBounds_t)(void *this_, bool bFullUpdate);
-typedef void (*CStrDlg_CStrDlg_t)(void *this_, DWORD dwFlags, const char *pszString, const char *pszPrompt, const char *pszTitle);
-typedef int (*CDialog_DoModal_t)(void *this_);
-// typedef CWinApp *(*AfxGetApp_t)(void);
-typedef LRESULT (*AfxWndProc_t)(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-typedef void (*CMapFace_SetTexture_t)(void *this_, const char *pszNewTex, bool bRescaleTextureCoordinates);
-typedef void (*CMapEntity_CMapEntity_t)(void *this_);
-typedef void (*CMapSolid_CMapSolid_t)(void *this_, CMapClass *parent);
-typedef void (*CEditGameClass_SetClass_t)(void *this_, const char *pszClassname, bool bLoading);
-typedef void (*CEditGameClass_SetKeyValue_t)(void *this_, const char *key, const char *value);
-typedef void (*CMapClass_AddChild_t)(void *this_, CMapClass *pChild);
-typedef int (*AfxMessageBox_t)(LPCTSTR lpszText, UINT nType, UINT nIDHelp);
-typedef void (*Msg_t)(int type, const char *fmt, ...);
-typedef bool (*EnableMenuItem_t)(HMENU hMenu, UINT uIDEnableItem, UINT uEnable);
-typedef void *(*ValveAlloc_t)(size_t size);
-typedef void (*CMapSolid_ClipByFace_t)(CMapClass *this_, const CMapFace *fa, CMapClass **f, CMapClass **b);
-typedef bool (*CMapSolid_AddPlane_t)(CMapClass *this_, const CMapFace *fa);
-typedef CMapFace *(*CSolidFaces_MakeFace_t)(void *this_);
-typedef CMapFace *(*CMapFace_CopyFrom_t)(CMapFace *this_, const CMapFace *from, DWORD dwFlags, bool bUpdateDependencies);
-typedef bool *(*CMapSolid_CreateFromPlanes_t)(CMapClass *this_, DWORD flags, void *unk);
-typedef bool (*CMapFace_CreateFace_t)(CMapFace *this_, Vec3 *points, int npoints, bool bIsCordonFace);
-typedef void (*CMapPoint_SetOrigin_t)(void *this_, Vec3 *pos);
-typedef void (*CMapFace_InitializeTextureAxes_t)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
-typedef bool (*CToolMaterial_OnMouseMove3D_t)(void *this_, void *pView, UINT flags, const float *vPoint);
-typedef FaceOrientation (*CMapFace_GetOrientation_t)(void *this_);
-typedef void (*CHistory_MarkUndoPosition_t)(void *this_, const void* pSelection, const char *pszName, bool);
-typedef void (*CHistory_KeepNew_t)(void *this_, CMapClass *pObject, bool bKeepChildren);
-typedef void (*CHistory_Keep_t)(void *this_, CMapClass *pObject);
-typedef void *(*GetHistory_t)();
 
 // msvc desctuctor flags, guessed name
 enum DeleteFlags {
@@ -242,6 +167,13 @@ static inline void BBoxSize(const BoundingBox *bbox, Vec3 *out) {
     out->z = bbox->maxs.z - bbox->mins.z;
 }
 
+typedef char *(*CMapClass_GetType_t)(void *);
+typedef void (*CMapPoint_SetOrigin_t)(void *this_, Vec3 *pos);
+typedef CMapClass *(*CMapClass_Copy_t)(void *this_, bool bUpdateDependencies);
+typedef CMapClass *(*CMapClass_CopyFrom_t)(void *this_, CMapClass *from, bool bUpdateDependencies);
+typedef void (*CMapClass_CopyChildrenFrom_t)(void *this_, void *from, bool bUpdateDependencies);
+typedef void (*CMapClass_CalcBounds_t)(void *this_, bool bFullUpdate);
+typedef void (*CMapClass_AddChild_t)(void *this_, CMapClass *pChild);
 typedef struct {
     CMapClass_GetType_t GetType; // 0
 
@@ -276,9 +208,11 @@ typedef struct {
     void *CMapClass_46; void *CMapClass_47; void *CMapClass_48; void *CMapClass_49;
 
     CMapClass_Copy_t     Copy;         // 50
-    void                *CopyFrom;     // 51
+    CMapClass_CopyFrom_t *CopyFrom;    // 51
 } CMapClassVTable;
 
+typedef void (*CEditGameClass_SetClass_t)(void *this_, const char *pszClassname, bool bLoading);
+typedef void (*CEditGameClass_SetKeyValue_t)(void *this_, const char *key, const char *value);
 typedef struct {
     CEditGameClass_SetClass_t SetClass;
     CEditGameClass_SetKeyValue_t SetKeyValue;
@@ -376,6 +310,7 @@ static_assert(offsetof(CMapFace, nPoints_2)          == 0x1DC, "CMapFace::nPoint
 static_assert(sizeof(CMapFace)               == CMAPFACE_SIZE, "CMapFace size wrong");
 
 #define MAPDOC_VTABLE_ADDOBJECTTOWORLD 71
+typedef void (*CMapDoc_AddObjectToWorld_t)(void *this_, void *obj, void *parent);
 typedef struct {
     uint8_t padding[sizeof(void *) * (MAPDOC_VTABLE_ADDOBJECTTOWORLD)];
     CMapDoc_AddObjectToWorld_t AddObjectToWorld;

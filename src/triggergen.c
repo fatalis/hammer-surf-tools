@@ -2,9 +2,9 @@
 
 #include "common.h"
 #include "triggergen.h"
-#include "render.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
+#include "hammerfuncs.h"
 
 #define TRIGGER_HEIGHT 2.0f
 

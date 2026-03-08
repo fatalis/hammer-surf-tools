@@ -3,9 +3,10 @@
 
 #include "common.h"
 #include "anglefix.h"
-#include "render.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
+#include "hooks.h"
+#include "hammerfuncs.h"
 
 #define PLAYER_SIZE 32.0f
 
@@ -43,6 +44,7 @@ static float move_distance(float theta) {
 
 void do_anglefix() {
     CMapDoc *doc = GetActiveMapDoc();
+    void *selection3d = GetSelection3D();
     if (!doc || !selection3d) {
         return;
     }

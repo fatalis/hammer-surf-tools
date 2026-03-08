@@ -6,8 +6,8 @@
 
 #include "common.h"
 
-LRESULT hook_AfxWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
-
+typedef LRESULT (*AfxWndProc_t)(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 extern AfxWndProc_t orig_AfxWndProc;
+LRESULT hook_AfxWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 #endif // WNDPROC_H

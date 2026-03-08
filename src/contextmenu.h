@@ -5,9 +5,7 @@
 #include <windows.h>
 
 typedef HMENU (*LoadMenuW_t)(HINSTANCE hInstance, LPCWSTR lpMenuName);
-
 extern LoadMenuW_t orig_LoadMenuW;
-
 HMENU hook_LoadMenuW(HINSTANCE hInstance, LPCWSTR lpMenuName);
 
 #endif // CONTEXTMENU_H
