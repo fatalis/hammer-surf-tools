@@ -25,27 +25,24 @@ jobs:
           HAMMERPLUSPLUS_BUILD=$(grep "#define TARGET_HAMMERPLUSPLUS_BUILD" src/common.h | sed "s/.*\"\(.*\)\"/\1/")
           echo "HAMMERPLUSPLUS_BUILD=$HAMMERPLUSPLUS_BUILD" >> $GITHUB_ENV
 
-      - name: Get Short Commit ID
-        id: git
-        run: |
-          SHORT_COMMIT=$(git rev-parse --short HEAD)
-          echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
-
-      - name: Get Commit Count (Revision Number)
+      - name: Get Tag
         id: rev
         run: |
-          REVISION=$(git rev-list --count HEAD)
-          echo "REVISION=$REVISION" >> $GITHUB_ENV
+          TAG=$(git describe --tags --dirty --always)
+          RELEASE_NAME="hammer-surf-tools_${TAG}_h++${HAMMERPLUSPLUS_BUILD}"
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
 
       - name: Create ZIP
         id: zip
         run: |
-          ZIP_NAME="r${REVISION}-${SHORT_COMMIT}-hpp${HAMMERPLUSPLUS_BUILD}.zip"
-          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
-          zip -j "$ZIP_NAME" build/version.dll README.md
+          echo "ZIP_NAME=${RELEASE_NAME}.zip" >> $GITHUB_ENV
+          zip -j "${RELEASE_NAME}.zip" build/version.dll README.md
 
-      - name: Upload Release Artifact
-        uses: actions/upload-artifact@v4
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
         with:
-          name: ${{ env.ZIP_NAME }}
-          path: ${{ env.ZIP_NAME }}
+          name: ${{ env.RELEASE_NAME }}
+          files: ${{ env.ZIP_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
