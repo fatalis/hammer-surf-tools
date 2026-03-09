@@ -1,6 +1,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+// used by CI to name each build/release
+// this is the current guaranteed working/recommend version
+#define TARGET_HAMMERPLUSPLUS_BUILD "8870"
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdint.h>

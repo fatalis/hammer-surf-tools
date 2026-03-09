@@ -11,10 +11,41 @@ jobs:
           submodules: true
 
       - name: Install MinGW-w64
-        run: sudo apt-get install -y mingw-w64
+        run: sudo apt-get install -y mingw-w64 zip
 
       - name: Configure CMake
         run: cmake -B build -S .
 
       - name: Build
         run: cmake --build build
+
+      - name: Get Hammer++ Build String
+        id: get_build
+        run: |
+          HAMMERPLUSPLUS_BUILD=$(grep "#define TARGET_HAMMERPLUSPLUS_BUILD" src/common.h | sed "s/.*\"\(.*\)\"/\1/")
+          echo "HAMMERPLUSPLUS_BUILD=$HAMMERPLUSPLUS_BUILD" >> $GITHUB_ENV
+
+      - name: Get Short Commit ID
+        id: git
+        run: |
+          SHORT_COMMIT=$(git rev-parse --short HEAD)
+          echo "SHORT_COMMIT=$SHORT_COMMIT" >> $GITHUB_ENV
+
+      - name: Get Commit Count (Revision Number)
+        id: rev
+        run: |
+          REVISION=$(git rev-list --count HEAD)
+          echo "REVISION=$REVISION" >> $GITHUB_ENV
+
+      - name: Create ZIP
+        id: zip
+        run: |
+          ZIP_NAME="${REVISION}-${SHORT_COMMIT}-hpp${HAMMERPLUSPLUS_BUILD}.zip"
+          echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
+          zip -j "$ZIP_NAME" build/version.dll README.md
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ZIP_NAME }}
+          path: ${{ env.ZIP_NAME }}
