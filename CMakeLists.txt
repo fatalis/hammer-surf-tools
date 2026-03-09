@@ -85,9 +85,9 @@ set_target_properties(hammer-surf-utils PROPERTIES
   # LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/../../.."
 )
 
-set_target_properties(test-patterns PROPERTIES
-  # RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
-)
+# set_target_properties(test-patterns PROPERTIES
+#   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}"
+# )
 
 # Build as Windows DLL (WIN32 is set when using mingw toolchain)
 if(WIN32)
