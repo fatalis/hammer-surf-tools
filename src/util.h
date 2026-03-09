@@ -107,19 +107,15 @@ static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_su
     return surf_string;
 }
 
-static inline bool CMapClass_IsSolid(CMapClass *ent) {
-    char *name = ent->vtable->GetType(ent);
-    return !strcmp(name, "CMapSolid");
-}
-
 int AfxMessageBoxF(UINT nType, const char* fmt, ...);
 CMapClass *new_CMapEntity();
 CMapClass *new_CMapSolid();
 RefVector *CMapDoc_GetSelection(CMapDoc *doc);
 void *GetFaceEditSheet();
 
-int CMapClass_SolidCount(CMapClass *ent);
-CMapClass *CMapClass_FirstSolid(CMapClass *ent);
+bool CMapClass_IsSolid(CMapClass *ent);
+bool CMapClass_IsWorldBrush(CMapClass *ent);
+bool IsAllWorldBrushes(RefVector *selected);
 
 typedef struct {
     CMapDoc *pMapDoc;

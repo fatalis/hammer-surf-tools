@@ -42,39 +42,27 @@ FaceEditSheetFaces *CFaceEditSheet_GetFaces(void *sheet) {
     return (void *)sheet + CFaceEditSheet_m_Faces_Offset;
 }
 
-static bool solid_count_cb(CMapClass *ent, void *param) {
-    int *count = (int *)param;
-    if (CMapClass_IsSolid(ent)) {
-        (*count)++;
-    }
-    return true;
+bool CMapClass_IsSolid(CMapClass *ent) {
+    char *name = ent->vtable->GetType(ent);
+    return !strcmp(name, "CMapSolid");
 }
 
-static bool get_first_solid_cb(CMapClass *ent, void *param) {
-    CMapClass **out = (CMapClass **)param;
+bool CMapClass_IsWorldBrush(CMapClass *ent) {
     if (CMapClass_IsSolid(ent)) {
-        *out = ent;
-        return false;
+        CMapClass *parent = ent->vtable->GetParent(ent);
+        if (parent && !strcmp(parent->vtable->GetType(parent), "CMapWorld")) {
+            return true;
+        }
     }
-    return true;
+    return false;
 }
 
-int CMapClass_SolidCount(CMapClass *ent) {
-    if (CMapClass_IsSolid(ent)) {
-        return 1;
-    }
-
+bool IsAllWorldBrushes(RefVector *selected) {
     int count = 0;
-    CMapClass_EnumChildren(ent, solid_count_cb, &count, nullptr);
-    return count;
-}
-
-CMapClass *CMapClass_FirstSolid(CMapClass *ent) {
-    if (CMapClass_IsSolid(ent)) {
-        return ent;
-    }
-
-    CMapClass *solid = nullptr;
-    CMapClass_EnumChildren(ent, get_first_solid_cb, &solid, nullptr);
-    return solid;
+    for (auto i = 0; i < selected->length; i++) {
+        if (CMapClass_IsWorldBrush(selected->items[i])) {
+            count++;
+        }
+    };
+    return count == selected->length;
 }

@@ -172,16 +172,14 @@ static CMapClass *get_selected_ramp() {
     RefVector *selected = CMapDoc_GetSelection(doc);
 
     if (selected->length != 1) {
-        AfxMessageBoxF(MB_OK, "Selection should be exactly 1 item.");
+        AfxMessageBoxF(MB_OK, "Selection should contain exactly 1 item.");
         return nullptr;
     }
 
     CMapClass *item = selected->items[0];
     assert(item);
 
-    CMapClass *parent = item->vtable->GetParent(item);
-    bool is_worldbrush = parent && !strcmp(parent->vtable->GetType(parent), "CMapWorld");
-    if (!CMapClass_IsSolid(item) || !is_worldbrush) {
+    if (!CMapClass_IsWorldBrush(item)) {
         AfxMessageBoxF(MB_OK, "Selection should be a world brush.");
         return nullptr;
     }
