@@ -40,7 +40,7 @@ jobs:
       - name: Create ZIP
         id: zip
         run: |
-          ZIP_NAME="${REVISION}-${SHORT_COMMIT}-hpp${HAMMERPLUSPLUS_BUILD}.zip"
+          ZIP_NAME="r${REVISION}-${SHORT_COMMIT}-hpp${HAMMERPLUSPLUS_BUILD}.zip"
           echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
           zip -j "$ZIP_NAME" build/version.dll README.md
 
