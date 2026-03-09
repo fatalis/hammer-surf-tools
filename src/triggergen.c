@@ -88,7 +88,7 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
     // ent->m_EditGameClass.vtable->SetKeyValue(&ent->m_EditGameClass, "target", "blah");
     ent->vtable->AddChild(ent, solid);
 
-    doc->vtable->AddObjectToWorld(doc, ent, false);
+    doc->vtable->AddObjectToWorld(doc, ent, nullptr);
 
     CHistory_KeepNew(GetHistory(), ent, true);
 
