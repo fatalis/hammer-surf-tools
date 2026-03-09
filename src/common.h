@@ -40,10 +40,11 @@ typedef struct CMapFace CMapFace;
 typedef struct CMapDoc CMapDoc;
 
 typedef struct {
-    void **items;
-    uint64_t capacity; // guessed
+    void **items; // CUtlMemory
+    int allocation_count;
+    int grow_size;
     // int padding;
-    int length;
+    int length; // CUtlVector
 } RefVector;
 static_assert(sizeof(RefVector) == 8 + 8 + 4 + 4, "RefVector size wrong");
 
@@ -58,14 +59,6 @@ typedef struct {
     float dist;
     Vec3 points[3];
 } Plane;
-
-// TODO: make a RefVector macro
-typedef struct {
-    CMapFace *list;
-    uint64_t *capacity;
-    // int padding;
-    int length;
-} FaceVector;
 
 typedef struct {
     float yaw;
@@ -211,7 +204,7 @@ typedef struct CMapClass {
     void *CMapSolid_0x188;     // 0x188
     CEditGameClass m_EditGameClass;      // 0x190 // CMapEntity
     void *CMapSolid_0x198;     // 0x198 EditGameClass data? union for CMapFace needed
-    FaceVector Faces;          // 0x1A0
+    RefVector Faces;          // 0x1A0
 } CMapClass; // incomplete sized type
 static_assert(offsetof(CMapClass, m_Origin)      == CMAPCLASS_OFFSET_ORIGIN,      "CMapClass::m_Origin offset wrong");
 static_assert(offsetof(CMapClass, m_Render2DBox) == CMAPCLASS_OFFSET_RENDER2DBOX, "CMapClass::m_Render2DBox offset wrong");

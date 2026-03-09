@@ -102,17 +102,18 @@ void do_trigger_generator() {
         return;
     }
 
-    FaceEditSheetFaces *faces = CFaceEditSheet_GetFaces(sheet);
+    RefVector *stored_faces = CFaceEditSheet_GetFaces(sheet);
 
-    if (faces->length < 1) {
+    if (stored_faces->length < 1) {
         AfxMessageBoxF(MB_OK, "Select some faces with the texture tool first.");
         return;
     }
 
     CHistory_MarkUndoPosition(GetHistory(), nullptr, "Trigger Generation", false);
 
-    for (auto i = 0; i < faces->length; i++) {
-        StoredFace *sf = &faces->list[i];
+    StoredFace **sfs = (StoredFace **)&stored_faces->items;
+    for (auto i = 0; i < stored_faces->length; i++) {
+        StoredFace *sf = sfs[i];
         CMapFace *face = sf->pMapFace;
         assert(face);
 

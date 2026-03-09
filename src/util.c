@@ -38,7 +38,7 @@ void *GetFaceEditSheet() {
     return *(void **)((void *)wnd + CMainFrame_m_pFaceEditSheet_Offset);
 }
 
-FaceEditSheetFaces *CFaceEditSheet_GetFaces(void *sheet) {
+RefVector *CFaceEditSheet_GetFaces(void *sheet) {
     return (void *)sheet + CFaceEditSheet_m_Faces_Offset;
 }
 

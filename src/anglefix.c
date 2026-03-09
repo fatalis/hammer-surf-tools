@@ -16,8 +16,9 @@ static CMapFace *best_surfable_face(CMapClass *solid) {
     float best_normal_delta;
     const float ideal_normal = 0.64f;
 
+    CMapFace **faces = (CMapFace **)&solid->Faces.items;
     for (auto i = 0; i < solid->Faces.length; i++) {
-        CMapFace *face = &solid->Faces.list[i];
+        CMapFace *face = faces[i];
         float znorm = fabsf(face->plane.normal.z);
         float delta = fabsf(znorm - ideal_normal);
         if ((!best || delta < best_normal_delta) && znorm < SURF_NORMAL && znorm > 0.0f) {
@@ -104,8 +105,10 @@ void do_anglefix() {
         CMapClass *copy = item->vtable->Copy(item, false);
 
         // change original brush to playerclip
+
+        CMapFace **faces = (CMapFace **)&item->Faces.items;
         for (auto i = 0; i < item->Faces.length; i++) {
-            CMapFace *face = &item->Faces.list[i];
+            CMapFace *face = faces[i];
             CMapFace_SetTexture(face, "tools/toolsplayerclip", false);
             CMapFace_InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
         }

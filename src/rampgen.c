@@ -25,8 +25,9 @@ static char ramp_orientation(CMapClass *solid) {
     char best_axis;
     const float ideal_normal = 0.64f;
 
+    CMapFace **faces = (CMapFace **)&solid->Faces.items;
     for (auto i = 0; i < solid->Faces.length; i++) {
-        CMapFace *face = &solid->Faces.list[i];
+        CMapFace *face = faces[i];
         float znorm = fabsf(face->plane.normal.z);
         float delta = fabsf(znorm - ideal_normal);
         char axis = orientation_to_axis(CMapFace_GetOrientation(face));
@@ -91,7 +92,7 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
             delta.x = direction == 'l' ? size.x : -size.x;
         } else {
             delta.y = direction == 'l' ? size.y : -size.y;
-        } 
+        }
         TransMove(copy, &delta);
 #ifdef RAMPGEN_DEBUG
         Sleep(500);

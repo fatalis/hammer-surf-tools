@@ -122,13 +122,6 @@ typedef struct {
     CMapFace *pMapFace;
     CMapClass *pMapSolid;
 } StoredFace;
-// TODO: make a RefVector macro
-typedef struct {
-    StoredFace *list;
-    uint64_t *capacity;
-    // int padding;
-    int length;
-} FaceEditSheetFaces;
-FaceEditSheetFaces *CFaceEditSheet_GetFaces(void *sheet);
+RefVector *CFaceEditSheet_GetFaces(void *sheet);
 
 #endif // UTIL_H

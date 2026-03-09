@@ -41,8 +41,9 @@ void measure_render_2d(void *this_, void *pRender) {
 
     int lines = 1;
     auto n = item->Faces.length;
+    CMapFace **faces = (CMapFace **)&item->Faces.items;
     for (auto face_idx = 0; face_idx < n; face_idx++) {
-        CMapFace *face = &item->Faces.list[face_idx];
+        CMapFace *face = faces[face_idx];
 
         char buf[64];
         snprintf(buf, sizeof(buf), "face %d ", face_idx);
