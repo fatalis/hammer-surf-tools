@@ -64,15 +64,15 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
       src/offsets.c
       # src/testincludes.c
     )
+
+    target_include_directories(test-patterns PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+    target_link_libraries(test-patterns PRIVATE minhook)
+    target_compile_definitions(test-patterns PRIVATE TEST_PATTERNS)
 endif()
 
 target_include_directories(hammer-surf-utils PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(test-patterns PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(hammer-surf-utils PRIVATE psapi minhook)
-target_link_libraries(test-patterns PRIVATE minhook)
-
-target_compile_definitions(test-patterns PRIVATE TEST_PATTERNS)
 
 target_link_options(hammer-surf-utils PRIVATE
     -Wl,--export-all-symbols
