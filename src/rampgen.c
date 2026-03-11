@@ -164,6 +164,8 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         doc->vtable->AddObjectToWorld(doc, items[i], nullptr);
         CHistory_KeepNew(GetHistory(), items[i], false);
     }
+
+    CMapDoc_SetModifiedFlag(doc, true);
 }
 
 static CMapClass *get_selected_ramp() {

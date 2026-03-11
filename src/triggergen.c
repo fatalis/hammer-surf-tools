@@ -119,6 +119,8 @@ void do_trigger_generator() {
         CreateTriggerExtrudedFromFace(face);
     }
 
+    CMapDoc_SetModifiedFlag(doc, true);
+
     // TODO: bring up object properties dialog
 
     // old scale code, left here for example for TransScale

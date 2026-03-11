@@ -123,6 +123,8 @@ void do_anglefix() {
         CHistory_KeepNew(GetHistory(), ent, true);
     }
 
+    CMapDoc_SetModifiedFlag(doc, true);
+
     if (n_unneeded > 0) {
         AfxMessageBoxF(MB_OK, "Warning: %d selected brushes skipped because rampfix wasn't needed.", n_unneeded);
     }
