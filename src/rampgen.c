@@ -198,8 +198,6 @@ static CMapClass *get_selected_ramp() {
     return item;
 }
 
-static CStrDlgInst dlg;
-
 #ifdef RAMPGEN_DEBUG
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -224,7 +222,7 @@ void do_ramp_generator() {
         return;
     }
 
-    memset(&dlg, 0, sizeof(dlg));
+    CStrDlgInst dlg;
     CStrDlg(&dlg, 0, nullptr, help, "Curved Ramp Generator");
 
     if (DoModal(&dlg) == 1) {
@@ -233,7 +231,7 @@ void do_ramp_generator() {
         char direction;
 
         // sscanf format: a character (x/y/z) followed by two integers
-        if (sscanf(dlg.str, " %c %f %d", &direction, &degrees, &segments) == 3 && segments > 0) {
+        if (sscanf(dlg.m_string, " %c %f %d", &direction, &degrees, &segments) == 3 && segments > 0) {
             // TODO: verify input further
 #ifdef RAMPGEN_DEBUG
             RampGenCmd *cmd = malloc(sizeof(RampGenCmd));

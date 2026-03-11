@@ -80,11 +80,13 @@ typedef struct {
     Vec3 maxs;
 } BoundingBox;
 
-typedef struct { // TODO: find real size
-    uint8_t unk[320];
-    char *str;
-    uint8_t unk2[900];
+typedef struct {
+    uint8_t unk[CSTRDLG_OFFSET_STRING];
+    char *m_string;
+    uint8_t padding[CSTRDLG_SIZE - CSTRDLG_OFFSET_STRING - sizeof(char *)];
 } CStrDlgInst;
+static_assert(offsetof(CStrDlgInst, m_string) == CSTRDLG_OFFSET_STRING, "CMapClass::m_Origin offset wrong");
+static_assert(sizeof(CStrDlgInst) == CSTRDLG_SIZE, "CStrDlg size wrong");
 
 // msvc desctuctor flags, guessed name
 typedef enum {

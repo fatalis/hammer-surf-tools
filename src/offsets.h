@@ -2,7 +2,7 @@
 #define OFFSETS_H
 
 // struct sizes
-#define CSTRDLG_SIZE 320
+#define CSTRDLG_SIZE                       0x490
 #define CMAPFACE_SIZE                      0x360
 #define CMAPENTITY_SIZE                    0x280
 #define CMAPSOLID_SIZE                     0x230
@@ -20,6 +20,7 @@
 #define CSELECTION_OFFSET_SELECTIONLIST    0x018
 #define SELECTION3D_OFFSET_SELECTION       0x1A8
 #define CEDITGAMECLASS_OFFSET_CLASS        0x030
+#define CSTRDLG_OFFSET_STRING              0x140
 
 // pattern scanned offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET
