@@ -89,7 +89,7 @@ void do_anglefix() {
         }
 
         if (!undo_pos_started) {
-            CHistory_MarkUndoPosition(GetHistory(), nullptr, "Anglefix", false);
+            CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Anglefix", false);
             undo_pos_started = true;
         }
 
@@ -122,6 +122,9 @@ void do_anglefix() {
         doc->vtable->AddObjectToWorld(doc, ent, nullptr);
         CHistory_KeepNew(GetHistory(), ent, true);
     }
+
+    // modifying selection is not needed, original selection is mutated into collision brush
+    // which is probably what the user wants selected
 
     CMapDoc_SetModifiedFlag(doc, true);
 

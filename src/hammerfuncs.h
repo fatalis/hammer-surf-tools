@@ -166,4 +166,22 @@ typedef const char *(*WCKeyValues_GetValue_t)(void *this_, const char *pszKey, i
 extern WCKeyValues_GetValue_t WCKeyValues_GetValue;
 #endif
 
+#ifdef USING_CSELECTION_SELECTOBJECTLIST
+typedef enum {
+    scToggle = 0x01,
+    scSelect = 0x02,
+    scUnselect = 0x04,
+    scClear = 0x10,
+    scNoLift = 0x20,
+    scNoApply = 0x40,
+    scCascading = 0x80,
+    scCascadingRecursive = 0x100,
+    scSelectAll = 0x200,
+    scSaveChanges = 0x400
+} SelectionCmd;
+
+typedef void (*CSelection_SelectObjectList_t)(void *this_, const MapClassPtrVector *pList, SelectionCmd cmd);
+extern CSelection_SelectObjectList_t CSelection_SelectObjectList;
+#endif
+
 #endif // HAMMERFUNCS_H

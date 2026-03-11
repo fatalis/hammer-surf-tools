@@ -505,6 +505,25 @@ static Pattern_t g_patterns[] = {
         (void **)&WCKeyValues_GetValue
     },
 #endif
+#ifdef USING_CSELECTION_SELECTOBJECTLIST
+    {
+        // 48 89 5c 24 10  48 89 6c 24 18  48 89 74 24 20  57  48 83 ec 20  41 8b e8 48 8b f2  48 8b f9  41 0f ba e0 0a
+        "CSelection::SelectObjectList",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x48, 0x89, 0x6C, 0x24, 0x18,
+            0x48, 0x89, 0x74, 0x24, 0x20,
+            0x57,
+            0x48, 0x83, 0xEC, 0x20,
+            0x41, 0x8B, 0xE8,
+            0x48, 0x8B, 0xF2,
+            0x48, 0x8B, 0xF9,
+            0x41, 0x0F, 0xBA, 0xE0, 0x0A
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CSelection_SelectObjectList
+    },
+#endif
 
     // offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET

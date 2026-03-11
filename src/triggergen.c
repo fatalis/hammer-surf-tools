@@ -109,15 +109,22 @@ void do_trigger_generator() {
         return;
     }
 
-    CHistory_MarkUndoPosition(GetHistory(), nullptr, "Trigger Generation", false);
+    CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Trigger Generation", false);
 
+    CMapClass *items[stored_faces->length];
     for (auto i = 0; i < stored_faces->length; i++) {
         StoredFace *sf = &stored_faces->items[i];
         CMapFace *face = sf->pMapFace;
         assert(face);
 
-        CreateTriggerExtrudedFromFace(face);
+        CMapClass *ent = CreateTriggerExtrudedFromFace(face);
+        items[i] = ent;
     }
+
+    MapClassPtrVector list;
+    list.items = items;
+    list.length = stored_faces->length;
+    CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
 
     CMapDoc_SetModifiedFlag(doc, true);
 

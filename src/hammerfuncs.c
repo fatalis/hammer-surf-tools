@@ -103,3 +103,7 @@ ValveAlloc_t ValveAlloc;
 #ifdef USING_WCKEYVALUES_GETVALUE
 WCKeyValues_GetValue_t WCKeyValues_GetValue;
 #endif
+
+#ifdef USING_CSELECTION_SELECTOBJECTLIST
+CSelection_SelectObjectList_t CSelection_SelectObjectList;
+#endif

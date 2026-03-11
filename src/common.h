@@ -52,7 +52,7 @@ typedef struct HAMMER_ALIGN { \
 } Name
 
 DEFINE_VECTOR(CMapFace, FaceVector);
-DEFINE_VECTOR(CMapClass *, MapClassPtrVector);
+DEFINE_VECTOR(CMapClass *, MapClassPtrVector); // CMapObjectList
 static_assert(sizeof(MapClassPtrVector) == 8 + 4 + 4 + 4 + 4,   "MapClassPtrVector size wrong");
 static_assert(offsetof(MapClassPtrVector, length) == 8 + 4 + 4, "MapClassPtrVector::length offset wrong");
 

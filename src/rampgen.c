@@ -56,7 +56,7 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         degrees = -degrees;
     }
 
-    CHistory_MarkUndoPosition(GetHistory(), nullptr, "Ramp Generation", false);
+    CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Ramp Generation", false);
 
     Vec3 orig_size;
     BBoxSize(&solid->m_Render2DBox, &orig_size);
@@ -164,6 +164,11 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         doc->vtable->AddObjectToWorld(doc, items[i], nullptr);
         CHistory_KeepNew(GetHistory(), items[i], false);
     }
+
+    MapClassPtrVector list;
+    list.items = items;
+    list.length = n_items;
+    CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
 
     CMapDoc_SetModifiedFlag(doc, true);
 }
