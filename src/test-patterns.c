@@ -49,9 +49,6 @@ static void process_file(const char *path, const char *dir_under_versions) {
     }
     printf("\n\n");
 
-    /* ---- process buffer here if desired ---- */
-    /* buffer contains size bytes */
-
     fclose(f);
 }
 
