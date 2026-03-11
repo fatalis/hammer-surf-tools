@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 set(CMAKE_POLICY_VERSION_MINIMUM 3.10) # force subprojects
-project(hammer-surf-tools LANGUAGES C)
 
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/toolchain-mingw64.cmake")
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 set(CMAKE_C_FLAGS_RELEASE "-O2")
+
+project(hammer-surf-tools LANGUAGES C)
 
 add_subdirectory(extern/minhook)
 
