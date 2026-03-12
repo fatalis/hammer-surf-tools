@@ -1,4 +1,3 @@
-#include "common.h"
 #include "rampgen.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
@@ -204,15 +203,6 @@ static CMapClass *get_selected_ramp() {
 }
 
 #ifdef RAMPGEN_DEBUG
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-typedef struct {
-    CMapClass *ramp;
-    float degrees;
-    int segments;
-    char direction;
-} RampGenCmd;
-
 static DWORD WINAPI hook_init_thread(LPVOID param) {
     RampGenCmd *cmd = param;
     rampgen(cmd->ramp, cmd->degrees, cmd->segments, cmd->direction);

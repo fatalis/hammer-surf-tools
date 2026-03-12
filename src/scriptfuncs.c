@@ -1,4 +1,3 @@
-#include "common.h"
 #include "scriptfuncs.h"
 
 TransScale_t TransScale;

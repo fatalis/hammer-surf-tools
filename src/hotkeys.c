@@ -1,4 +1,3 @@
-#include "common.h"
 #include "hotkeys.h"
 
 static const ACCEL hotkey1 = { FCONTROL | FALT | FSHIFT, 'S', (uint16_t)CMD_CURVED_RAMP_GENERATOR };

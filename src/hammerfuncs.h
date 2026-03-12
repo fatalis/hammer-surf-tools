@@ -1,8 +1,6 @@
 #ifndef HAMMERFUNCS_H
 #define HAMMERFUNCS_H
 
-#include "common.h"
-
 #ifdef USING_AFXMESSAGEBOX
 typedef int (*AfxMessageBox_t)(LPCTSTR lpszText, UINT nType, UINT nIDHelp);
 extern AfxMessageBox_t AfxMessageBox;

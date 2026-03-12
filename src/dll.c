@@ -1,13 +1,5 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <psapi.h>
-
-#include <MinHook.h>
-
-#include "common.h"
 #include "wrapper.h"
 #include "patterns.h"
-#include "brushsync.h"
 #include "scriptfuncs.h"
 
 static DWORD WINAPI hook_init_thread(LPVOID param) {
@@ -48,8 +40,6 @@ static DWORD WINAPI hook_init_thread(LPVOID param) {
     }
 
     log_msg("[hook] setup hooks successfully\n");
-
-    // follow_console_log();
 
     return 0;
 }

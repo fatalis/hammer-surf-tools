@@ -1,8 +1,6 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include "common.h"
-
 static inline float Vec3Dot(const Vec3 *a) {
     const Vec3 up = {0, 0, 1};
     return a->x * up.x +
@@ -107,7 +105,7 @@ static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_su
     return surf_string;
 }
 
-int AfxMessageBoxF(UINT nType, const char* fmt, ...);
+int AfxMessageBoxF(unsigned int nType, const char* fmt, ...);
 CMapClass *new_CMapEntity();
 CMapClass *new_CMapSolid();
 MapClassPtrVector *CMapDoc_GetSelection(CMapDoc *doc);

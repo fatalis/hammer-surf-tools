@@ -1,6 +1,4 @@
-#include "common.h"
 #include "anglefix.h"
-#include "hooks.h"
 #include "scriptfuncs.h"
 #include "hooks.h"
 #include "hammerfuncs.h"

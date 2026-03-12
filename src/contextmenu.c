@@ -1,4 +1,3 @@
-#include "common.h"
 #include "contextmenu.h"
 #include "triggergen.h"
 #include "anglefix.h"

@@ -1,7 +1,4 @@
 #include "hooks.h"
-#include "patterns.h"
-#include "triggergen.h"
-#include "hammerfuncs.h"
 #include "measure.h"
 #include "contextmenu.h"
 #include "hotkeys.h"

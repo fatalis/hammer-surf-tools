@@ -1,6 +1,4 @@
-#include "common.h"
 #include "measure.h"
-#include "scriptfuncs.h"
 #include "hammerfuncs.h"
 #include "util.h"
 #include "hooks.h"

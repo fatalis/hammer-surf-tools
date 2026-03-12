@@ -1,4 +1,3 @@
-#include "common.h"
 #include "brushsync.h"
 #include "hooks.h"
 #include "scriptfuncs.h"

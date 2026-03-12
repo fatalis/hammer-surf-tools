@@ -1,11 +1,8 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
 #define DLLEXPORT __declspec(dllexport)
 
 static HMODULE real_dll;
 
-void wrapper(void)
+void wrapper()
 {
     if (real_dll)
         return;

@@ -1,11 +1,6 @@
 #ifndef PATTERNS_H
 #define PATTERNS_H
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <stdbool.h>
-#include <stdint.h>
-
 typedef enum {
     PATTERN_REL      = 1,
     PATTERN_OPTIONAL = 2,

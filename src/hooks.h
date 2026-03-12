@@ -1,8 +1,6 @@
 #ifndef HOOKS_H
 #define HOOKS_H
 
-#include "common.h"
-
 #ifdef USING_HOOK_AFXWNDPROC
 typedef LRESULT (*AfxWndProc_t)(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 extern AfxWndProc_t orig_AfxWndProc;

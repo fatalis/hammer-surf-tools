@@ -1,4 +1,3 @@
-#include "common.h"
 #include "offsets.h"
 
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET

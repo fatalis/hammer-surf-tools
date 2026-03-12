@@ -1,11 +1,7 @@
-#include <MinHook.h>
-
-#include "common.h"
 #include "patterns.h"
+#include "config.h"
 #include "hooks.h"
-#include "contextmenu.h"
 #include "scriptfuncs.h"
-#include "hotkeys.h"
 #include "hammerfuncs.h"
 #include "offsets.h"
 

@@ -5,17 +5,6 @@
 // this is the current guaranteed working/recommend version
 #define TARGET_HAMMERPLUSPLUS_BUILD "8870"
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <math.h>
-#include <assert.h>
-#include <float.h>
-
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-
-#include "config.h"
 #include "offsets.h"
 
 void log_msg(const char *fmt, ...);

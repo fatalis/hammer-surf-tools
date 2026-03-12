@@ -1,7 +1,5 @@
-#include "common.h"
 #include "triggergen.h"
 #include "hooks.h"
-#include "scriptfuncs.h"
 #include "hammerfuncs.h"
 #include "util.h"
 

@@ -1,6 +1,5 @@
 #include "util.h"
 #include "hammerfuncs.h"
-#include "hooks.h"
 
 int AfxMessageBoxF(UINT nType, const char* fmt, ...) {
     const size_t BUFFER_SIZE = 512;

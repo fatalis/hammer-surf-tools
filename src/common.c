@@ -1,6 +1,3 @@
-#include <stdarg.h>
-#include <stdio.h>
-
 void log_msg(const char *fmt, ...) {
 #ifdef TEST_PATTERNS
     va_list va;
