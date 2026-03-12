@@ -39,7 +39,6 @@ add_library(hammer-surf-tools SHARED
   ${SOURCES}
 )
 
-target_include_directories(hammer-surf-tools PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(hammer-surf-tools PRIVATE psapi minhook)
 target_link_options(hammer-surf-tools PRIVATE
     -Wl,--export-all-symbols
@@ -68,7 +67,6 @@ if(NOT DEFINED ENV{GITHUB_ACTIONS})
       ${SOURCES}
     )
 
-    target_include_directories(test-patterns PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
     target_link_libraries(test-patterns PRIVATE minhook)
     target_compile_definitions(test-patterns PRIVATE TEST_PATTERNS)
     set_target_properties(test-patterns PROPERTIES

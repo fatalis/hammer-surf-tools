@@ -1,9 +1,7 @@
 #include "patterns.h"
-#include "config.h"
 #include "hooks.h"
 #include "scriptfuncs.h"
 #include "hammerfuncs.h"
-#include "offsets.h"
 
 static void *resolve_rel(void *call_addr, const uint8_t *insn) {
     if (insn[0] == 0xE8) { // call

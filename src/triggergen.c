@@ -27,7 +27,7 @@ static CMapFace *make_trigger_face(CMapClass *solid, Vec3 *points, int nPoints) 
 }
 
 CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
-    if (!pTargetFace || pTargetFace->nPoints < 3) {
+    if (!pTargetFace || pTargetFace->Points.length < 3) {
         log_msg("CreateTriggerExtrudedFromFace: invalid face\n");
         return nullptr;
     }
@@ -35,14 +35,14 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
     CMapDoc *doc = GetActiveMapDoc();
     assert(doc);
 
-    const int nPoints = (int)pTargetFace->nPoints;
+    const int nPoints = (int)pTargetFace->Points.length;
 
     CMapClass *solid = new_CMapSolid();
 
     // bottom face (input face's location)
     Vec3 orig[nPoints];
     for (auto i = 0; i < nPoints; i++) {
-        orig[i] = pTargetFace->Points[i].vec;
+        orig[i] = pTargetFace->Points.items[i].vec;
     }
     make_trigger_face(solid, orig, -nPoints);
 
@@ -55,7 +55,7 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
 
     Vec3 top[nPoints];
     for (int i = 0; i < nPoints; i++) {
-        top[i] = pTargetFace->Points[i].vec;
+        top[i] = pTargetFace->Points.items[i].vec;
         top[i].x += vOffset.x;
         top[i].y += vOffset.y;
         top[i].z += vOffset.z;
@@ -68,8 +68,8 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
         auto next = (i + 1) % nPoints;
 
         Vec3 quad[4] = {
-            pTargetFace->Points[i].vec,
-            pTargetFace->Points[next].vec,
+            pTargetFace->Points.items[i].vec,
+            pTargetFace->Points.items[next].vec,
             top[next],
             top[i]
         };

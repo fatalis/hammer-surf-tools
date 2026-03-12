@@ -210,27 +210,25 @@ static_assert(offsetof(CMapClass, m_Origin)      == CMAPCLASS_OFFSET_ORIGIN,    
 static_assert(offsetof(CMapClass, m_Render2DBox) == CMAPCLASS_OFFSET_RENDER2DBOX, "CMapClass::m_Render2DBox offset wrong");
 static_assert(offsetof(CMapClass, Faces)         == CMAPCLASS_OFFSET_FACES,       "CMapClass::Faces offset wrong");
 
+// changed in hammer++, used to be just a vec3
 typedef struct HAMMER_ALIGN {
     Vec3 vec;
     int padding;
     uint8_t padding2[VEC3POINTS_SIZE - sizeof(Vec3) - sizeof(int)];
 } Vec3Points;
 static_assert(sizeof(Vec3Points) == VEC3POINTS_SIZE, "Vec3Points size wrong");
+DEFINE_VECTOR(Vec3Points, Vec3PointsVector);
 
 typedef struct HAMMER_ALIGN CMapFace {
     void *vtable;              // 0x00
     uint8_t padding[0x188];    // 0x08  CMapAtom stuff.. make struct later
     Plane plane;               // 0x190
     int pad;
-    Vec3Points *Points;         // 0x1C8 TODO: check if this is a RefVector
-    uint64_t nPoints;           // 0x1D0
-    int padding3;               // 0x1D8
-    int nPoints_2;              // 0x1DC
+    Vec3PointsVector Points;
     uint8_t padding2[0x180];    // 0x1E0
 } CMapFace; // 0x360
 static_assert(offsetof(CMapFace, plane)              == 0x190, "CMapFace::plane offset wrong");
 static_assert(offsetof(CMapFace, Points)             == 0x1C8, "CMapFace::Points offset wrong");
-static_assert(offsetof(CMapFace, nPoints_2)          == 0x1DC, "CMapFace::nPoints_2 offset wrong");
 static_assert(sizeof(CMapFace)               == CMAPFACE_SIZE, "CMapFace size wrong");
 
 typedef struct HAMMER_ALIGN {
