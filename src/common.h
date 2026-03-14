@@ -244,7 +244,8 @@ typedef struct HAMMER_ALIGN CMapEntity {
 } CMapEntity;
 static_assert(offsetof(CMapEntity, base.point.m_Origin) == CMAPCLASS_OFFSET_ORIGIN,         "CMapClass::m_Origin offset wrong");
 static_assert(offsetof(CMapEntity, base.m_Render2DBox)  == CMAPCLASS_OFFSET_RENDER2DBOX,    "CMapClass::m_Render2DBox offset wrong");
-static_assert(offsetof(CMapEntity, m_EditGameClass)     == CMAPENTITY_OFFSET_EDITGAMECLASS, "CMapClass::m_Render2DBox offset wrong");
+static_assert(offsetof(CMapEntity, m_EditGameClass)     == CMAPENTITY_OFFSET_EDITGAMECLASS, "CMapEntity::m_EditGameClass offset wrong");
+static_assert(sizeof(CMapEntity)                        == CMAPENTITY_SIZE,                 "CMapEntity size wrong");
 
 typedef struct HAMMER_ALIGN CMapSolid {
     CMapClass base;         // 0x000

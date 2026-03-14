@@ -19,3 +19,11 @@ jobs:
 
       - name: Build
         run: cmake --build build
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: |
+            build/version.dll
+            README.md
