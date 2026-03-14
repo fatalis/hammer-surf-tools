@@ -11,6 +11,11 @@ void log_msg(const char *fmt, ...);
 
 #define HAMMER_ALIGN __attribute__((packed, aligned(4)))
 #define ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
+#define ASSERT(x) \
+    do { if(!(x)) { \
+        MessageBoxA(NULL, #x, "Assertion Failed", MB_ICONERROR); \
+        DebugBreak(); \
+    }} while(0)
 
 // minimum surf angle
 #define SURF_NORMAL 0.7f

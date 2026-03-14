@@ -7,7 +7,7 @@ TransRotate_t TransRotate;
 void **ScriptDataPtr;
 
 bool script_data_init() {
-    assert(ScriptDataPtr);
+    ASSERT(ScriptDataPtr);
     void *script_data = *ScriptDataPtr;
     size_t n_script_funcs = *(size_t *)((void*)ScriptDataPtr + SCRIPT_DATA_ARRAY_SIZE_OFFSET);
 

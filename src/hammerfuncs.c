@@ -16,10 +16,6 @@ CHistory_KeepNew_t CHistory_KeepNew;
 CHistory_Keep_t CHistory_Keep;
 #endif
 
-#ifdef USING_CHISTORY_MARKUNDOPOSITION
-CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
-#endif
-
 #ifdef USING_CHISTORY_UNDO
 CHistory_Undo_t CHistory_Undo;
 #endif

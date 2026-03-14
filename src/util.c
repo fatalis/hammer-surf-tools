@@ -37,6 +37,14 @@ void *GetFaceEditSheet() {
     return *(void **)((void *)wnd + CMainFrame_m_pFaceEditSheet_Offset);
 }
 
+HWND GetMainWndHwnd() {
+    void *wnd = GetMainWnd();
+    if (!wnd) {
+        return nullptr;
+    }
+    return *(void **)((void *)wnd + CWND_OFFSET_HWND);
+}
+
 StoredFaceVector *CFaceEditSheet_GetFaces(void *sheet) {
     return (void *)sheet + CFaceEditSheet_m_Faces_Offset;
 }

@@ -21,11 +21,6 @@ typedef void (*CHistory_Keep_t)(CHistory *this_, CMapClass *pObject);
 extern CHistory_Keep_t CHistory_Keep;
 #endif
 
-#ifdef USING_CHISTORY_MARKUNDOPOSITION
-typedef void (*CHistory_MarkUndoPosition_t)(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite);
-extern CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
-#endif
-
 #ifdef USING_CHISTORY_UNDO
 typedef void (*CHistory_Undo_t)(CHistory *this_, CMapObjectList *pNewSelection, CMapObjectList *unk);
 extern CHistory_Undo_t CHistory_Undo;

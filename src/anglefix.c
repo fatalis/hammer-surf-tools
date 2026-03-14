@@ -63,7 +63,7 @@ void do_anglefix() {
 
     for (auto n_item = 0; n_item < selected->length; n_item++)  {
         CMapClass *item = selected->items[n_item];
-        assert(item);
+        ASSERT(item);
 
         CMapFace *surfable_face = best_surfable_face(item);
         if (!surfable_face) {
@@ -118,6 +118,14 @@ void do_anglefix() {
         ent->vtable->AddChild(ent, copy);
 
         doc->vtable->AddObjectToWorld(doc, ent, nullptr);
+
+        // this isn't necessary, only the compiler is needed - saving for now anyway
+        // void *edit = (void *)&ent->m_EditGameClass;
+        // void *m_pClass = *(void **)(edit + CEDITGAMECLASS_OFFSET_CLASS);
+        // if (!m_pClass) {
+        //     AfxMessageBoxF(MB_OK, "Hammer++ fgd not detected");
+        // }
+
         CHistory_KeepNew(GetHistory(), ent, true);
     }
 

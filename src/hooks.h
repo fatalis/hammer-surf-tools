@@ -7,6 +7,12 @@ extern AfxWndProc_t orig_AfxWndProc;
 LRESULT hook_AfxWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 #endif
 
+#ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
+typedef void (*CHistory_MarkUndoPosition_t)(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite);
+extern CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
+void hook_CHistory_MarkUndoPosition(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite);
+#endif
+
 #ifdef USING_HOOK_CLIPPER3D_DRAWBRUSHEXTENTS
 typedef void (*Clipper3D_DrawBrushExtents_t)(void *this_, void *pRender, void *pSolid, int nFlags);
 extern Clipper3D_DrawBrushExtents_t orig_Clipper3D_DrawBrushExtents;

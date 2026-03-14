@@ -2,6 +2,7 @@
 #include "measure.h"
 #include "contextmenu.h"
 #include "hotkeys.h"
+#include "rampgen.h"
 
 #ifdef USING_HOOK_AFXWNDPROC
 AfxWndProc_t orig_AfxWndProc;
@@ -56,7 +57,7 @@ void *hook_SetFocus(void *this_) {
 
         if (ObjectProperties) {
             if (this_ != ObjectProperties) {
-                HWND properties_hwnd = *(HWND *)(ObjectProperties + COBJECTPROPERTIES_OFFSET_HWND);
+                HWND properties_hwnd = *(HWND *)(ObjectProperties + CWND_OFFSET_HWND);
                 bool visible = IsWindowVisible(properties_hwnd);
 
                 if (visible) {
@@ -106,6 +107,15 @@ Selection3D_RenderTool2D_t orig_Selection3D_RenderTool2D;
 void hook_Selection3D_RenderTool2D(void *this_, void *pRender) {
     orig_Selection3D_RenderTool2D(this_, pRender);
     measure_render_2d(this_, pRender);
+}
+#endif
+
+#ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
+CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
+
+void hook_CHistory_MarkUndoPosition(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite) {
+    rampgen_close();
+    CHistory_MarkUndoPosition(this_, pSelection, pszName, bFromOpposite);
 }
 #endif
 

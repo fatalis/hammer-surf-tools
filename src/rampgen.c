@@ -5,7 +5,9 @@
 #include "util.h"
 
 // #define RAMPGEN_DEBUG
-static const char help[] = "Expecting <direction: l/r> <degrees> <segments>\r\nExample: r 3 20";
+static RampGenCmd cmd;
+static HWND dlg;
+static bool generating;
 
 static char orientation_to_axis(FaceOrientation ori) {
     if (ori == FACE_ORIENTATION_SOUTH_WALL || ori == FACE_ORIENTATION_NORTH_WALL) {
@@ -43,34 +45,88 @@ static char ramp_orientation(CMapClass *solid) {
     return '?';
 }
 
-static void rampgen(CMapClass *solid, float degrees, int segments, char direction) {
+static void undo() {
+    CHistory *history = GetHistory();
+
+    // should always be true since we have rampgen_close
+    ASSERT(!strcmp(history->CurTrack->szName, "Ramp Generation"));
+
+    CMapObjectList sel = {0};
+    CMapObjectList unk = {0};
+    CHistory_Undo(history, &sel, &unk);
+
+    // other things ctrl+z does after undo:
+    // RemoveDead, UpdateAllDependencies
+}
+
+// static void rampgen(CMapClass *solid, float degrees, int segments, char direction, float segment_width) {
+static void rampgen(bool initial) {
     CMapDoc *doc = GetActiveMapDoc();
-    if (!doc) {
-        return;
+    ASSERT(doc);
+
+    // ignore CHistory_MarkUndoPosition hook calls that CHistory_Undo does
+    // otherwise, rampgen_close would trigger on undo()
+    generating = true;
+
+    if (!initial) {
+        undo();
     }
 
+    CMapClass *solid = cmd.ramp;
+    float degrees = cmd.degrees;
+
     char axis = ramp_orientation(solid);
-    assert(axis == 'x' || axis == 'y');
-    if (direction == 'r') {
+    ASSERT(axis == 'x' || axis == 'y');
+    if (cmd.direction == 'r') {
         degrees = -degrees;
     }
 
     CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Ramp Generation", false);
+    CSelection_SelectObjectList(doc->m_pSelection, nullptr, scClear);
+    CHistory_Keep(GetHistory(), solid);
 
     Vec3 orig_size;
+    BBoxSize(&solid->m_Render2DBox, &orig_size);
+
+    float factor = cmd.segment_width / (axis == 'x' ? orig_size.x : orig_size.y);
+    BoundingBox *bbox = &solid->m_Render2DBox;
+    // TODO: make a func for this
+    Vec3 ref;
+    if (axis == 'x') {
+        ref = (Vec3){
+            cmd.direction == 'l' ? bbox->maxs.x : bbox->mins.x,
+            bbox->mins.y,
+            bbox->mins.z
+        };
+    } else {
+        ref = (Vec3){
+            bbox->mins.x,
+            cmd.direction == 'l' ? bbox->maxs.y : bbox->mins.y,
+            bbox->mins.z
+        };
+    }
+    Vec3 scale = {1.0f, 1.0f, 1.0f};
+    if (axis == 'x') {
+        scale.x = factor;
+    } else {
+        scale.y = factor;
+    }
+
+    TransScale(solid, &ref, &scale);
+
+    // Vec3 orig_size;
     BBoxSize(&solid->m_Render2DBox, &orig_size);
     Vec3 orig_pos = solid->m_Origin;
     // log_msg("orig_pos %g %g %g\n", (double)orig_pos.x, (double)orig_pos.y, (double)orig_pos.z);
 
-    int n_items = 0;
-    CMapClass *items[segments + 1];
 
-    CHistory_Keep(GetHistory(), solid);
+    int n_items = 0;
+    CMapClass *items[cmd.segments + 1];
 
     items[0] = solid;
     n_items++;
 
-    for (int seg = 1; seg <= segments; seg++) {
+    for (int seg = 1; seg <= cmd.segments; seg++) {
         CMapClass *prev_item = items[seg-1];
         CMapClass *copy = prev_item->vtable->Copy(prev_item, FALSE);
 
@@ -83,14 +139,14 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         BBoxSize(bbox_prev, &size); // or use the selected solid's size
         // log_msg("seg %d: %g %g %g -> %g %g %g\n", seg, (double)orig_size.x, (double)orig_size.y, (double)orig_size.z,
                 // (double)size.x, (double)size.y, (double)size.z);
-        // assert((int)size.x == (int)orig_size.x && (int)size.y == (int)orig_size.y && (int)size.z == (int)orig_size.z);
+        // ASSERT((int)size.x == (int)orig_size.x && (int)size.y == (int)orig_size.y && (int)size.z == (int)orig_size.z);
 
         // move new seg
         Vec3 delta = {0.0f, 0.0f, 0.0f};
         if (axis == 'x') {
-            delta.x = direction == 'l' ? size.x : -size.x;
+            delta.x = cmd.direction == 'l' ? size.x : -size.x;
         } else {
-            delta.y = direction == 'l' ? size.y : -size.y;
+            delta.y = cmd.direction == 'l' ? size.y : -size.y;
         }
         TransMove(copy, &delta);
 #ifdef RAMPGEN_DEBUG
@@ -101,14 +157,14 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         Vec3 ref;
         if (axis == 'x') {
             ref = (Vec3){
-                direction == 'l' ? bbox_prev->maxs.x : bbox_prev->mins.x,
+                cmd.direction == 'l' ? bbox_prev->maxs.x : bbox_prev->mins.x,
                 bbox_prev->mins.y,
                 bbox_prev->mins.z
             };
         } else {
             ref = (Vec3){
                 bbox_prev->mins.x,
-                direction == 'l' ? bbox_prev->maxs.y : bbox_prev->mins.y,
+                cmd.direction == 'l' ? bbox_prev->maxs.y : bbox_prev->mins.y,
                 bbox_prev->mins.z
             };
         }
@@ -143,7 +199,7 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         Sleep(1000);
 #endif
 
-        if (seg == segments) {
+        if (seg == cmd.segments) {
             Vec3 moved = {
                 orig_pos.x - copy->m_Origin.x,
                 orig_pos.y - copy->m_Origin.y,
@@ -158,18 +214,21 @@ static void rampgen(CMapClass *solid, float degrees, int segments, char directio
         }
     }
 
-    assert(n_items == segments + 1);
+    ASSERT(n_items == cmd.segments + 1);
     for (auto i = 1; i < n_items; i++) {
         doc->vtable->AddObjectToWorld(doc, items[i], nullptr);
         CHistory_KeepNew(GetHistory(), items[i], false);
     }
 
-    CMapObjectList list;
-    list.items = items;
-    list.length = n_items;
-    CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
+    // TODO: do the select on IDOK click
+    // CMapObjectList list;
+    // list.items = items;
+    // list.length = n_items;
+    // CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
 
     CMapDoc_SetModifiedFlag(doc, true);
+
+    generating = false;
 }
 
 static CMapClass *get_selected_ramp() {
@@ -186,7 +245,7 @@ static CMapClass *get_selected_ramp() {
     }
 
     CMapClass *item = selected->items[0];
-    assert(item);
+    ASSERT(item);
 
     if (!CMapClass_IsWorldBrush(item)) {
         AfxMessageBoxF(MB_OK, "Selection should be a world brush.");
@@ -211,32 +270,99 @@ static DWORD WINAPI hook_init_thread(LPVOID param) {
 }
 #endif
 
+static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
+    switch (message) {
+        case WM_INITDIALOG:
+            SendDlgItemMessage(hDlg, IDC_DEGREES, UDM_SETRANGE32, 1, 100);
+            SendDlgItemMessage(hDlg, IDC_DEGREES, UDM_SETPOS32, 0, (int)cmd.degrees);
+
+            SendDlgItemMessage(hDlg, IDC_SEGMENTS, UDM_SETRANGE32, 1, 1000);
+            SendDlgItemMessage(hDlg, IDC_SEGMENTS, UDM_SETPOS32, 0, cmd.segments);
+
+            SendDlgItemMessage(hDlg, IDC_SEGMENT_WIDTH, UDM_SETRANGE32, 0, 2048);
+            SendDlgItemMessage(hDlg, IDC_SEGMENT_WIDTH, UDM_SETPOS32, 0, (int)cmd.segment_width);
+            UDACCEL accel = { 0, 16 }; // 16 unit step - TODO: doesnt work with scroll?
+            SendDlgItemMessage(hDlg, IDC_SEGMENT_WIDTH, UDM_SETACCEL, 1, (LPARAM)&accel);
+
+            CheckDlgButton(hDlg, IDC_DIRECTION_LEFT, BST_CHECKED);
+
+            rampgen(true);
+
+            return true;
+
+        case WM_NOTIFY:
+            NMHDR *hdr = (NMHDR*)lParam;
+            if (hdr->code == UDN_DELTAPOS) {
+                if (hdr->idFrom == IDC_DEGREES || hdr->idFrom == IDC_SEGMENTS || hdr->idFrom == IDC_SEGMENT_WIDTH) {
+                    NMUPDOWN *ud = (NMUPDOWN*)lParam;
+                    if (hdr->idFrom == IDC_DEGREES) {
+                        cmd.degrees = (float)(ud->iPos + ud->iDelta);
+                    }
+                    else if (hdr->idFrom == IDC_SEGMENTS) {
+                        cmd.segments = ud->iPos + ud->iDelta;
+                    }
+                    else if (hdr->idFrom == IDC_SEGMENT_WIDTH) {
+                        cmd.segment_width = (float)(ud->iPos + ud->iDelta);
+                    }
+
+                    rampgen(false);
+                    return true;
+                }
+            }
+            break;
+
+        case WM_COMMAND:
+            if (HIWORD(wParam) == BN_CLICKED) {
+                int id = LOWORD(wParam);
+
+                if (id == IDC_DIRECTION_LEFT || id == IDC_DIRECTION_RIGHT) {
+                    cmd.direction = id == IDC_DIRECTION_LEFT ? 'l' : 'r';
+                    rampgen(false);
+                    return true;
+                } else if (id == IDCANCEL || id == IDOK) {
+                    if (id == IDCANCEL) {
+                        undo();
+                    }
+                    DestroyWindow(hDlg);
+                    dlg = nullptr;
+                    return true;
+                }
+            }
+            break;
+    }
+
+    return false;
+}
+
 void do_ramp_generator() {
     CMapClass *ramp = get_selected_ramp();
     if (!ramp) {
         return;
     }
 
-    CStrDlgInst dlg;
-    CStrDlg(&dlg, 0, nullptr, help, "Curved Ramp Generator");
+    char axis = ramp_orientation(ramp);
+    ASSERT(axis == 'x' || axis == 'y');
+    Vec3 orig_size;
+    BBoxSize(&ramp->m_Render2DBox, &orig_size);
+    float width = axis == 'x' ? orig_size.x : orig_size.y;
 
-    if (DoModal(&dlg) == 1) {
-        float degrees;
-        int segments;
-        char direction;
+    cmd = (RampGenCmd){ramp, 3.0f, 30, 'l', width};
+    dlg = CreateDialogA(
+        GetModuleHandleA("version.dll"),
+        MAKEINTRESOURCE(IDD_RAMPGEN),
+        GetMainWndHwnd(),
+        dlg_proc
+    );
+    if (dlg) {
+        ShowWindow(dlg, SW_SHOW);
+    }
+}
 
-        // sscanf format: a character (x/y/z) followed by two integers
-        if (sscanf(dlg.m_string, " %c %f %d", &direction, &degrees, &segments) == 3 && segments > 0) {
-            // TODO: verify input further
-#ifdef RAMPGEN_DEBUG
-            RampGenCmd *cmd = malloc(sizeof(RampGenCmd));
-            *cmd = (RampGenCmd){ramp, degrees, segments, direction};
-            CreateThread(nullptr, 0, hook_init_thread, cmd, 0, nullptr);
-#else
-            rampgen(ramp, degrees, segments, direction);
-#endif
-        } else {
-            AfxMessageBoxF(MB_OK, help);
-        }
+// called from CHistory_MarkUndoPosition hook
+// ie when the user makes changes after a ramp gen, close
+void rampgen_close() {
+    if (dlg && !generating) {
+        DestroyWindow(dlg);
+        dlg = nullptr;
     }
 }

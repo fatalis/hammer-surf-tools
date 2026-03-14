@@ -33,7 +33,7 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
     }
 
     CMapDoc *doc = GetActiveMapDoc();
-    assert(doc);
+    ASSERT(doc);
 
     const int nPoints = (int)pTargetFace->Points.length;
 
@@ -114,7 +114,7 @@ void do_trigger_generator() {
     for (auto i = 0; i < stored_faces->length; i++) {
         StoredFace *sf = &stored_faces->items[i];
         CMapFace *face = sf->pMapFace;
-        assert(face);
+        ASSERT(face);
 
         CMapClass *ent = CreateTriggerExtrudedFromFace(face);
         items[i] = ent;

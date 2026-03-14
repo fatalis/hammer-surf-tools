@@ -31,7 +31,7 @@ void measure_render_2d(void *this_, void *pRender) {
     }
 
     CMapClass *item = selected->items[0];
-    assert(item);
+    ASSERT(item);
     if (!CMapClass_IsSolid(item)) {
         return;
     }

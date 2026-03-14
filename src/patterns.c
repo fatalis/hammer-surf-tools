@@ -11,7 +11,8 @@ static void *resolve_rel(void *call_addr, const uint8_t *insn) {
         int32_t rel = *(int32_t *)(insn + 3);
         return call_addr + 7 + rel;
     }
-    assert(false);
+    ASSERT(false);
+    return nullptr;
 }
 
 static Pattern_t g_patterns[] = {
@@ -426,29 +427,6 @@ static Pattern_t g_patterns[] = {
         (void **)&CMapFace_GetOrientation
     },
 #endif
-#ifdef USING_CHISTORY_MARKUNDOPOSITION
-    {
-        // 48 89 5c 24 10  55  56  57  41 54  41 55  41 56  41 57  48 83 ec 20  49 8b d8  48 8b ea  48 8b f1  48 8b 41 30
-        "CHistory::MarkUndoPosition",
-        (const uint8_t[]){
-            0x48, 0x89, 0x5C, 0x24, 0x10,
-            0x55,
-            0x56,
-            0x57,
-            0x41, 0x54,
-            0x41, 0x55,
-            0x41, 0x56,
-            0x41, 0x57,
-            0x48, 0x83, 0xEC, 0x20,
-            0x49, 0x8B, 0xD8,
-            0x48, 0x8B, 0xEA,
-            0x48, 0x8B, 0xF1,
-            0x48, 0x8B, 0x41, 0x30
-        },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-        (void **)&CHistory_MarkUndoPosition
-    },
-#endif
 #ifdef USING_CHISTORY_KEEPNEW
     {
         // 48 89 5c 24 10  48 89 74 24 18  57  48 81 ec 40 01 00 00  48 83 39 00  41 0f b6 d8
@@ -607,6 +585,30 @@ static Pattern_t g_patterns[] = {
         nullptr,
         (void **)&orig_EnableMenuItem,
         hook_EnableMenuItem,
+    },
+#endif
+#ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
+    {
+        // 48 89 5c 24 10  55  56  57  41 54  41 55  41 56  41 57  48 83 ec 20  49 8b d8  48 8b ea  48 8b f1  48 8b 41 30
+        "CHistory::MarkUndoPosition",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x55,
+            0x56,
+            0x57,
+            0x41, 0x54,
+            0x41, 0x55,
+            0x41, 0x56,
+            0x41, 0x57,
+            0x48, 0x83, 0xEC, 0x20,
+            0x49, 0x8B, 0xD8,
+            0x48, 0x8B, 0xEA,
+            0x48, 0x8B, 0xF1,
+            0x48, 0x8B, 0x41, 0x30
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CHistory_MarkUndoPosition,
+        hook_CHistory_MarkUndoPosition
     },
 #endif
 #ifdef USING_HOOK_CLIPPER3D_DRAWBRUSHEXTENTS
@@ -775,7 +777,7 @@ bool scan_all(uint8_t *base, size_t size) {
         } else {
             // only user32 supported rn
             void *user32 = LoadLibraryA("user32.dll");
-            assert(user32);
+            ASSERT(user32);
             addr = GetProcAddress(user32, p->name);
         }
 

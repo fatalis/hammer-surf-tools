@@ -110,6 +110,7 @@ CMapClass *new_CMapEntity();
 CMapClass *new_CMapSolid();
 CMapObjectList *CMapDoc_GetSelection(CMapDoc *doc);
 void *GetFaceEditSheet();
+HWND GetMainWndHwnd();
 
 bool CMapClass_IsSolid(CMapClass *ent);
 bool CMapClass_IsWorldBrush(CMapClass *ent);

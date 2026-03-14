@@ -12,6 +12,7 @@ project(hammer-surf-tools LANGUAGES C)
 
 add_subdirectory(extern/minhook)
 
+enable_language(RC)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror -Wdouble-promotion -Wconversion -Wno-address-of-packed-member")
 
@@ -31,6 +32,7 @@ set(SOURCES
   src/hotkeys.c
   src/util.c
   src/offsets.c
+  src/rampgen.rc
 )
 
 # main dll (version.dll)
