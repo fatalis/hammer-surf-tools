@@ -17,18 +17,21 @@
 //     doc->vtable->AddObjectToWorld(doc, ent, false);
 // }
 
-static CMapFace *make_trigger_face(CMapClass *solid, Vec3 *points, int nPoints) {
+static CMapFace *make_trigger_face(CMapSolid *solid, Vec3 *points, int nPoints) {
     CMapFace *face = CSolidFaces_MakeFace(&solid->Faces);
     CMapFace_CreateFace(face, points, nPoints, false);
     CMapFace_SetTexture(face, "tools/toolstrigger", 0);
+    face->atom.r = 255; // TODO: temporary fix. find what normally does this
+    face->atom.g = 255;
+    face->atom.b = 0;
     // TODO: verify these args
     CMapFace_InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
     return face;
 }
 
-CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
+CMapEntity *create_trigger(CMapFace *pTargetFace) {
     if (!pTargetFace || pTargetFace->Points.length < 3) {
-        log_msg("CreateTriggerExtrudedFromFace: invalid face\n");
+        log_msg("create_trigger: invalid face\n");
         return nullptr;
     }
 
@@ -37,7 +40,7 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
 
     const int nPoints = (int)pTargetFace->Points.length;
 
-    CMapClass *solid = new_CMapSolid();
+    CMapSolid *solid = new_CMapSolid();
 
     // bottom face (input face's location)
     Vec3 orig[nPoints];
@@ -77,19 +80,19 @@ CMapClass *CreateTriggerExtrudedFromFace(CMapFace *pTargetFace) {
         make_trigger_face(solid, quad, ARRAY_LEN(quad));
     }
 
-    CMapClass *ent = new_CMapEntity();
+    CMapEntity *ent = new_CMapEntity();
     CEditGameClass *edit = &ent->m_EditGameClass;
 
     edit->vtable->SetClass(edit, "trigger_teleport", false);
-    edit->vtable->SetKeyValue(edit, "spawnflags", "1"); // clients flag - needed for trigger_multiple only? forgot
-    ent->vtable->AddChild(ent, solid);
+    edit->vtable->SetKeyValue(edit, "spawnflags", "1"); // clients flag
+    ent->base.vtable->AddChild(ent, (CMapClass *)solid);
 
-    ent->vtable->CalcBounds(ent, true);
-    CMapEntity_SetKVOrigin(ent);
+    ent->base.vtable->CalcBounds(ent, true);
+    CMapEntity_SetKVOrigin(ent); // TODO: find out what normally does this when tying to entity
 
     doc->vtable->AddObjectToWorld(doc, ent, nullptr);
 
-    CHistory_KeepNew(GetHistory(), ent, true);
+    CHistory_KeepNew(GetHistory(), (CMapClass *)ent, true);
 
     return ent;
 }
@@ -116,8 +119,8 @@ void do_trigger_generator() {
         CMapFace *face = sf->pMapFace;
         ASSERT(face);
 
-        CMapClass *ent = CreateTriggerExtrudedFromFace(face);
-        items[i] = ent;
+        CMapEntity *ent = create_trigger(face);
+        items[i] = (CMapClass *)ent;
     }
 
     CMapObjectList list;

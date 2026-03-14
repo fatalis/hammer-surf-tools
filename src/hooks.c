@@ -113,7 +113,7 @@ void hook_Selection3D_RenderTool2D(void *this_, void *pRender) {
 #ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
 CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
 
-void hook_CHistory_MarkUndoPosition(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite) {
+void hook_CHistory_MarkUndoPosition(CHistory *this_, const CMapObjectList* pSelection, const char *pszName, bool bFromOpposite) {
     rampgen_close();
     CHistory_MarkUndoPosition(this_, pSelection, pszName, bFromOpposite);
 }

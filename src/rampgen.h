@@ -9,7 +9,7 @@
 #define IDC_DIRECTION_RIGHT 50004
 
 typedef struct {
-    CMapClass *ramp;
+    CMapSolid *ramp;
     float degrees;
     int segments;
     char direction;

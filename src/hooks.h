@@ -8,9 +8,9 @@ LRESULT hook_AfxWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam);
 #endif
 
 #ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
-typedef void (*CHistory_MarkUndoPosition_t)(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite);
+typedef void (*CHistory_MarkUndoPosition_t)(CHistory *this_, const CMapObjectList* pSelection, const char *pszName, bool bFromOpposite);
 extern CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
-void hook_CHistory_MarkUndoPosition(CHistory *this_, const void* pSelection, const char *pszName, bool bFromOpposite);
+void hook_CHistory_MarkUndoPosition(CHistory *this_, const CMapObjectList* pSelection, const char *pszName, bool bFromOpposite);
 #endif
 
 #ifdef USING_HOOK_CLIPPER3D_DRAWBRUSHEXTENTS
@@ -34,11 +34,11 @@ CMapDoc *GetActiveMapDoc();
 
 #ifdef USING_HOOK_CFACEEDITSHEET_CLICKFACE
 enum {
-    cfToggle    = 0x01,			// toggle - if selected, then unselect
-    cfSelect    = 0x02,			// select
-    cfUnselect  = 0x04,			// unselect
-    cfClear     = 0x08,			// clear face list
-    cfEdgeAlign = 0x10			// align face texture coordinates to 3d view alignment - should be here???
+    cfToggle    = 0x01,
+    cfSelect    = 0x02,
+    cfUnselect  = 0x04,
+    cfClear     = 0x08,
+    cfEdgeAlign = 0x10 
 };
 
 typedef void (*CFaceEditSheet_ClickFace_t)(void *this_, CMapClass *pSolid, int faceIndex, int cmd, int clickMode);

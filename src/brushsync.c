@@ -16,9 +16,9 @@ static bool find_ent_by_pos(CMapClass *ent, void *param) {
 
     char *name = ent->vtable->GetType(ent);
     if (!strcmp(name, "CMapEntity")) {
-        int rx = (int)roundf(ent->m_Origin.x);
-        int ry = (int)roundf(ent->m_Origin.y);
-        int rz = (int)roundf(ent->m_Origin.z);
+        int rx = (int)roundf(ent->point.m_Origin.x);
+        int ry = (int)roundf(ent->point.m_Origin.y);
+        int rz = (int)roundf(ent->point.m_Origin.z);
 
         if (rx == find->pos[0] && ry == find->pos[1] && rz == find->pos[2]) {
             find->ent = ent;

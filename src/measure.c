@@ -35,11 +35,12 @@ void measure_render_2d(void *this_, void *pRender) {
     if (!CMapClass_IsSolid(item)) {
         return;
     }
+    CMapSolid *solid = (CMapSolid *)item;
 
     int lines = 1;
-    auto n = item->Faces.length;
+    auto n = solid->Faces.length;
     for (auto face_idx = 0; face_idx < n; face_idx++) {
-        CMapFace *face = &item->Faces.items[face_idx];
+        CMapFace *face = &solid->Faces.items[face_idx];
 
         char buf[64];
         snprintf(buf, sizeof(buf), "face %d ", face_idx);

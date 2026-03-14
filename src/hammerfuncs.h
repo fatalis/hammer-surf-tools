@@ -35,7 +35,7 @@ extern CMapDoc_UpdateAllViews_t CMapDoc_UpdateAllViews;
 #endif
 
 #ifdef USING_CMAPENTITY_CMAPENTITY
-typedef void (*CMapEntity_CMapEntity_t)(void *this_);
+typedef void (*CMapEntity_CMapEntity_t)(CMapEntity *this_);
 extern CMapEntity_CMapEntity_t CMapEntity_CMapEntity;
 #endif
 
@@ -88,7 +88,7 @@ extern CMapFace_SetTexture_t CMapFace_SetTexture;
 #endif
 
 #ifdef USING_CMAPSOLID_ADDPLANE
-typedef bool (*CMapSolid_AddPlane_t)(CMapClass *this_, const CMapFace *fa);
+typedef bool (*CMapSolid_AddPlane_t)(CMapSolid *this_, const CMapFace *fa);
 extern CMapSolid_AddPlane_t CMapSolid_AddPlane;
 #endif
 

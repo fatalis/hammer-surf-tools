@@ -8,7 +8,7 @@
 
 // credit to not-a-zombie for his code on https://not-a-zombie.github.io/vmf-resizer/
 
-static CMapFace *best_surfable_face(CMapClass *solid) {
+static CMapFace *best_surfable_face(CMapSolid *solid) {
     // find best surfable face
     CMapFace *best = nullptr;
     float best_normal_delta;
@@ -62,7 +62,7 @@ void do_anglefix() {
     int n_unneeded = 0;
 
     for (auto n_item = 0; n_item < selected->length; n_item++)  {
-        CMapClass *item = selected->items[n_item];
+        CMapSolid *item = (CMapSolid *)selected->items[n_item];
         ASSERT(item);
 
         CMapFace *surfable_face = best_surfable_face(item);
@@ -98,8 +98,8 @@ void do_anglefix() {
         Vec3 displacement = {x, y, 0.0f};
 
         // copy before mutating original brush
-        CHistory_Keep(GetHistory(), item);
-        CMapClass *copy = item->vtable->Copy(item, false);
+        CHistory_Keep(GetHistory(), (CMapClass *)item);
+        CMapClass *copy = item->base.vtable->Copy(item, false);
 
         // change original brush to playerclip
 
@@ -112,10 +112,10 @@ void do_anglefix() {
         // displace original brush
         TransMove(surfable_face, &displacement);
 
-        CMapClass *ent = new_CMapEntity();
-        // TODO: detect if fgd has func_detail_illusionary
-        ent->m_EditGameClass.vtable->SetClass(&ent->m_EditGameClass, "func_detail_illusionary", false);
-        ent->vtable->AddChild(ent, copy);
+        CMapEntity *ent = new_CMapEntity();
+        CEditGameClass *edit = &ent->m_EditGameClass;
+        edit->vtable->SetClass(edit, "func_detail_illusionary", false);
+        ent->base.vtable->AddChild(ent, copy);
 
         doc->vtable->AddObjectToWorld(doc, ent, nullptr);
 
@@ -126,7 +126,7 @@ void do_anglefix() {
         //     AfxMessageBoxF(MB_OK, "Hammer++ fgd not detected");
         // }
 
-        CHistory_KeepNew(GetHistory(), ent, true);
+        CHistory_KeepNew(GetHistory(), (CMapClass *)ent, true);
     }
 
     // modifying selection is not needed, original selection is mutated into collision brush

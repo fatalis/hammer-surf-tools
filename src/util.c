@@ -13,14 +13,14 @@ int AfxMessageBoxF(UINT nType, const char* fmt, ...) {
     return AfxMessageBox(buffer, nType, 0);
 }
 
-CMapClass *new_CMapEntity() {
-    CMapClass *ent = ValveAlloc(CMAPENTITY_SIZE);
+CMapEntity *new_CMapEntity() {
+    CMapEntity *ent = ValveAlloc(CMAPENTITY_SIZE);
     CMapEntity_CMapEntity(ent);
     return ent;
 }
 
-CMapClass *new_CMapSolid() {
-    CMapClass *ent = ValveAlloc(CMAPSOLID_SIZE);
+CMapSolid *new_CMapSolid() {
+    CMapSolid *ent = ValveAlloc(CMAPSOLID_SIZE);
     CMapSolid_CMapSolid(ent, nullptr);
     return ent;
 }
@@ -64,10 +64,10 @@ bool CMapClass_IsWorldBrush(CMapClass *ent) {
     return false;
 }
 
-void CMapEntity_SetKVOrigin(CMapClass *ent) {
+void CMapEntity_SetKVOrigin(CMapEntity *ent) {
     CEditGameClass *edit = &ent->m_EditGameClass;
     char origin[KEYVALUE_MAX_VALUE_LENGTH];
-    snprintf(origin, sizeof(origin), "%g %g %g", (double)ent->m_Origin.x, (double)ent->m_Origin.y, (double)ent->m_Origin.z);
+    snprintf(origin, sizeof(origin), "%g %g %g", (double)ent->base.point.m_Origin.x, (double)ent->base.point.m_Origin.y, (double)ent->base.point.m_Origin.z);
     edit->vtable->SetKeyValue(edit, "origin", origin);
 }
 

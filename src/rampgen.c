@@ -4,6 +4,8 @@
 #include "hammerfuncs.h"
 #include "util.h"
 
+// TODO: esc -> close
+
 // #define RAMPGEN_DEBUG
 static RampGenCmd cmd;
 static HWND dlg;
@@ -19,7 +21,7 @@ static char orientation_to_axis(FaceOrientation ori) {
     return 'z';
 }
 
-static char ramp_orientation(CMapClass *solid) {
+static char ramp_orientation(CMapSolid *solid) {
     // find best surfable face
     CMapFace *best = nullptr;
     float best_normal_delta;
@@ -72,7 +74,7 @@ static void rampgen(bool initial) {
         undo();
     }
 
-    CMapClass *solid = cmd.ramp;
+    CMapSolid *solid = cmd.ramp;
     float degrees = cmd.degrees;
 
     char axis = ramp_orientation(solid);
@@ -83,13 +85,13 @@ static void rampgen(bool initial) {
 
     CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Ramp Generation", false);
     CSelection_SelectObjectList(doc->m_pSelection, nullptr, scClear);
-    CHistory_Keep(GetHistory(), solid);
+    CHistory_Keep(GetHistory(), (CMapClass *)solid);
 
     Vec3 orig_size;
-    BBoxSize(&solid->m_Render2DBox, &orig_size);
+    BBoxSize(&solid->base.m_Render2DBox, &orig_size);
 
     float factor = cmd.segment_width / (axis == 'x' ? orig_size.x : orig_size.y);
-    BoundingBox *bbox = &solid->m_Render2DBox;
+    BoundingBox *bbox = &solid->base.m_Render2DBox;
     // TODO: make a func for this
     Vec3 ref;
     if (axis == 'x') {
@@ -115,25 +117,25 @@ static void rampgen(bool initial) {
     TransScale(solid, &ref, &scale);
 
     // Vec3 orig_size;
-    BBoxSize(&solid->m_Render2DBox, &orig_size);
-    Vec3 orig_pos = solid->m_Origin;
+    BBoxSize(&solid->base.m_Render2DBox, &orig_size);
+    Vec3 orig_pos = solid->base.point.m_Origin;
     // log_msg("orig_pos %g %g %g\n", (double)orig_pos.x, (double)orig_pos.y, (double)orig_pos.z);
 
 
     int n_items = 0;
-    CMapClass *items[cmd.segments + 1];
+    CMapSolid *items[cmd.segments + 1];
 
     items[0] = solid;
     n_items++;
 
     for (int seg = 1; seg <= cmd.segments; seg++) {
-        CMapClass *prev_item = items[seg-1];
-        CMapClass *copy = prev_item->vtable->Copy(prev_item, FALSE);
+        CMapSolid *prev_item = items[seg-1];
+        CMapSolid *copy = (CMapSolid *)prev_item->base.vtable->Copy(prev_item, FALSE);
 
         items[n_items] = copy;
         n_items++;
 
-        BoundingBox *bbox_prev = &prev_item->m_Render2DBox;
+        BoundingBox *bbox_prev = &prev_item->base.m_Render2DBox;
 
         Vec3 size;
         BBoxSize(bbox_prev, &size); // or use the selected solid's size
@@ -181,7 +183,7 @@ static void rampgen(bool initial) {
 #endif
 
         // rotate all segs including new seg back so that the new seg is axis aligned for next seg to copy and move
-        BBoxTrueCenter(*items, n_items, &ref);
+        BBoxTrueCenter((CMapClass *)*items, n_items, &ref);
         for (auto item_idx = 0; item_idx < n_items; item_idx++) {
             Euler angles = {0.0f, 0.0f, 0.0f};
             if (axis == 'x') {
@@ -201,9 +203,9 @@ static void rampgen(bool initial) {
 
         if (seg == cmd.segments) {
             Vec3 moved = {
-                orig_pos.x - copy->m_Origin.x,
-                orig_pos.y - copy->m_Origin.y,
-                orig_pos.z - copy->m_Origin.z,
+                orig_pos.x - copy->base.point.m_Origin.x,
+                orig_pos.y - copy->base.point.m_Origin.y,
+                orig_pos.z - copy->base.point.m_Origin.z,
             };
 
             // log_msg("moved %g %g %g\n", (double)moved.x, (double)moved.y, (double)moved.z);
@@ -217,7 +219,7 @@ static void rampgen(bool initial) {
     ASSERT(n_items == cmd.segments + 1);
     for (auto i = 1; i < n_items; i++) {
         doc->vtable->AddObjectToWorld(doc, items[i], nullptr);
-        CHistory_KeepNew(GetHistory(), items[i], false);
+        CHistory_KeepNew(GetHistory(), (CMapClass *)items[i], false);
     }
 
     // TODO: do the select on IDOK click
@@ -231,7 +233,7 @@ static void rampgen(bool initial) {
     generating = false;
 }
 
-static CMapClass *get_selected_ramp() {
+static CMapSolid *get_selected_ramp() {
     CMapDoc *doc = GetActiveMapDoc();
     if (!doc) {
         return nullptr;
@@ -252,13 +254,15 @@ static CMapClass *get_selected_ramp() {
         return nullptr;
     }
 
-    char axis = ramp_orientation(item);
+    CMapSolid *solid = (CMapSolid *)item;
+
+    char axis = ramp_orientation(solid);
     if (axis == '?') {
         AfxMessageBoxF(MB_OK, "Brush must have a surfable face facing x or y direction.");
         return nullptr;
     }
 
-    return item;
+    return solid;
 }
 
 #ifdef RAMPGEN_DEBUG
@@ -335,7 +339,7 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
 }
 
 void do_ramp_generator() {
-    CMapClass *ramp = get_selected_ramp();
+    CMapSolid *ramp = get_selected_ramp();
     if (!ramp) {
         return;
     }
@@ -343,7 +347,7 @@ void do_ramp_generator() {
     char axis = ramp_orientation(ramp);
     ASSERT(axis == 'x' || axis == 'y');
     Vec3 orig_size;
-    BBoxSize(&ramp->m_Render2DBox, &orig_size);
+    BBoxSize(&ramp->base.m_Render2DBox, &orig_size);
     float width = axis == 'x' ? orig_size.x : orig_size.y;
 
     cmd = (RampGenCmd){ramp, 3.0f, 30, 'l', width};

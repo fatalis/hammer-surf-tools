@@ -106,15 +106,15 @@ static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_su
 }
 
 int AfxMessageBoxF(unsigned int nType, const char* fmt, ...);
-CMapClass *new_CMapEntity();
-CMapClass *new_CMapSolid();
+CMapEntity *new_CMapEntity();
+CMapSolid *new_CMapSolid();
 CMapObjectList *CMapDoc_GetSelection(CMapDoc *doc);
 void *GetFaceEditSheet();
 HWND GetMainWndHwnd();
 
 bool CMapClass_IsSolid(CMapClass *ent);
 bool CMapClass_IsWorldBrush(CMapClass *ent);
-void CMapEntity_SetKVOrigin(CMapClass *ent);
+void CMapEntity_SetKVOrigin(CMapEntity *ent);
 bool IsAllWorldBrushes(CMapObjectList *selected);
 
 typedef struct StoredFace {
