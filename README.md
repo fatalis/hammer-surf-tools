@@ -14,17 +14,17 @@ A mod of [Hammer++](https://ficool2.github.io/HammerPlusPlus-Website/index.html)
 ### Curved Ramp Generator
 - Generates a curved ramp by a start segment and inputting direction, degrees, and number of segments.
 - Convex ramps are not supported yet.  
-- **Usage**: Select a start segment that’s not rotated, then press `Ctrl + Alt + Shift + S`.
+- **Usage**: Select a start segment that’s not rotated, then press `Alt + Shift + R`.
 
 ### Trigger Generator
 - Creates triggers by extruding from selected faces.  
 - For now they are hardcoded to be 2 unit tall `trigger_teleport`.
 - You can press `Alt + Enter` after to set the teleport destination in bulk.
-- **Usage**: Select some faces with the texture tool, then press `Ctrl + Alt + Shift + T`.
+- **Usage**: Select some faces with the texture tool, then press `Alt + Shift + T`.
 
 ### Angle Fix
 - Requires compiling with `vbspplusplus.exe` from the [Tools++ compilers](https://ficool2.github.io/HammerPlusPlus-Website/tools.html) (for `func_detail_illusionary`)
-- **Usage**: Select worldbrush rotated ramps and press `Ctrl + Alt + Shift + A`.
+- **Usage**: Select worldbrush rotated ramps and press `Alt + Shift + A`.
 
 ## About Angle Steepness Rating
 When you see ratings like `5/10` with the angle measure tools:
@@ -48,3 +48,6 @@ When you see ratings like `5/10` with the angle measure tools:
 ```bash
 WINEDLLOVERRIDES="version=n,b"
 ```
+
+## Preview Build (Latest Commit)
+https://nightly.link/fatalis/hammer-surf-tools/workflows/build/main

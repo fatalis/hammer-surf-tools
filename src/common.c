@@ -1,3 +1,5 @@
+// TODO: cwd changes on windows and log goes to hammerplusplus/
+
 void log_msg(const char *fmt, ...) {
 #ifdef TEST_PATTERNS
     va_list va;

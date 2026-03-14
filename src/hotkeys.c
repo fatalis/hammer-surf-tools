@@ -1,8 +1,8 @@
 #include "hotkeys.h"
 
-static const ACCEL hotkey1 = { FCONTROL | FALT | FSHIFT, 'S', (uint16_t)CMD_CURVED_RAMP_GENERATOR };
-static const ACCEL hotkey2 = { FCONTROL | FALT | FSHIFT, 'A', (uint16_t)CMD_ANGLEFIX};
-static const ACCEL hotkey3 = { FCONTROL | FALT | FSHIFT, 'T', (uint16_t)CMD_TRIGGER_GENERATOR };
+static const ACCEL hotkey1 = { FALT | FSHIFT, 'R', CMD_CURVED_RAMP_GENERATOR };
+static const ACCEL hotkey2 = { FALT | FSHIFT, 'A', CMD_ANGLEFIX};
+static const ACCEL hotkey3 = { FALT | FSHIFT, 'T', CMD_TRIGGER_GENERATOR };
 
 static const ACCEL hotkeys[] = { hotkey1, hotkey2, hotkey3 };
 

@@ -5,9 +5,9 @@
 
 static void add_menus(HMENU hPopup, int pos) {
     HMENU hSubMenu = CreatePopupMenu();
-    AppendMenuA(hSubMenu, MF_STRING, CMD_CURVED_RAMP_GENERATOR, "Curved Ramp Generator\tCtrl+Alt+Shift+S");
-    AppendMenuA(hSubMenu, MF_STRING, CMD_ANGLEFIX,              "Anglefix\tCtrl+Alt+Shift+A");
-    AppendMenuA(hSubMenu, MF_STRING, CMD_TRIGGER_GENERATOR,     "Trigger Generator\tCtrl+Alt+Shift+T");
+    AppendMenuA(hSubMenu, MF_STRING, CMD_CURVED_RAMP_GENERATOR, "Curved Ramp Generator\tAlt+Shift+R");
+    AppendMenuA(hSubMenu, MF_STRING, CMD_ANGLEFIX,              "Anglefix\tAlt+Shift+A");
+    AppendMenuA(hSubMenu, MF_STRING, CMD_TRIGGER_GENERATOR,     "Trigger Generator\tAlt+Shift+T");
 
     InsertMenuA(
         hPopup,
