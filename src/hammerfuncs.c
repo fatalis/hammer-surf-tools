@@ -20,22 +20,6 @@ CHistory_Keep_t CHistory_Keep;
 CHistory_Undo_t CHistory_Undo;
 #endif
 
-#ifdef USING_CMAPDOC_UPDATEALLVIEWS
-CMapDoc_UpdateAllViews_t CMapDoc_UpdateAllViews;
-#endif
-
-#ifdef USING_CMAPENTITY_CMAPENTITY
-CMapEntity_CMapEntity_t CMapEntity_CMapEntity;
-#endif
-
-#ifdef USING_CMAPFACE_COPYFROM
-CMapFace_CopyFrom_t CMapFace_CopyFrom;
-#endif
-
-#ifdef USING_CMAPFACE_CREATEFACE
-CMapFace_CreateFace_t CMapFace_CreateFace;
-#endif
-
 #ifdef USING_CMAPFACE_GETORIENTATION
 static const char *FaceOrientation_str[] = {
     "FLOOR",
@@ -49,35 +33,6 @@ static const char *FaceOrientation_str[] = {
 const char *GetFaceOrientationStr(FaceOrientation orientation) {
     return FaceOrientation_str[orientation];
 }
-CMapFace_GetOrientation_t CMapFace_GetOrientation;
-#endif
-
-#ifdef USING_CMAPFACE_INITIALIZETEXTUREAXES
-CMapFace_InitializeTextureAxes_t CMapFace_InitializeTextureAxes;
-#endif
-
-#ifdef USING_CMAPFACE_SETTEXTURE
-CMapFace_SetTexture_t CMapFace_SetTexture;
-#endif
-
-#ifdef USING_CMAPSOLID_ADDPLANE
-CMapSolid_AddPlane_t CMapSolid_AddPlane;
-#endif
-
-#ifdef USING_CMAPSOLID_CMAPSOLID
-CMapSolid_CMapSolid_t CMapSolid_CMapSolid;
-#endif
-
-#ifdef USING_CMAPSOLID_CLIPBYFACE
-CMapSolid_ClipByFace_t CMapSolid_ClipByFace;
-#endif
-
-#ifdef USING_CMAPSOLID_SPLIT
-CMapSolid_Split_t CMapSolid_Split;
-#endif
-
-#ifdef USING_CMAPSOLID_CREATEFROMPLANES
-CMapSolid_CreateFromPlanes_t CMapSolid_CreateFromPlanes;
 #endif
 
 #ifdef USING_CRENDER_DRAWTEXT
@@ -92,10 +47,6 @@ CSolidFaces_MakeFace_t CSolidFaces_MakeFace;
 CStrDlg_CStrDlg_t CStrDlg;
 #endif
 
-#ifdef USING_CMAPCLASS_ENUMCHILDREN
-CMapClass_EnumChildren_t CMapClass_EnumChildren;
-#endif
-
 #ifdef USING_GETHISTORY
 GetHistory_t GetHistory;
 #endif
@@ -106,14 +57,6 @@ GetMainWnd_t GetMainWnd;
 
 #ifdef USING_MSG
 Msg_t Msg;
-#endif
-
-#ifdef USING_CMAPDOC_SETMODIFIEDFLAG
-CMapDoc_SetModifiedFlag_t CMapDoc_SetModifiedFlag;
-#endif
-
-#ifdef USING_CMAPDOC_DELETEOBJECT
-CMapDoc_DeleteObject_t CMapDoc_DeleteObject;
 #endif
 
 #ifdef USING_VALVEALLOC
@@ -127,3 +70,17 @@ WCKeyValues_GetValue_t WCKeyValues_GetValue;
 #ifdef USING_CSELECTION_SELECTOBJECTLIST
 CSelection_SelectObjectList_t CSelection_SelectObjectList;
 #endif
+
+#ifdef USING_CVISGROUP_ISAUTOVISGROUP
+CVisGroup_IsAutoVisGroup_t CVisGroup_IsAutoVisGroup;
+#endif
+
+#ifdef USING_S_CLASSES
+MCMSTRUCTVector *S_Classes;
+#endif
+
+CMapClassMethods_t  CMapClassMethods;
+CMapDocMethods_t    CMapDocMethods;
+CMapSolidMethods_t  CMapSolidMethods;
+CMapFaceMethods_t   CMapFaceMethods;
+CMapEntityMethods_t CMapEntityMethods;

@@ -103,4 +103,6 @@ typedef struct StoredFace {
 DEFINE_VECTOR(StoredFace, StoredFaceVector);
 StoredFaceVector *CFaceEditSheet_GetFaces(void *sheet);
 
+MAPCLASSTYPE MAPCLASS_TYPE(const char* type_name);
+
 #endif // UTIL_H

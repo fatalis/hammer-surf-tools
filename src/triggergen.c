@@ -9,13 +9,13 @@
 
 static CMapFace *make_trigger_face(CMapSolid *solid, Vec3 *points, int n_points) {
     CMapFace *face = CSolidFaces_MakeFace(&solid->Faces);
-    CMapFace_CreateFace(face, points, n_points, false);
-    CMapFace_SetTexture(face, "tools/toolstrigger", 0);
+    CMapFaceMethods.CreateFace(face, points, n_points, false);
+    CMapFaceMethods.SetTexture(face, "tools/toolstrigger", 0);
     face->atom.r = 255; // TODO: temporary fix. find what normally does this
     face->atom.g = 255;
     face->atom.b = 0;
     // TODO: verify these args
-    CMapFace_InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
+    CMapFaceMethods.InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
     return face;
 }
 
@@ -113,7 +113,7 @@ void do_trigger_generator() {
     list.length = stored_faces->length;
     CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
 
-    CMapDoc_SetModifiedFlag(doc, true);
+    CMapDocMethods.SetModifiedFlag(doc, true);
 
     // TODO: bring up object properties dialog
 }

@@ -104,8 +104,8 @@ void do_anglefix() {
 
         for (auto i = 0; i < item->Faces.length; i++) {
             CMapFace *face = &item->Faces.items[i];
-            CMapFace_SetTexture(face, "tools/toolsplayerclip", false);
-            CMapFace_InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
+            CMapFaceMethods.SetTexture(face, "tools/toolsplayerclip", false);
+            CMapFaceMethods.InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
 #ifdef WHOLE_BRUSH_ANGLEFIX
             TransMove(face, &displacement);
 #endif
@@ -136,7 +136,7 @@ void do_anglefix() {
     // modifying selection is not needed, original selection is mutated into collision brush
     // which is probably what the user wants selected
 
-    CMapDoc_SetModifiedFlag(doc, true);
+    CMapDocMethods.SetModifiedFlag(doc, true);
 
     if (n_unneeded > 0) {
         AfxMessageBoxF(MB_OK, "Warning: %d selected brushes skipped because rampfix wasn't needed.", n_unneeded);

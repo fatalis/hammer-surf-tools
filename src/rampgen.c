@@ -84,7 +84,7 @@ bool ramp_orientation(RampGenCmd *cmd, RampOrientation *out_orientation) {
 
     for (auto i = 0; i < solid->Faces.length; i++) {
         CMapFace *face = &solid->Faces.items[i];
-        FaceOrientation orientation = CMapFace_GetOrientation(face);
+        FaceOrientation orientation = CMapFaceMethods.GetOrientation(face);
         float znorm = fabsf(face->plane.normal.z);
         float delta = fabsf(znorm - ideal_normal);
         Axis axis = orientation_to_axis(orientation);
@@ -96,7 +96,7 @@ bool ramp_orientation(RampGenCmd *cmd, RampOrientation *out_orientation) {
 
     if (best_face != -1) {
         CMapFace *face = &solid->Faces.items[best_face];
-        FaceOrientation orientation = CMapFace_GetOrientation(face);
+        FaceOrientation orientation = CMapFaceMethods.GetOrientation(face);
         Axis axis = orientation_to_axis(orientation);
         char curve = cmd->curve;
         AppendDirection direction = cmd->direction;
@@ -205,7 +205,7 @@ static void move_seg(CMapDoc *doc, CMapSolid *prev_seg, CMapSolid *seg, RampOrie
 
     Vec3 delta = VEC3_ZERO;
     delta.v[ori->axis] = ori->direction == DIR_PLUS ? size.v[ori->axis] : -size.v[ori->axis];
-    delta.v[ori->axis] += DIR_PLUS ? ori->segment_gap : -ori->segment_gap;
+    delta.v[ori->axis] += ori->direction == DIR_PLUS ? ori->segment_gap : -ori->segment_gap;
 
     TransMove(seg, &delta);
 }
@@ -277,7 +277,7 @@ static CMapSolid *cut_convex_seg(CMapDoc *doc, CMapSolid *solid, RampOrientation
     debug("convex: cut 1");
 #endif
     CMapSolid *cut = nullptr;
-    CMapSolid_Split(solid, &plane, nullptr, &cut);
+    CMapSolidMethods.Split(solid, &plane, nullptr, &cut);
     if (!cut) {
         AfxMessageBoxF(MB_OK, "Convex: Cut 1 failed");
         return nullptr;
@@ -285,7 +285,7 @@ static CMapSolid *cut_convex_seg(CMapDoc *doc, CMapSolid *solid, RampOrientation
 #ifdef RAMPGEN_DEBUG
     doc->vtable->AddObjectToWorld(doc, cut, nullptr);
 #endif
-    CMapDoc_DeleteObject(doc, (CMapClass *)solid);
+    CMapDocMethods.DeleteObject(doc, (CMapClass *)solid);
 
 #ifdef CONVEX_DEBUG
     debug("convex: rotate back");
@@ -309,7 +309,7 @@ static CMapSolid *cut_convex_seg(CMapDoc *doc, CMapSolid *solid, RampOrientation
     debug("convex: cut 2");
 #endif
     CMapSolid *cut2 = nullptr;
-    CMapSolid_Split(cut, &plane, nullptr, &cut2);
+    CMapSolidMethods.Split(cut, &plane, nullptr, &cut2);
     if (!cut2) {
         AfxMessageBoxF(MB_OK, "Convex: Cut 2 failed");
         return nullptr;
@@ -424,7 +424,7 @@ void rampgen(RampGenCmd *cmd, RampOrientation *ori, bool initial, bool *generati
         CHistory_KeepNew(GetHistory(), (CMapClass *)segments[i], false);
     }
 
-    CMapDoc_SetModifiedFlag(doc, true);
+    CMapDocMethods.SetModifiedFlag(doc, true);
 
     if (ori->segment_list) {
         arrfree(ori->segment_list);

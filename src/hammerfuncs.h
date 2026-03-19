@@ -26,94 +26,6 @@ typedef void (*CHistory_Undo_t)(CHistory *this_, CMapObjectList *pNewSelection, 
 extern CHistory_Undo_t CHistory_Undo;
 #endif
 
-#ifdef USING_CMAPDOC_UPDATEALLVIEWS
-#define MAPVIEW_UPDATE_OBJECTS 0x001
-#define MAPVIEW_RENDER_NOW     0x800
-
-typedef void (*CMapDoc_UpdateAllViews_t)(void *this_, int nFlags, void *ub);
-extern CMapDoc_UpdateAllViews_t CMapDoc_UpdateAllViews;
-#endif
-
-#ifdef USING_CMAPENTITY_CMAPENTITY
-typedef void (*CMapEntity_CMapEntity_t)(CMapEntity *this_);
-extern CMapEntity_CMapEntity_t CMapEntity_CMapEntity;
-#endif
-
-#ifdef USING_CMAPFACE_COPYFROM
-typedef CMapFace *(*CMapFace_CopyFrom_t)(CMapFace *this_, const CMapFace *from, DWORD dwFlags, bool bUpdateDependencies);
-extern CMapFace_CopyFrom_t CMapFace_CopyFrom;
-#endif
-
-#ifdef USING_CMAPFACE_CREATEFACE
-typedef bool (*CMapFace_CreateFace_t)(CMapFace *this_, Vec3 *points, int npoints, bool bIsCordonFace);
-extern CMapFace_CreateFace_t CMapFace_CreateFace;
-#endif
-
-#ifdef USING_CMAPFACE_GETORIENTATION
-typedef enum {
-    FACE_ORIENTATION_FLOOR = 0,
-    FACE_ORIENTATION_CEILING,
-    FACE_ORIENTATION_NORTH_WALL,
-    FACE_ORIENTATION_SOUTH_WALL,
-    FACE_ORIENTATION_EAST_WALL,
-    FACE_ORIENTATION_WEST_WALL,
-    FACE_ORIENTATION_INVALID
-} FaceOrientation;
-
-const char *GetFaceOrientationStr(FaceOrientation orientation);
-
-typedef FaceOrientation (*CMapFace_GetOrientation_t)(void *this_);
-extern CMapFace_GetOrientation_t CMapFace_GetOrientation;
-#endif
-
-#ifdef USING_CMAPFACE_INITIALIZETEXTUREAXES
-typedef enum {
-    TEXTURE_ALIGN_NONE  = 0,
-    TEXTURE_ALIGN_WORLD = 1,
-    TEXTURE_ALIGN_FACE  = 2,
-    TEXTURE_ALIGN_QUAKE = 4
-} TextureAlignment;
-#define INIT_TEXTURE_FORCE    0x0001
-#define INIT_TEXTURE_AXES     0x0002
-#define INIT_TEXTURE_ROTATION 0x0004
-#define INIT_TEXTURE_SHIFT    0x0008
-#define INIT_TEXTURE_SCALE    0x0010
-#define INIT_TEXTURE_ALL      (INIT_TEXTURE_AXES | INIT_TEXTURE_ROTATION | INIT_TEXTURE_SHIFT | INIT_TEXTURE_SCALE)
-
-typedef void (*CMapFace_InitializeTextureAxes_t)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
-extern CMapFace_InitializeTextureAxes_t CMapFace_InitializeTextureAxes;
-#endif
-
-#ifdef USING_CMAPFACE_SETTEXTURE
-typedef void (*CMapFace_SetTexture_t)(void *this_, const char *pszNewTex, bool bRescaleTextureCoordinates);
-extern CMapFace_SetTexture_t CMapFace_SetTexture;
-#endif
-
-#ifdef USING_CMAPSOLID_ADDPLANE
-typedef bool (*CMapSolid_AddPlane_t)(CMapSolid *this_, const CMapFace *fa);
-extern CMapSolid_AddPlane_t CMapSolid_AddPlane;
-#endif
-
-#ifdef USING_CMAPSOLID_CMAPSOLID
-typedef void (*CMapSolid_CMapSolid_t)(void *this_, CMapClass *parent);
-extern CMapSolid_CMapSolid_t CMapSolid_CMapSolid;
-#endif
-
-#ifdef USING_CMAPSOLID_CLIPBYFACE
-typedef void (*CMapSolid_ClipByFace_t)(CMapClass *this_, const CMapFace *fa, CMapClass **f, CMapClass **b);
-extern CMapSolid_ClipByFace_t CMapSolid_ClipByFace;
-#endif
-
-#ifdef USING_CMAPSOLID_SPLIT
-typedef int (*CMapSolid_Split_t)(CMapSolid *this_, Plane *pPlane, CMapSolid **pFront, CMapSolid **pBack);
-extern CMapSolid_Split_t CMapSolid_Split;
-#endif
-
-#ifdef USING_CMAPSOLID_CREATEFROMPLANES
-typedef bool *(*CMapSolid_CreateFromPlanes_t)(CMapClass *this_, DWORD flags, void *unk);
-extern CMapSolid_CreateFromPlanes_t CMapSolid_CreateFromPlanes;
-#endif
-
 #ifdef USING_CRENDER_DRAWTEXT
 typedef void (*CRender_DrawText_t)(void *this_, const char *text, int x, int y, int nFlags);
 extern CRender_DrawText_t CRender_DrawText;
@@ -137,10 +49,9 @@ typedef void (*CStrDlg_CStrDlg_t)(void *this_, DWORD dwFlags, const char *pszStr
 extern CStrDlg_CStrDlg_t CStrDlg;
 #endif
 
-#ifdef USING_CMAPCLASS_ENUMCHILDREN
-typedef bool (*EnumChildrenCallback)(CMapClass *ent, void *param);
-typedef bool (*CMapClass_EnumChildren_t)(void *this_, EnumChildrenCallback cb, void *param, const char *type);
-extern CMapClass_EnumChildren_t CMapClass_EnumChildren;
+#ifdef USING_CVISGROUP_ISAUTOVISGROUP
+typedef bool (*CVisGroup_IsAutoVisGroup_t)(void *this_);
+extern CVisGroup_IsAutoVisGroup_t CVisGroup_IsAutoVisGroup;
 #endif
 
 #ifdef USING_GETHISTORY
@@ -162,16 +73,6 @@ enum MWMSGTYPE {
 
 typedef void (*Msg_t)(int type, const char *fmt, ...);
 extern Msg_t Msg;
-#endif
-
-#ifdef USING_CMAPDOC_SETMODIFIEDFLAG
-typedef void (*CMapDoc_SetModifiedFlag_t)(void *this_, bool bModified);
-extern CMapDoc_SetModifiedFlag_t CMapDoc_SetModifiedFlag;
-#endif
-
-#ifdef USING_CMAPDOC_DELETEOBJECT
-typedef void (*CMapDoc_DeleteObject_t)(CMapDoc *this_, CMapClass *pObject);
-extern CMapDoc_DeleteObject_t CMapDoc_DeleteObject;
 #endif
 
 #ifdef USING_VALVEALLOC
@@ -201,5 +102,171 @@ typedef enum {
 typedef void (*CSelection_SelectObjectList_t)(void *this_, const CMapObjectList *pList, SelectionCmd cmd);
 extern CSelection_SelectObjectList_t CSelection_SelectObjectList;
 #endif
+
+#ifdef USING_S_CLASSES
+extern MCMSTRUCTVector *S_Classes;
+#endif
+
+//
+// CMapClass
+//
+
+#ifdef USING_CMAPCLASS_ENUMCHILDREN
+typedef bool (*EnumChildrenCallback)(CMapClass *ent, void *param);
+#endif
+
+typedef struct {
+    #ifdef USING_CMAPCLASS_ENUMCHILDREN
+    bool (*EnumChildren)(void *this_, EnumChildrenCallback cb, void *param, MAPCLASSTYPE type);
+    #endif
+    
+    #ifdef USING_CMAPCLASS_GETVISGROUPCOUNT
+    CVisGroup *(*GetVisGroup)(void *this_, int nIndex);
+    #endif
+
+    #ifdef USING_CMAPCLASS_GETVISGROUPCOUNT
+    int (*GetVisGroupCount)(void *this_);
+    #endif
+
+
+} CMapClassMethods_t;
+extern CMapClassMethods_t CMapClassMethods;
+////////////////////////////////
+
+
+//
+// CMapDoc
+//
+
+#ifdef USING_CMAPDOC_UPDATEALLVIEWS
+#define MAPVIEW_UPDATE_OBJECTS 0x001
+#define MAPVIEW_RENDER_NOW     0x800
+#endif
+
+typedef struct {
+
+    #ifdef USING_CMAPDOC_UPDATEALLVIEWS
+    void (*UpdateAllViews)(void *this_, int nFlags, void *ub);
+    #endif
+
+    #ifdef USING_CMAPDOC_SETMODIFIEDFLAG
+    void (*SetModifiedFlag)(void *this_, bool bModified);
+    #endif
+
+    #ifdef USING_CMAPDOC_DELETEOBJECT
+    void (*DeleteObject)(CMapDoc *this_, CMapClass *pObject);
+    #endif
+
+} CMapDocMethods_t;
+extern CMapDocMethods_t CMapDocMethods;
+////////////////////////////////
+
+//
+// CMapSolid
+//
+
+typedef struct {
+
+    #ifdef USING_CMAPSOLID_ADDPLANE
+    bool (*AddPlane)(CMapSolid *this_, const CMapFace *fa);
+    #endif
+
+    #ifdef USING_CMAPSOLID_CMAPSOLID
+    void (*CMapSolid)(void *this_, CMapClass *parent);
+    #endif
+    
+    #ifdef USING_CMAPSOLID_CLIPBYFACE
+    void (*ClipByFace)(CMapClass *this_, const CMapFace *fa, CMapClass **f, CMapClass **b);
+    #endif
+    
+    #ifdef USING_CMAPSOLID_SPLIT
+    int (*Split)(CMapSolid *this_, Plane *pPlane, CMapSolid **pFront, CMapSolid **pBack);
+    #endif
+
+    #ifdef USING_CMAPSOLID_CREATEFROMPLANES
+    bool *(*CreateFromPlanes)(CMapClass *this_, DWORD flags, void *unk);
+    #endif
+
+} CMapSolidMethods_t;
+extern CMapSolidMethods_t CMapSolidMethods;
+////////////////////////////////
+
+//
+// CMapFace 
+//
+
+#ifdef USING_CMAPFACE_GETORIENTATION
+typedef enum {
+    FACE_ORIENTATION_FLOOR = 0,
+    FACE_ORIENTATION_CEILING,
+    FACE_ORIENTATION_NORTH_WALL,
+    FACE_ORIENTATION_SOUTH_WALL,
+    FACE_ORIENTATION_EAST_WALL,
+    FACE_ORIENTATION_WEST_WALL,
+    FACE_ORIENTATION_INVALID
+} FaceOrientation;
+
+const char *GetFaceOrientationStr(FaceOrientation orientation);
+#endif
+
+#ifdef USING_CMAPFACE_INITIALIZETEXTUREAXES
+typedef enum {
+    TEXTURE_ALIGN_NONE  = 0,
+    TEXTURE_ALIGN_WORLD = 1,
+    TEXTURE_ALIGN_FACE  = 2,
+    TEXTURE_ALIGN_QUAKE = 4
+} TextureAlignment;
+#define INIT_TEXTURE_FORCE    0x0001
+#define INIT_TEXTURE_AXES     0x0002
+#define INIT_TEXTURE_ROTATION 0x0004
+#define INIT_TEXTURE_SHIFT    0x0008
+#define INIT_TEXTURE_SCALE    0x0010
+#define INIT_TEXTURE_ALL      (INIT_TEXTURE_AXES | INIT_TEXTURE_ROTATION | INIT_TEXTURE_SHIFT | INIT_TEXTURE_SCALE)
+#endif
+
+typedef struct {
+
+    #ifdef USING_CMAPFACE_SETTEXTURE
+    void (*SetTexture)(void *this_, const char *pszNewTex, bool bRescaleTextureCoordinates);
+    #endif
+    
+    #ifdef USING_CMAPFACE_INITIALIZETEXTUREAXES
+    void (*InitializeTextureAxes)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
+    #endif
+    
+    #ifdef USING_CMAPFACE_GETORIENTATION
+    FaceOrientation (*GetOrientation)(void *this_);
+    #endif
+    
+    #ifdef USING_CMAPFACE_CREATEFACE
+    bool (*CreateFace)(CMapFace *this_, Vec3 *points, int npoints, bool bIsCordonFace);
+    #endif
+    
+    #ifdef USING_CMAPFACE_COPYFROM
+    CMapFace *(*CopyFrom)(CMapFace *this_, const CMapFace *from, DWORD dwFlags, bool bUpdateDependencies);
+    #endif
+    
+    
+
+} CMapFaceMethods_t;
+extern CMapFaceMethods_t  CMapFaceMethods;
+////////////////////////////////
+
+//
+//  CMapEntity
+//
+
+typedef struct {
+    #ifdef USING_CMAPENTITY_HASSOLIDCHILDREN
+    bool (*HasSolidChildren)(void *this_);
+    #endif
+    
+    #ifdef USING_CMAPENTITY_CMAPENTITY
+    void (*CMapEntity)(CMapEntity *this_);
+    #endif
+
+} CMapEntityMethods_t;
+extern CMapEntityMethods_t CMapEntityMethods;
+////////////////////////////////
 
 #endif // HAMMERFUNCS_H

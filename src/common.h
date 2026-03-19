@@ -33,12 +33,17 @@ void log_msg(const char *fmt, ...);
 #define IDR_FORGEMAPTYPE            129
 #define IDD_FACEEDIT                194
 
+typedef const char * MAPCLASSTYPE;
+
 // typedefs
 typedef struct CMapClass CMapClass;
 typedef struct CMapFace CMapFace;
 typedef struct CMapDoc CMapDoc;
 typedef vec3 Vec3;
 #define VEC3_ONE VEC3(1, 1, 1)
+
+typedef vec2 Vec2;
+#define VEC2_ONE VEC2(1, 1)
 
 // CUtlVector
 #define DEFINE_VECTOR(T, Name) \
@@ -101,109 +106,6 @@ typedef enum {
     DELETE_OBJ,
     DELETE_ARRAY
 } DeleteFlags;
-typedef void (*Dtor_t)(void *this_, DeleteFlags flags);
-
-
-typedef char      *(*CMapAtom_GetType_t)           (void *this_);
-typedef void       (*CMapPoint_SetOrigin_t)        (void *this_, Vec3 *pos);
-typedef CMapClass *(*CMapClass_Copy_t)             (void *this_, bool bUpdateDependencies);
-typedef CMapClass *(*CMapClass_CopyFrom_t)         (void *this_, CMapClass *from, bool bUpdateDependencies);
-typedef void       (*CMapClass_CopyChildrenFrom_t) (void *this_, void *from, bool bUpdateDependencies);
-typedef void       (*CMapClass_CalcBounds_t)       (void *this_, bool bFullUpdate);
-typedef void       (*CMapClass_AddChild_t)         (void *this_, CMapClass *pChild);
-typedef CMapClass *(*CMapAtom_GetParent_t)         (void *this_);
-typedef void       (*CMapAtom_SetRenderColor_t)    (void *this_, uint32_t color);
-typedef void       (*CMapAtom_SetRenderColor2_t)   (void *this_, uint8_t r, uint8_t g, uint8_t b);
-typedef bool       (*CMapClass_UpdateObjectColor_t)(void *this_);
-
-typedef struct {
-    // ==== CMapAtom ====
-    CMapAtom_GetType_t            GetType;                    //  0
-    void                         *CMapClass_01;               //  1
-    void                         *CMapClass_02;               //  2
-    void                         *CMapClass_03;               //  3
-    CMapAtom_SetRenderColor_t     SetRenderColor;             //  4
-    CMapAtom_SetRenderColor2_t    SetRenderColor2;            //  5
-    void                         *CMapClass_06;               //  6
-    void                         *SetParent;                  //  7
-    CMapAtom_GetParent_t          GetParent;                  //  8
-    void                         *CMapClass_09;               //  9
-    void                         *CMapClass_10;               // 10
-    void                         *CMapClass_11;               // 11
-    void                         *CMapClass_12;               // 12
-    void                         *CMapClass_13;               // 13
-    void                         *CMapClass_14;               // 14
-    void                         *CMapClass_15;               // 15
-    void                         *CMapClass_16;               // 16
-    void                         *DoTransform;                // 17
-
-    // ==== CMapPoint ====
-    CMapPoint_SetOrigin_t         SetOrigin;                  // 18
-
-    // ==== CMapClass ====
-    Dtor_t                        Dtor;                       // 19
-    void                         *CMapClass_20;               // 20
-    void                         *AddVisGroup;                // 21
-    CMapClass_UpdateObjectColor_t UpdateObjectColor;          // 22
-    CMapClass_AddChild_t          AddChild;                   // 23
-    void                         *CMapClass_CopyChildrenFrom; // 24
-    void                         *RemoveAllChildren;          // 25
-    void                         *RemoveChild;                // 26
-    void                         *UpdateChild;                // 27
-    void                         *CMapClass_GetParent;        // 28
-    void                         *CMapclass_SetParent;        // 29
-    void                         *ReplaceTargetName;          // 30
-    void                         *OnAddToWorld;               // 31
-    void                         *OnClone;                    // 32
-    void                         *OnPreClone;                 // 33
-    void                         *OnPrePaste;                 // 34
-    void                         *OnPaste;                    // 35
-    void                         *CMapClass_36;               // 36
-    void                         *CMapClass_37;               // 37
-    void                         *CMapClass_38;               // 38
-    void                         *CMapClass_39;               // 39
-    void                         *CMapClass_40;               // 40
-    void                         *CMapClass_41;               // 41
-    CMapClass_CalcBounds_t        CalcBounds;                 // 42
-    void                         *SetLogicalPosition;         // 43
-    void                         *GetLogicalPosition;         // 44
-    void                         *CMapClass_45;               // 45
-    void                         *CMapClass_46;               // 46
-    void                         *CMapClass_47;               // 47
-    void                         *IsMapClass;                 // 48
-    void                         *CMapClass_49;               // 49
-    CMapClass_Copy_t              Copy;                       // 50
-    CMapClass_CopyFrom_t         *CopyFrom;                   // 51
-
-    // ...
-    // void *IsGroup;                // 60
-    // void *GetDescription;         // 71
-    // ...                          // 82
-} CMapClassVTable;
-
-
-// in hammer++ there is no SetClass on CMapEntity
-typedef void (*CEditGameClass_SetClass_t)(void *this_, const char *pszClassname, bool bLoading);
-typedef void (*CEditGameClass_SetKeyValue_t)(void *this_, const char *key, const char *value);
-typedef struct {
-    CEditGameClass_SetClass_t SetClass;
-    CEditGameClass_SetKeyValue_t SetKeyValue;
-} CEditGameClassVTable;
-
-
-typedef struct {
-    CEditGameClassVTable *vtable;
-    void *m_KeyValues; // WCKeyValues instance start (not pointer to)
-} CEditGameClass; // incomplete sized type
-
-
-typedef struct HAMMER_ALIGN {
-    uint8_t padding[CVISGROUP_OFFSET_NAME];
-    char m_szName[128];
-} CVisGroup; // incomplete sized type
-static_assert(offsetof(CVisGroup, m_szName) == CVISGROUP_OFFSET_NAME, "CVisGroup::m_szName offset wrong");
-DEFINE_VECTOR(CVisGroup *, CVisGroupList);
-
 
 typedef struct HAMMER_ALIGN CMapAtom {
     // vtable                    // 0x00
@@ -222,6 +124,180 @@ typedef struct HAMMER_ALIGN CMapAtom {
     uint8_t padding1;            // 0x4F
 } CMapAtom;
 static_assert(sizeof(CMapAtom) == CMAPATOM_SIZE - sizeof(void *), "CMapAtom size wrong"); // subtracts vtable ptr size
+
+typedef struct HAMMER_ALIGN {
+    uint8_t padding[CVISGROUP_OFFSET_NAME];
+    char m_szName[128];
+} CVisGroup; // incomplete sized type
+static_assert(offsetof(CVisGroup, m_szName) == CVISGROUP_OFFSET_NAME, "CVisGroup::m_szName offset wrong");
+DEFINE_VECTOR(CVisGroup *, CVisGroupList);
+
+typedef void VMatrix;
+typedef void CMapWorld;
+typedef void CChunkFile;
+typedef void CSaveInfo;
+typedef void CMapView2D;
+typedef void CMapViewLogical;
+typedef void HitInfo_t;
+typedef void CBaseTool;
+
+typedef bool         (*CMapClass_BoolNoArgs_t)        (void *this_);
+typedef MAPCLASSTYPE (*CMapAtom_GetType_t)            (void *this_);
+typedef void         (*CMapAtom_SetRenderColor_t)     (void *this_, uint32_t color);
+typedef void         (*CMapAtom_SetRenderColor2_t)    (void *this_, uint8_t r, uint8_t g, uint8_t b);
+typedef void         (*CMapAtom_SetParent_t)          (void *this_, CMapAtom *parent);
+typedef CMapClass   *(*CMapAtom_GetParent_t)          (void *this_);
+typedef void         (*CMapAtom_DoTransform_t)        (void *this_, const VMatrix *matrix);
+typedef void         (*CMapPoint_SetOrigin_t)         (void *this_, Vec3 *pos);
+typedef void         (*Dtor_t)                        (void *this_, DeleteFlags flags);
+typedef size_t       (*CMapClass_GetSize_t)           (void *this_);
+typedef void         (*CMapClass_AddVisGroup_t)       (void *this_, CVisGroup *visgroup);
+typedef bool         (*CMapClass_UpdateObjectColor_t) (void *this_);
+typedef void         (*CMapClass_AddChild_t)          (void *this_, CMapClass *child);
+typedef void         (*CMapClass_CopyChildrenFrom_t)  (void *this_, CMapClass *from, bool bUpdateDependencies);
+typedef void         (*CMapClass_RemoveAllChildren_t) (void *this_);
+typedef void         (*CMapClass_RemoveChild_t)       (void *this_, CMapClass *child, bool bUpdateBounds);
+typedef void         (*CMapClass_UpdateChild_t)       (void *this_, CMapClass *child);
+typedef CMapClass   *(*CMapClass_GetParent_t)         (void *this_);
+typedef void         (*CMapClass_SetParent_t)         (void *this_, CMapClass *parent);
+typedef void         (*CMapClass_ReplaceTargetName_t) (void *this_, const char *oldName, const char *newName);
+typedef void         (*CMapClass_OnAddToWorld_t)      (void *this_, CMapWorld *world);
+typedef void         (*CMapClass_OnClone_t)           (void *this_, CMapClass *clone, CMapWorld *world, const void *origList, void *newList);
+typedef void         (*CMapClass_OnPreClone_t)        (void *this_, CMapClass *clone, CMapWorld *world, const void *origList, void *newList);
+typedef void         (*CMapClass_OnPrePaste_t)        (void *this_, CMapClass *copy, CMapWorld *srcWorld, CMapWorld *dstWorld, const void *origList, void *newList);
+typedef void         (*CMapClass_OnPaste_t)           (void *this_, CMapClass *copy, CMapWorld *srcWorld, CMapWorld *dstWorld, const void *origList, void *newList);
+typedef void         (*CMapClass_OnParentKeyChanged_t)(void *this_, const char *key, const char *value);
+typedef void         (*CMapClass_OnRemoveFromWorld_t) (void *this_, CMapWorld *world, bool bNotifyChildren);
+typedef void         (*CMapClass_OnUndoRedo_t)        (void *this_);
+typedef bool         (*CMapClass_OnApply_t)           (void *this_);
+typedef void         (*CMapClass_CalcBounds_t)        (void *this_, bool bFullUpdate);
+typedef void         (*CMapClass_SetLogicalPosition_t)(void *this_, const Vec2 *pos);
+typedef const Vec2  *(*CMapClass_GetLogicalPosition_t)(void *this_);
+typedef void         (*CMapClass_GetRenderLogicalBox_t)(void *this_, Vec2 *mins, Vec2 *maxs);
+typedef CMapClass   *(*CMapClass_PrepareSelection_t)  (void *this_, int mode);
+typedef bool         (*CMapClass_IsMapClass_t)        (void *this_, MAPCLASSTYPE type);
+typedef bool         (*CMapClass_IsWorld_t)           (void *this_);
+typedef CMapClass   *(*CMapClass_Copy_t)              (void *this_, bool bUpdateDependencies);
+typedef CMapClass   *(*CMapClass_CopyFrom_t)          (void *this_, CMapClass *from, bool bUpdateDependencies);
+typedef bool         (*CMapClass_HitTest2D_t)         (void *this_, CMapView2D *view, const Vec2 *pt, HitInfo_t *hitData);
+typedef bool         (*CMapClass_HitTestLogical_t)    (void *this_, CMapViewLogical *view, const Vec2 *pt, HitInfo_t *hitData);
+typedef CBaseTool   *(*CMapClass_GetToolObject_t)     (void *this_, int hitData, bool bAttach);
+typedef int          (*CMapClass_SaveVMF_t)           (void *this_, CChunkFile *file, CSaveInfo *saveInfo);
+typedef int          (*CMapClass_SaveEditorData_t)    (void *this_, CChunkFile *file);
+typedef bool         (*CMapClass_ShouldSerialize_t)   (void *this_);
+typedef void         (*CMapClass_PostloadWorld_t)     (void *this_, CMapWorld *world);
+typedef void         (*CMapClass_PresaveWorld_t)      (void *this_);
+typedef bool         (*CMapClass_IsIntersectingCordon_t)(void *this_, const Vec3 *mins, const Vec3 *maxs);
+typedef const char  *(*CMapClass_GetDescription_t)      (void *this_);
+
+typedef struct {
+    // ==== CMapAtom ====
+    CMapAtom_GetType_t             GetType;                    //  0
+    void                          *CMapClass_01;               //  1
+    void                          *CMapClass_02;               //  2
+    void                          *CMapClass_03;               //  3
+    CMapAtom_SetRenderColor_t      SetRenderColor;             //  4
+    CMapAtom_SetRenderColor2_t     SetRenderColor2;            //  5
+    void                          *CMapClass_06;               //  6
+    CMapAtom_SetParent_t           _SetParent;                 //  7
+    CMapAtom_GetParent_t           _GetParent;                 //  8
+    void                          *CMapClass_09;               //  9
+    void                          *CMapClass_10;               // 10
+    void                          *CMapClass_11;               // 11
+    void                          *CMapClass_12;               // 12
+    void                          *CMapClass_13;               // 13
+    void                          *CMapPoint_PostUpdate;       // 14
+    void                          *CMapClass_15;               // 15
+    void                          *CMapClass_16;               // 16
+    CMapAtom_DoTransform_t         DoTransform;                // 17
+
+    // ==== CMapPoint ====
+    CMapPoint_SetOrigin_t          SetOrigin;                  // 18
+
+    // ==== CMapClass ====
+    Dtor_t                         Dtor;                       // 19
+    CMapClass_GetSize_t            GetSize;                    // 20
+    CMapClass_AddVisGroup_t        AddVisGroup;                // 21
+    CMapClass_UpdateObjectColor_t  UpdateObjectColor;          // 22
+    CMapClass_AddChild_t           AddChild;                   // 23
+    CMapClass_CopyChildrenFrom_t   CopyChildrenFrom;           // 24
+    CMapClass_RemoveAllChildren_t  RemoveAllChildren;          // 25
+    CMapClass_RemoveChild_t        RemoveChild;                // 26
+    CMapClass_UpdateChild_t        UpdateChild;                // 27
+    CMapClass_GetParent_t          GetParent;                  // 28
+    CMapClass_SetParent_t          SetParent;                  // 29
+    CMapClass_ReplaceTargetName_t  ReplaceTargetName;          // 30
+    CMapClass_OnAddToWorld_t       OnAddToWorld;               // 31
+    CMapClass_OnClone_t            OnClone;                    // 32
+    CMapClass_OnPreClone_t         OnPreClone;                 // 33
+    CMapClass_OnPrePaste_t         OnPrePaste;                 // 34
+    CMapClass_OnPaste_t            OnPaste;                    // 35
+    void                          *CMapClass_36;               // 36
+    void                          *NotifyDependents;           // 37
+    CMapClass_OnParentKeyChanged_t OnParentKeyChanged;         // 38
+    CMapClass_OnRemoveFromWorld_t  OnRemoveFromWorld;          // 39
+    CMapClass_OnUndoRedo_t         OnUndoRedo;                 // 40
+    CMapClass_OnApply_t            OnApply;                    // 41
+    CMapClass_CalcBounds_t         CalcBounds;                 // 42
+    CMapClass_SetLogicalPosition_t SetLogicalPosition;         // 43
+    CMapClass_GetLogicalPosition_t GetLogicalPosition;         // 44
+    CMapClass_GetRenderLogicalBox_t GetRenderLogicalBox;       // 45
+    CMapClass_PrepareSelection_t   PrepareSelection;           // 46
+    void                          *PostUpdate;                 // 47
+    CMapClass_IsMapClass_t         IsMapClass;                 // 48
+    CMapClass_IsWorld_t            IsWorld;                    // 49
+    CMapClass_Copy_t               Copy;                       // 50
+    CMapClass_CopyFrom_t           CopyFrom;                   // 51
+    CMapClass_HitTest2D_t          HitTest2D;                  // 52
+    CMapClass_HitTestLogical_t     HitTestLogical;             // 53
+    CMapClass_GetToolObject_t      GetToolObject;              // 54
+    CMapClass_SaveVMF_t            SaveVMF;                    // 55
+    CMapClass_SaveEditorData_t     SaveEditorData;             // 56
+    CMapClass_ShouldSerialize_t    ShouldSerialize;            // 57
+    CMapClass_PostloadWorld_t      PostloadWorld;              // 58
+    CMapClass_PresaveWorld_t       PresaveWorld;               // 59
+
+    CMapClass_BoolNoArgs_t         IsGroup;                    // 60
+    CMapClass_BoolNoArgs_t         IsScaleable;                // 61
+    CMapClass_BoolNoArgs_t         IsClutter;                  // 62
+    CMapClass_BoolNoArgs_t         CanBeCulledByCordon;        // 63
+    CMapClass_IsIntersectingCordon_t IsIntersectingCordon;     // 64
+    CMapClass_BoolNoArgs_t         IsEditable;                 // 65
+    CMapClass_BoolNoArgs_t         ShouldSnapToHalfGrid;       // 66
+    CMapClass_BoolNoArgs_t         IsSolid;                    // 67
+
+    void                          *CMapClass_68;               // 68
+    void                          *CMapClass_69;               // 69
+    void                          *CMapClass_70;               // 70
+    CMapClass_GetDescription_t     GetDescription;             // 71
+    CMapClass_BoolNoArgs_t         IsLogical;                  // 72
+    CMapClass_BoolNoArgs_t         IsVisibleLogical;           // 73
+    void                          *CMapClass_74;               // 74
+    void                          *CMapClass_75;               // 75
+    void                          *CMapClass_76;               // 76
+    void                          *CMapClass_77;               // 77
+    void                          *CMapClass_78;               // 78
+    void                          *CMapClass_79;               // 79
+    void                          *CMapClass_80;               // 80
+    void                          *CMapClass_81;               // 81
+    void                          *CMapClass_82;               // 82
+
+} CMapClassVTable;
+
+
+// in hammer++ there is no SetClass on CMapEntity
+typedef void (*CEditGameClass_SetClass_t)(void *this_, const char *pszClassname, bool bLoading);
+typedef void (*CEditGameClass_SetKeyValue_t)(void *this_, const char *key, const char *value);
+typedef struct {
+    CEditGameClass_SetClass_t SetClass;
+    CEditGameClass_SetKeyValue_t SetKeyValue;
+} CEditGameClassVTable;
+
+
+typedef struct {
+    CEditGameClassVTable *vtable;
+    void *m_KeyValues; // WCKeyValues instance start (not pointer to)
+} CEditGameClass; // incomplete sized type
 
 
 typedef struct HAMMER_ALIGN CMapPoint {
@@ -361,5 +437,12 @@ typedef struct HAMMER_ALIGN {
     CHistoryTrack *CurTrack;
     HistoryTrackRefVector Tracks;
 } CHistory; // incomplete sized type
+
+typedef struct MCMSTRUCT {
+    const char* Type;      
+    void* (*pfnNew)(void);
+} MCMSTRUCT;
+
+DEFINE_VECTOR(MCMSTRUCT, MCMSTRUCTVector);
 
 #endif // COMMON_H

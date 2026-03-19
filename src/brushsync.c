@@ -20,7 +20,7 @@ typedef struct {
 static bool find_ent_by_pos(CMapClass *ent, void *param) {
     FindEntity *find = param;
 
-    char *name = ent->vtable->GetType(ent);
+    const char *name = ent->vtable->GetType(ent);
     if (!strcmp(name, "CMapEntity")) {
         Int3 rounded = {
             (int)roundf(ent->point.m_Origin.x),
@@ -47,15 +47,15 @@ static void move_brush(Int3 start, Int3 end) {
     find.pos = start;
     find.ent = nullptr;
 
-    CMapClass_EnumChildren(doc->m_pWorld, find_ent_by_pos, &find, nullptr);
+    CMapClassMethods.EnumChildren(doc->m_pWorld, find_ent_by_pos, &find, nullptr);
     /* log_msg("[hook] FindEnt = %p\n", find.ent); */
 
     if (find.ent) {
         Vec3 delta;
         TransMove(find.ent, &delta);
         log_msg("[hook] moved %p with delta %.1f %.1f %.1f\n", find.ent, (double)delta.x, (double)delta.y, (double)delta.z);
-        CMapDoc_SetModifiedFlag(doc, true);
-        CMapDoc_UpdateAllViews(doc, MAPVIEW_UPDATE_OBJECTS, nullptr);
+        CMapDocMethods.SetModifiedFlag(doc, true);
+        CMapDocMethods.UpdateAllViews(doc, MAPVIEW_UPDATE_OBJECTS, nullptr);
     } else {
         log_msg("[hook] failed to find ent at %d %d %d\n", find.pos.x, find.pos.y, find.pos.z);
     }
