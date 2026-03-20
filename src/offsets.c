@@ -20,4 +20,5 @@ void dump_offsets() {
     //
     // log_msg("CMapClass::m_Origin %zx\n", offsetof(CMapClass, m_Origin));
     // log_msg("CMapClass::texture %zx\n", offsetof(CMapFace, texture));
+    // log_msg("CCamera::m_ViewMatrix %zx\n", offsetof(CCamera, m_ViewMatrix));
 }

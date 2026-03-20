@@ -6,7 +6,7 @@
 
 #define TARGET_FILE "hammerplusplus_dll.dll"
 
-static unsigned char *buffer = NULL;
+static unsigned char *buffer = nullptr;
 static size_t buffer_cap = 0;
 
 static void process_file(const char *path, const char *dir_under_versions) {
@@ -56,7 +56,7 @@ static void recurse(const char *path, const char *dir_under_versions) {
 
     struct dirent *ent;
 
-    while ((ent = readdir(d)) != NULL) {
+    while ((ent = readdir(d)) != nullptr) {
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
             continue;
 
@@ -86,7 +86,7 @@ int main(void) {
 
     struct dirent *ent;
 
-    while ((ent = readdir(versions)) != NULL) {
+    while ((ent = readdir(versions)) != nullptr) {
         if (strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0)
             continue;
 

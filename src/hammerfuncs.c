@@ -75,6 +75,10 @@ CSelection_SelectObjectList_t CSelection_SelectObjectList;
 CVisGroup_IsAutoVisGroup_t CVisGroup_IsAutoVisGroup;
 #endif
 
+#ifdef USING_MAPVIEW3D_NEARESTOBJECTAT
+CMapView3D_NearestObjectAt_t CMapView3D_NearestObjectAt;
+#endif
+
 #ifdef USING_S_CLASSES
 MCMSTRUCTVector *S_Classes;
 #endif

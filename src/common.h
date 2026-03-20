@@ -13,7 +13,7 @@ void log_msg(const char *fmt, ...);
 #define ARRAY_LEN(x) (sizeof(x) / sizeof((x)[0]))
 #define ASSERT(x) \
     do { if(!(x)) { \
-        MessageBoxA(NULL, #x, "Assertion Failed", MB_ICONERROR); \
+        MessageBoxA(nullptr, #x, "Assertion Failed", MB_ICONERROR); \
         DebugBreak(); \
     }} while(0)
 
@@ -38,6 +38,7 @@ typedef const char * MAPCLASSTYPE;
 typedef struct CMapClass CMapClass;
 typedef struct CMapFace CMapFace;
 typedef struct CMapDoc CMapDoc;
+typedef mat4 Mat4;
 typedef vec3 Vec3;
 #define VEC3_ONE VEC3(1, 1, 1)
 typedef vec2 Vec2;
@@ -135,9 +136,12 @@ typedef void CMapWorld;
 typedef void CChunkFile;
 typedef void CSaveInfo;
 typedef void CMapView2D;
+typedef void CMapView3D;
 typedef void CMapViewLogical;
 typedef void HitInfo_t;
 typedef void CBaseTool;
+typedef void Selection3D;
+
 
 typedef bool         (*CMapClass_BoolNoArgs_t)        (void *this_);
 typedef MAPCLASSTYPE (*CMapAtom_GetType_t)            (void *this_);
@@ -438,10 +442,25 @@ typedef struct HAMMER_ALIGN {
 
 
 typedef struct MCMSTRUCT {
-    const char* Type;      
+    const char* Type;
     void* (*pfnNew)(void);
 } MCMSTRUCT;
 DEFINE_VECTOR(MCMSTRUCT, MCMSTRUCTVector);
+
+
+typedef struct HAMMER_ALIGN {
+    Vec3 m_ViewPoint;                                                        // 0x00
+    int padding;
+    uint8_t padding2[CCAMERA_OFFSET_MATRICES - sizeof(Vec3) - sizeof(int)];
+    Mat4 m_ViewMatrix;                                                       // 0x3C
+    Mat4 m_ProjMatrix;                                                       // 0x7C
+    Mat4 m_ViewProjMatrix;                                                   // 0xBC
+    Mat4 m_InvViewProjMatrix;                                                // 0xFC
+    uint8_t padding3[CCAMERA_SIZE - CCAMERA_OFFSET_MATRICES - (sizeof(Mat4) * 4)];
+} CCamera;
+static_assert(offsetof(CCamera, m_ViewMatrix) ==   CCAMERA_OFFSET_MATRICES, "CCamera::m_ViewMatrix offset wrong");
+static_assert(sizeof(CCamera) == CCAMERA_SIZE, "CCamera size wrong");
+DEFINE_VECTOR(CCamera, CCameraVector);
 
 
 extern MAPCLASSTYPE CMapWorldType;

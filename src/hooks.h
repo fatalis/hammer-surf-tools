@@ -38,7 +38,7 @@ enum {
     cfSelect    = 0x02,
     cfUnselect  = 0x04,
     cfClear     = 0x08,
-    cfEdgeAlign = 0x10 
+    cfEdgeAlign = 0x10
 };
 
 typedef void (*CFaceEditSheet_ClickFace_t)(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode);
@@ -65,9 +65,15 @@ HACCEL hook_LoadAcceleratorsA(HINSTANCE hInstance, LPCSTR lpTableName);
 #endif
 
 #ifdef USING_HOOK_SELECTION3D_RENDERTOOL2D
-typedef void (*Selection3D_RenderTool2D_t)(void *this_, void *pRender);
+typedef void (*Selection3D_RenderTool2D_t)(Selection3D *this_, void *pRender);
 extern Selection3D_RenderTool2D_t orig_Selection3D_RenderTool2D;
-void hook_Selection3D_RenderTool2D(void *this_, void *pRender);
+void hook_Selection3D_RenderTool2D(Selection3D *this_, void *pRender);
+#endif
+
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE3D
+typedef bool (*Selection3D_OnMouseMove3D_t)(Selection3D *this_, CMapView3D *pView, UINT nFlags, const Vec2 *vPoint);
+extern Selection3D_OnMouseMove3D_t orig_Selection3D_OnMouseMove3D;
+bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT nFlags, const Vec2 *vPoint);
 #endif
 
 #endif // HOOKS_H

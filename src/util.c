@@ -20,7 +20,7 @@ MAPCLASSTYPE MAPCLASS_TYPE(const char* type_name) {
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 int AfxMessageBoxF(UINT nType, const char* fmt, ...) {

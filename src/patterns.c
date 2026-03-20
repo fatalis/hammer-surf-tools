@@ -557,6 +557,23 @@ static Pattern_t patterns[] = {
         (void **)&CSelection_SelectObjectList
     },
 #endif
+#ifdef USING_MAPVIEW3D_NEARESTOBJECTAT
+    {
+        // 48 89 5c 24 10 56 48 81 ec a0 00 00 00 33 db 49 8b f0 41 89 18 48 8b 89 80 01 00 00
+        "CMapView3D::NearestObjectAt",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x56,
+            0x48, 0x81, 0xEC, 0xA0, 0x00, 0x00, 0x00,
+            0x33, 0xDB,
+            0x49, 0x8B, 0xF0,
+            0x41, 0x89, 0x18,
+            0x48, 0x8B, 0x89, 0x80, 0x01, 0x00, 0x00
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CMapView3D_NearestObjectAt
+    },
+#endif
 
     // offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET
@@ -681,6 +698,23 @@ static Pattern_t patterns[] = {
         "xxxxxxxxxxxxxxxx",
         (void **)&orig_Selection3D_RenderTool2D,
         hook_Selection3D_RenderTool2D
+    },
+#endif
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE3D
+    {
+        // 48 8b c4  53  48 81 ec b0 00 00 00  48 89 68 08  48 8b ea  48 89 70 10
+        "Selection3D::OnMouseMove3D",
+        (const uint8_t[]){
+            0x48, 0x8B, 0xC4,
+            0x53,
+            0x48, 0x81, 0xEC, 0xB0, 0x00, 0x00, 0x00,
+            0x48, 0x89, 0x68, 0x08,
+            0x48, 0x8B, 0xEA,
+            0x48, 0x89, 0x70, 0x10
+        },
+        "xxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&orig_Selection3D_OnMouseMove3D,
+        hook_Selection3D_OnMouseMove3D
     },
 #endif
 #ifdef USING_HOOK_CFACEEDITSHEET_CLICKFACE

@@ -10,6 +10,7 @@
 #define CMAPENTITY_SIZE                    0x280
 #define CMAPSOLID_SIZE                     0x230
 #define VEC3POINTS_SIZE                    0x03C
+#define CCAMERA_SIZE                       0x328
 
 // struct offsets that are (hopefully) stable
 #define CEDITGAMECLASS_OFFSET_CLASS        0x030
@@ -31,6 +32,8 @@
 #define CMAPFACE_OFFSET_TEXTURE            0x058
 #define CMAPENTITY_OFFSET_EDITGAMECLASS    0x190
 #define CMAPENTITY_OFFSET_FLAGS            0x254 // used to set placeholder (flag 1 - non-brush entity flag)
+#define CMAPVIEW3D_OFFSET_CAMERALIST       0x108
+#define CCAMERA_OFFSET_MATRICES            0x03C
 
 // pattern scanned offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET

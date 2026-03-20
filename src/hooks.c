@@ -38,7 +38,7 @@ CMapDoc *GetActiveMapDoc() {
 #ifdef USING_HOOK_CFACEEDITSHEET_CLICKFACE
 CFaceEditSheet_ClickFace_t orig_CFaceEditSheet_ClickFace;
 
-void hook_CFaceEditSheet_ClickFace(void *this_, CMapClass *pSolid, int faceIndex, int cmd, int clickMode) {
+void hook_CFaceEditSheet_ClickFace(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode) {
     orig_CFaceEditSheet_ClickFace(this_, pSolid, faceIndex, cmd, clickMode);
 }
 #endif
@@ -107,6 +107,14 @@ Selection3D_RenderTool2D_t orig_Selection3D_RenderTool2D;
 void hook_Selection3D_RenderTool2D(void *this_, void *pRender) {
     orig_Selection3D_RenderTool2D(this_, pRender);
     measure_render_2d(this_, pRender);
+}
+#endif
+
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE3D
+Selection3D_OnMouseMove3D_t orig_Selection3D_OnMouseMove3D;
+
+bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT nFlags, const Vec2 *vPoint) {
+    return orig_Selection3D_OnMouseMove3D(this_, pView, nFlags, vPoint);
 }
 #endif
 

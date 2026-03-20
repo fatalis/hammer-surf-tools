@@ -17,7 +17,7 @@ MAPCLASSTYPE CMapSolidType;
 
 #ifndef TEST_PATTERNS
 static void get_exe_directory(char* out, size_t size) {
-    DWORD len = GetModuleFileNameA(NULL, out, (DWORD)size);
+    DWORD len = GetModuleFileNameA(nullptr, out, (DWORD)size);
     if (len == 0 || len == size) {
         // error or truncated
         out[0] = '\0';

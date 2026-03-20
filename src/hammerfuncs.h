@@ -103,6 +103,11 @@ typedef void (*CSelection_SelectObjectList_t)(void *this_, const CMapObjectList 
 extern CSelection_SelectObjectList_t CSelection_SelectObjectList;
 #endif
 
+#ifdef USING_MAPVIEW3D_NEARESTOBJECTAT
+typedef CMapClass *(*CMapView3D_NearestObjectAt_t)(void *this_, const Vec2 *vPoint, ULONG *ulFace);
+extern CMapView3D_NearestObjectAt_t CMapView3D_NearestObjectAt;
+#endif
+
 #ifdef USING_S_CLASSES
 extern MCMSTRUCTVector *S_Classes;
 #endif
@@ -119,7 +124,7 @@ typedef struct {
     #ifdef USING_CMAPCLASS_ENUMCHILDREN
     bool (*EnumChildren)(void *this_, EnumChildrenCallback cb, void *param, MAPCLASSTYPE type);
     #endif
-    
+
     #ifdef USING_CMAPCLASS_GETVISGROUPCOUNT
     CVisGroup *(*GetVisGroup)(void *this_, int nIndex);
     #endif
@@ -145,11 +150,11 @@ extern CMapClassMethods_t CMapClassMethods;
 typedef struct {
 
     #ifdef USING_CMAPDOC_UPDATEALLVIEWS
-    void (*UpdateAllViews)(void *this_, int nFlags, void *ub);
+    void (*UpdateAllViews)(CMapDoc *this_, int nFlags, void *ub);
     #endif
 
     #ifdef USING_CMAPDOC_SETMODIFIEDFLAG
-    void (*SetModifiedFlag)(void *this_, bool bModified);
+    void (*SetModifiedFlag)(CMapDoc *this_, bool bModified);
     #endif
 
     #ifdef USING_CMAPDOC_DELETEOBJECT
@@ -173,11 +178,11 @@ typedef struct {
     #ifdef USING_CMAPSOLID_CMAPSOLID
     void (*CMapSolid)(void *this_, CMapClass *parent);
     #endif
-    
+
     #ifdef USING_CMAPSOLID_CLIPBYFACE
     void (*ClipByFace)(CMapClass *this_, const CMapFace *fa, CMapClass **f, CMapClass **b);
     #endif
-    
+
     #ifdef USING_CMAPSOLID_SPLIT
     int (*Split)(CMapSolid *this_, Plane *pPlane, CMapSolid **pFront, CMapSolid **pBack);
     #endif
@@ -191,7 +196,7 @@ extern CMapSolidMethods_t CMapSolidMethods;
 ////////////////////////////////
 
 //
-// CMapFace 
+// CMapFace
 //
 
 #ifdef USING_CMAPFACE_GETORIENTATION
@@ -228,24 +233,22 @@ typedef struct {
     #ifdef USING_CMAPFACE_SETTEXTURE
     void (*SetTexture)(void *this_, const char *pszNewTex, bool bRescaleTextureCoordinates);
     #endif
-    
+
     #ifdef USING_CMAPFACE_INITIALIZETEXTUREAXES
     void (*InitializeTextureAxes)(void *this_, TextureAlignment eAlignment, DWORD dwFlags);
     #endif
-    
+
     #ifdef USING_CMAPFACE_GETORIENTATION
     FaceOrientation (*GetOrientation)(void *this_);
     #endif
-    
+
     #ifdef USING_CMAPFACE_CREATEFACE
     bool (*CreateFace)(CMapFace *this_, Vec3 *points, int npoints, bool bIsCordonFace);
     #endif
-    
+
     #ifdef USING_CMAPFACE_COPYFROM
     CMapFace *(*CopyFrom)(CMapFace *this_, const CMapFace *from, DWORD dwFlags, bool bUpdateDependencies);
     #endif
-    
-    
 
 } CMapFaceMethods_t;
 extern CMapFaceMethods_t  CMapFaceMethods;
@@ -259,7 +262,7 @@ typedef struct {
     #ifdef USING_CMAPENTITY_HASSOLIDCHILDREN
     bool (*HasSolidChildren)(void *this_);
     #endif
-    
+
     #ifdef USING_CMAPENTITY_CMAPENTITY
     void (*CMapEntity)(CMapEntity *this_);
     #endif
