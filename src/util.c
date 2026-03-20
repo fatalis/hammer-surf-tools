@@ -13,13 +13,13 @@ HINSTANCE GetHInstance() {
 }
 
 MAPCLASSTYPE MAPCLASS_TYPE(const char* type_name) {
-    for (int i = 0; i < S_Classes->length; i++) {
+    for (auto i = 0; i < S_Classes->length; i++) {
         MCMSTRUCT e = S_Classes->items[i];
         if (!strcmp(e.Type, type_name)) {
             return e.Type;
         }
     }
-    
+
     return NULL;
 }
 
@@ -75,16 +75,13 @@ CMapSolid *CMapClass_AsSolid(CMapClass *ent) {
     if (!ent) {
         return nullptr;
     }
-    const char *name = ent->vtable->GetType(ent);
-    return !strcmp(name, "CMapSolid") ? (CMapSolid *)ent : nullptr;
+    return ent->vtable->IsMapClass(ent, CMapSolidType) ? (CMapSolid *)ent : nullptr;
 }
 
 bool CMapClass_IsWorldBrush(CMapClass *ent) {
     if (CMapClass_AsSolid(ent)) {
         CMapClass *parent = ent->vtable->GetParent(ent);
-        if (parent && !strcmp(parent->vtable->GetType(parent), "CMapWorld")) {
-            return true;
-        }
+        return parent && parent->vtable->IsMapClass(parent, CMapWorldType);
     }
     return false;
 }

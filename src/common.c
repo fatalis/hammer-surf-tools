@@ -8,6 +8,13 @@
 #define DVECTOR_IMPLEMENTATION
 #include <dvector.h>
 
+#include "util.h"
+
+// TODO: put in a struct?
+MAPCLASSTYPE CMapWorldType;
+MAPCLASSTYPE CMapEntityType;
+MAPCLASSTYPE CMapSolidType;
+
 #ifndef TEST_PATTERNS
 static void get_exe_directory(char* out, size_t size) {
     DWORD len = GetModuleFileNameA(NULL, out, (DWORD)size);
@@ -51,4 +58,11 @@ void log_msg(const char *fmt, ...) {
 
     fclose(f);
 #endif
+}
+
+bool surf_tools_init() {
+    CMapWorldType  = MAPCLASS_TYPE("CMapWorld");
+    CMapEntityType = MAPCLASS_TYPE("CMapEntity");
+    CMapSolidType  = MAPCLASS_TYPE("CMapSolid");
+    return CMapWorldType && CMapEntityType && CMapSolidType;
 }

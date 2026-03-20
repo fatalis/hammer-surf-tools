@@ -20,8 +20,7 @@ typedef struct {
 static bool find_ent_by_pos(CMapClass *ent, void *param) {
     FindEntity *find = param;
 
-    const char *name = ent->vtable->GetType(ent);
-    if (!strcmp(name, "CMapEntity")) {
+    if (ent->vtable->IsMapClass(ent, CMapEntityType)) {
         Int3 rounded = {
             (int)roundf(ent->point.m_Origin.x),
             (int)roundf(ent->point.m_Origin.y),

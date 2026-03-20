@@ -40,7 +40,12 @@ static DWORD WINAPI hook_init_thread(LPVOID param) {
         return 1;
     }
 
-    log_msg("[hook] setup hooks successfully\n");
+    if (!surf_tools_init()) {
+        log_msg("[hook] error: surf_tools_init failed\n");
+        return 1;
+    }
+
+    log_msg("[hook] initialized successfully\n");
 
     return 0;
 }

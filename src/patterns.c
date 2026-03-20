@@ -3,6 +3,8 @@
 #include "scriptfuncs.h"
 #include "hammerfuncs.h"
 
+// TODO: get constructors from MCM
+
 static void *resolve_rel(void *call_addr, const uint8_t *insn) {
     if (insn[0] == 0xE8) { // call
         int32_t rel = *(int32_t *)(insn + 1);

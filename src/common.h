@@ -436,11 +436,18 @@ typedef struct HAMMER_ALIGN {
     HistoryTrackRefVector Tracks;
 } CHistory; // incomplete sized type
 
+
 typedef struct MCMSTRUCT {
     const char* Type;      
     void* (*pfnNew)(void);
 } MCMSTRUCT;
-
 DEFINE_VECTOR(MCMSTRUCT, MCMSTRUCTVector);
+
+
+extern MAPCLASSTYPE CMapWorldType;
+extern MAPCLASSTYPE CMapEntityType;
+extern MAPCLASSTYPE CMapSolidType;
+
+bool surf_tools_init();
 
 #endif // COMMON_H
