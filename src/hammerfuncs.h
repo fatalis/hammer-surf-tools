@@ -128,7 +128,6 @@ typedef struct {
     int (*GetVisGroupCount)(void *this_);
     #endif
 
-
 } CMapClassMethods_t;
 extern CMapClassMethods_t CMapClassMethods;
 ////////////////////////////////
@@ -184,7 +183,7 @@ typedef struct {
     #endif
 
     #ifdef USING_CMAPSOLID_CREATEFROMPLANES
-    bool *(*CreateFromPlanes)(CMapClass *this_, DWORD flags, void *unk);
+    bool *(*CreateFromPlanes)(CMapSolid *this_, DWORD flags, void *unk);
     #endif
 
 } CMapSolidMethods_t;

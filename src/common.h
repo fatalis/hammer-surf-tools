@@ -33,15 +33,13 @@ void log_msg(const char *fmt, ...);
 #define IDR_FORGEMAPTYPE            129
 #define IDD_FACEEDIT                194
 
-typedef const char * MAPCLASSTYPE;
-
 // typedefs
+typedef const char * MAPCLASSTYPE;
 typedef struct CMapClass CMapClass;
 typedef struct CMapFace CMapFace;
 typedef struct CMapDoc CMapDoc;
 typedef vec3 Vec3;
 #define VEC3_ONE VEC3(1, 1, 1)
-
 typedef vec2 Vec2;
 #define VEC2_ONE VEC2(1, 1)
 
@@ -144,7 +142,7 @@ typedef void CBaseTool;
 typedef bool         (*CMapClass_BoolNoArgs_t)        (void *this_);
 typedef MAPCLASSTYPE (*CMapAtom_GetType_t)            (void *this_);
 typedef void         (*CMapAtom_SetRenderColor_t)     (void *this_, uint32_t color);
-typedef void         (*CMapAtom_SetRenderColor2_t)    (void *this_, uint8_t r, uint8_t g, uint8_t b);
+typedef void         (*CMapAtom_SetRenderColorRGB_t)  (void *this_, uint8_t r, uint8_t g, uint8_t b);
 typedef void         (*CMapAtom_SetParent_t)          (void *this_, CMapAtom *parent);
 typedef CMapClass   *(*CMapAtom_GetParent_t)          (void *this_);
 typedef void         (*CMapAtom_DoTransform_t)        (void *this_, const VMatrix *matrix);
@@ -197,7 +195,7 @@ typedef struct {
     void                          *CMapClass_02;               //  2
     void                          *CMapClass_03;               //  3
     CMapAtom_SetRenderColor_t      SetRenderColor;             //  4
-    CMapAtom_SetRenderColor2_t     SetRenderColor2;            //  5
+    CMapAtom_SetRenderColorRGB_t   SetRenderColorRGB;          //  5
     void                          *CMapClass_06;               //  6
     CMapAtom_SetParent_t           _SetParent;                 //  7
     CMapAtom_GetParent_t           _GetParent;                 //  8

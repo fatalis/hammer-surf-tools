@@ -5,6 +5,7 @@
 #include "util.h"
 
 // TODO: esc -> close
+// TODO: add tests
 
 static void debug(const char *msg) {
 #ifdef RAMPGEN_DEBUG
@@ -13,17 +14,17 @@ static void debug(const char *msg) {
 #endif
 }
 
-static void box_bottom_corner(const BoundingBox *bbox, BoxCorner corner, Vec3 *out) {
+static inline Vec3 box_bottom_corner(const BoundingBox *bbox, BoxCorner corner) {
     float z = bbox->mins.z;
 
     if (corner == SW) {
-        *out = (Vec3){{ bbox->mins.x, bbox->mins.y, z }};
+        return (Vec3){{ bbox->mins.x, bbox->mins.y, z }};
     } else if (corner == SE) {
-        *out = (Vec3){{ bbox->maxs.x, bbox->mins.y, z }};
+        return (Vec3){{ bbox->maxs.x, bbox->mins.y, z }};
     } else if (corner == NE) {
-        *out = (Vec3){{ bbox->maxs.x, bbox->maxs.y, z }};
-    } else /* if (corner == NW) */ {
-        *out = (Vec3){{ bbox->mins.x, bbox->maxs.y, z }};
+        return (Vec3){{ bbox->maxs.x, bbox->maxs.y, z }};
+    } else { // NW
+        return (Vec3){{ bbox->mins.x, bbox->maxs.y, z }};
     }
 }
 
@@ -31,12 +32,11 @@ static inline Plane vertical_plane_from_bbox(const BoundingBox *bbox, RampOrient
     BoxCorner first  = ori->flip_edge ? ori->pivot      : ori->pivot_end;
     BoxCorner second = ori->flip_edge ? ori->pivot_end  : ori->pivot;
 
-    Vec3 p0, p1, p2;
-    box_bottom_corner(bbox, first, &p0);
-    box_bottom_corner(bbox, second, &p1);
+    Vec3 p0 = box_bottom_corner(bbox, first);
+    Vec3 p1 = box_bottom_corner(bbox, second);
 
     // third point above edge
-    p2 = (Vec3){{ p0.x, p0.y, bbox->maxs.z }};
+    Vec3 p2 = {{ p0.x, p0.y, bbox->maxs.z }};
 
     // direction along edge
     Vec3 dir = {{
@@ -190,8 +190,7 @@ static void resize_start_seg(CMapDoc * doc, CMapSolid *solid, RampOrientation *o
 
     // scale the start seg
     float factor = segment_width / orig_size.v[ori->axis];
-    Vec3 ref;
-    box_bottom_corner(&solid->base.m_Render2DBox, ori->pivot_opposite, &ref);
+    Vec3 ref = box_bottom_corner(&solid->base.m_Render2DBox, ori->pivot_opposite);
     Vec3 scale = VEC3_ONE;
     scale.v[ori->axis] = factor;
 
@@ -213,8 +212,7 @@ static void move_seg(CMapDoc *doc, CMapSolid *prev_seg, CMapSolid *seg, RampOrie
 static void rotate_seg(CMapDoc *doc, CMapSolid *seg, CMapSolid *ref_ent, Angle angle, float degrees, BoxCorner pivot, bool top) {
     debug("rotate seg");
 
-    Vec3 ref;
-    box_bottom_corner(&ref_ent->base.m_Render2DBox, pivot, &ref);
+    Vec3 ref = box_bottom_corner(&ref_ent->base.m_Render2DBox, pivot);
     if (top) {
         ref.z = ref_ent->base.m_Render2DBox.maxs.z;
     }
@@ -378,6 +376,7 @@ void rampgen(RampGenCmd *cmd, RampOrientation *ori, bool initial, bool *generati
         // cut 2 half rotation sides so we get a repeatable non-overlapping segment
         solid = cut_convex_seg(doc, solid, ori);
         if (!solid) {
+            *generating = false;
             return;
         }
     }

@@ -11,9 +11,7 @@ static CMapFace *make_trigger_face(CMapSolid *solid, Vec3 *points, int n_points)
     CMapFace *face = CSolidFaces_MakeFace(&solid->Faces);
     CMapFaceMethods.CreateFace(face, points, n_points, false);
     CMapFaceMethods.SetTexture(face, "tools/toolstrigger", 0);
-    face->atom.r = 255; // TODO: temporary fix. find what normally does this
-    face->atom.g = 255;
-    face->atom.b = 0;
+    face->vtable->SetRenderColorRGB(face, 255, 255, 0); // TODO: temporary fix. find what normally does this
     // TODO: verify these args
     CMapFaceMethods.InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
     return face;

@@ -15,7 +15,7 @@ static void *resolve_rel(void *call_addr, const uint8_t *insn) {
     return nullptr;
 }
 
-static Pattern_t g_patterns[] = {
+static Pattern_t patterns[] = {
 #ifdef USING_GETMAINWND
     {
         // find "You are about to export over your"
@@ -880,8 +880,8 @@ static void *find_pattern(uint8_t *base, size_t size, const uint8_t *pat, const 
 bool scan_all(uint8_t *base, size_t size) {
     bool success = true;
 
-    for (auto i = 0; i < ARRAYSIZE(g_patterns); i++) {
-        Pattern_t *p = &g_patterns[i];
+    for (auto i = 0; i < ARRAYSIZE(patterns); i++) {
+        Pattern_t *p = &patterns[i];
 
         void *addr = nullptr;
         if (p->pattern) {
