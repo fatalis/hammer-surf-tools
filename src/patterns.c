@@ -574,6 +574,23 @@ static Pattern_t patterns[] = {
         (void **)&CMapView3D_NearestObjectAt
     },
 #endif
+#ifdef USING_CMAPDOC_GETACTIVEMAPVIEW
+    {
+        // 48 89 5c 24 10  57  48 83 ec 30  48 8b 01  48 8b d9  ff 90 d0 00 00 00  48 89 44 24 40
+        "CMapDoc::GetActiveMapView",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x57,
+            0x48, 0x83, 0xEC, 0x30,
+            0x48, 0x8B, 0x01,
+            0x48, 0x8B, 0xD9,
+            0xFF, 0x90, 0xD0, 0x00, 0x00, 0x00,
+            0x48, 0x89, 0x44, 0x24, 0x40
+        },
+        "xxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CMapDocMethods.GetActiveMapView
+    },
+#endif
 
     // offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET
@@ -715,6 +732,27 @@ static Pattern_t patterns[] = {
         "xxxxxxxxxxxxxxxxxxxxxx",
         (void **)&orig_Selection3D_OnMouseMove3D,
         hook_Selection3D_OnMouseMove3D
+    },
+#endif
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE2D
+    {
+        // 48 89 5c 24 08  48 89 6c 24 10  48 89 74 24 18  57  41 54  41 55  41 56  41 57  48 81 ec f0 00 00 00  4d 8b f1
+        "Selection3D::OnMouseMove2D",
+        (const uint8_t[]){
+            0x48, 0x89, 0x5C, 0x24, 0x08,
+            0x48, 0x89, 0x6C, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
+            0x57,
+            0x41, 0x54,
+            0x41, 0x55,
+            0x41, 0x56,
+            0x41, 0x57,
+            0x48, 0x81, 0xEC, 0xF0, 0x00, 0x00, 0x00,
+            0x4D, 0x8B, 0xF1
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&orig_Selection3D_OnMouseMove2D,
+        hook_Selection3D_OnMouseMove2D
     },
 #endif
 #ifdef USING_HOOK_CFACEEDITSHEET_CLICKFACE

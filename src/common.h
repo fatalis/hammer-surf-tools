@@ -106,6 +106,18 @@ typedef enum {
     DELETE_ARRAY
 } DeleteFlags;
 
+
+typedef enum {
+    Notify_Changed = 0,
+    Notify_Removed,
+    Notify_Undo,
+    Notify_Transform,
+    Notify_Rebuild,
+    Notify_Rebuild_Full,
+    Notify_Clipped_Intermediate,
+    Notify_Clipped
+} Notify_Dependent_t;
+
 typedef struct HAMMER_ALIGN CMapAtom {
     // vtable                    // 0x00
     void *CMapAtom_0x08;         // 0x08 somewhere here: m_pParent, m_eSelectionState
@@ -135,6 +147,7 @@ typedef void VMatrix;
 typedef void CMapWorld;
 typedef void CChunkFile;
 typedef void CSaveInfo;
+typedef void CMapView;
 typedef void CMapView2D;
 typedef void CMapView3D;
 typedef void CMapViewLogical;
@@ -190,7 +203,8 @@ typedef bool         (*CMapClass_ShouldSerialize_t)   (void *this_);
 typedef void         (*CMapClass_PostloadWorld_t)     (void *this_, CMapWorld *world);
 typedef void         (*CMapClass_PresaveWorld_t)      (void *this_);
 typedef bool         (*CMapClass_IsIntersectingCordon_t)(void *this_, const Vec3 *mins, const Vec3 *maxs);
-typedef const char  *(*CMapClass_GetDescription_t)      (void *this_);
+typedef const char  *(*CMapClass_GetDescription_t)    (void *this_);
+typedef void         (*CMapClass_PostUpdate_t)        (void *this_, Notify_Dependent_t eNotifyType);
 
 typedef struct {
     // ==== CMapAtom ====
@@ -245,7 +259,7 @@ typedef struct {
     CMapClass_GetLogicalPosition_t GetLogicalPosition;         // 44
     CMapClass_GetRenderLogicalBox_t GetRenderLogicalBox;       // 45
     CMapClass_PrepareSelection_t   PrepareSelection;           // 46
-    void                          *PostUpdate;                 // 47
+    CMapClass_PostUpdate_t         PostUpdate;                 // 47
     CMapClass_IsMapClass_t         IsMapClass;                 // 48
     CMapClass_IsWorld_t            IsWorld;                    // 49
     CMapClass_Copy_t               Copy;                       // 50

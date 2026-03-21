@@ -118,6 +118,14 @@ bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT 
 }
 #endif
 
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE2D
+Selection3D_OnMouseMove2D_t orig_Selection3D_OnMouseMove2D;
+
+bool hook_Selection3D_OnMouseMove2D(Selection3D *this_, CMapView2D *pView, UINT nFlags, const Vec2 *vPoint) {
+    return orig_Selection3D_OnMouseMove2D(this_, pView, nFlags, vPoint);
+}
+#endif
+
 #ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
 CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
 

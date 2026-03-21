@@ -32,8 +32,10 @@
 #define CMAPFACE_OFFSET_TEXTURE            0x058
 #define CMAPENTITY_OFFSET_EDITGAMECLASS    0x190
 #define CMAPENTITY_OFFSET_FLAGS            0x254 // used to set placeholder (flag 1 - non-brush entity flag)
-#define CMAPVIEW3D_OFFSET_CAMERALIST       0x108
+#define CMAPVIEW_OFFSET_CAMERALIST         0x108
 #define CCAMERA_OFFSET_MATRICES            0x03C
+#define CMAPVIEW2D_OFFSET_MAPVIEW          0x0F8
+#define MAPVIEW_VTABLE_CLIENTTOWORLD          11
 
 // pattern scanned offsets
 #ifdef USING_OFFSET_CMAINFRAME_FACEEDITSHEET

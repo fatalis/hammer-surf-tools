@@ -76,4 +76,10 @@ extern Selection3D_OnMouseMove3D_t orig_Selection3D_OnMouseMove3D;
 bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT nFlags, const Vec2 *vPoint);
 #endif
 
+#ifdef USING_HOOK_SELECTION3D_ONMOUSEMOVE3D
+typedef bool (*Selection3D_OnMouseMove2D_t)(Selection3D *this_, CMapView2D *pView, UINT nFlags, const Vec2 *vPoint);
+extern Selection3D_OnMouseMove2D_t orig_Selection3D_OnMouseMove2D;
+bool hook_Selection3D_OnMouseMove2D(Selection3D *this_, CMapView2D *pView, UINT nFlags, const Vec2 *vPoint);
+#endif
+
 #endif // HOOKS_H

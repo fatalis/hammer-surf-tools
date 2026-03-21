@@ -104,7 +104,7 @@ extern CSelection_SelectObjectList_t CSelection_SelectObjectList;
 #endif
 
 #ifdef USING_MAPVIEW3D_NEARESTOBJECTAT
-typedef CMapClass *(*CMapView3D_NearestObjectAt_t)(void *this_, const Vec2 *vPoint, ULONG *ulFace);
+typedef CMapClass *(*CMapView3D_NearestObjectAt_t)(CMapView3D *this_, const Vec2 *vPoint, ULONG *ulFace);
 extern CMapView3D_NearestObjectAt_t CMapView3D_NearestObjectAt;
 #endif
 
@@ -159,6 +159,10 @@ typedef struct {
 
     #ifdef USING_CMAPDOC_DELETEOBJECT
     void (*DeleteObject)(CMapDoc *this_, CMapClass *pObject);
+    #endif
+
+    #ifdef USING_CMAPDOC_GETACTIVEMAPVIEW
+    CMapView *(*GetActiveMapView)(CMapDoc *this_);
     #endif
 
 } CMapDocMethods_t;
