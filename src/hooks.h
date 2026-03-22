@@ -41,6 +41,18 @@ enum {
     cfEdgeAlign = 0x10
 };
 
+enum {
+    id_SwitchModeStart = 0x100,
+    ModeLiftSelect,
+    ModeLift,
+    ModeSelect,
+    ModeApply,
+    ModeApplyAll,
+    ModeApplyLightmapScale,
+    ModeAlignToView,
+    id_SwitchModeEnd
+};
+
 typedef void (*CFaceEditSheet_ClickFace_t)(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode);
 extern CFaceEditSheet_ClickFace_t orig_CFaceEditSheet_ClickFace;
 void hook_CFaceEditSheet_ClickFace(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode);

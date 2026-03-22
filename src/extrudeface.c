@@ -35,7 +35,7 @@ void do_extrude_face() {
     }
 
     if (grab.grabbing) {
-        grab.grabbing = false;
+        extrude_face_close();
     } else {
         CMapView *view = CMapDocMethods.GetActiveMapView(doc);
         if (!view) {
@@ -69,7 +69,8 @@ void do_extrude_face() {
 
                 void *sheet = GetFaceEditSheet();
                 ASSERT(sheet);
-                orig_CFaceEditSheet_ClickFace(sheet, solid, (int)face_idx, 2, 0x103);
+                // visualize selected face
+                orig_CFaceEditSheet_ClickFace(sheet, solid, (int)face_idx, cfSelect | cfClear, ModeSelect);
 
                 grab.grabbing = true;
             }
@@ -79,6 +80,9 @@ void do_extrude_face() {
 
 void extrude_face_close() {
     grab.grabbing = false;
+    void *sheet = GetFaceEditSheet();
+    ASSERT(sheet);
+    orig_CFaceEditSheet_ClickFace(sheet, nullptr, -1, cfClear, -1);
 }
 
 typedef void (*ClientToWorld_t)(void *this_, Vec3 *vWorld, const Vec2 *vClient);
