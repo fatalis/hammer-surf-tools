@@ -29,6 +29,7 @@ void log_msg(const char *fmt, ...);
 #define CMD_RAMP_GENERATOR        32069 // stay below signed short range
 #define CMD_TRIGGER_GENERATOR     32068
 #define CMD_ANGLEFIX              32067
+#define CMD_EXTRUDE_FACE          32066
 #define IDR_POPUPS                  182
 #define IDR_FORGEMAPTYPE            129
 #define IDD_FACEEDIT                194

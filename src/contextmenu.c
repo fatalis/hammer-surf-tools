@@ -2,6 +2,7 @@
 #include "triggergen.h"
 #include "anglefix.h"
 #include "rampgenui.h"
+#include "extrudeface.h"
 
 static void add_menus(HMENU hPopup, int pos) {
     HMENU hSubMenu = CreatePopupMenu();
@@ -36,6 +37,8 @@ void menu_check_command(UINT cmd) {
         do_anglefix();
     } else if (cmd == CMD_TRIGGER_GENERATOR) {
         do_trigger_generator();
+    } else if (cmd == CMD_EXTRUDE_FACE) {
+        do_extrude_face();
     }
 }
 

@@ -3,8 +3,9 @@
 static const ACCEL hotkey1 = { FALT | FSHIFT, 'R', CMD_RAMP_GENERATOR };
 static const ACCEL hotkey2 = { FALT | FSHIFT, 'A', CMD_ANGLEFIX};
 static const ACCEL hotkey3 = { FALT | FSHIFT, 'T', CMD_TRIGGER_GENERATOR };
+static const ACCEL hotkey4 = { FALT | FSHIFT, 'E', CMD_EXTRUDE_FACE };
 
-static const ACCEL hotkeys[] = { hotkey1, hotkey2, hotkey3 };
+static const ACCEL hotkeys[] = { hotkey1, hotkey2, hotkey3, hotkey4 };
 
 HACCEL check_add_hotkeys(HACCEL accel, LPCSTR lpTableName) {
     if (lpTableName == MAKEINTRESOURCE(IDR_FORGEMAPTYPE)) {

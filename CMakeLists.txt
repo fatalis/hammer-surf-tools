@@ -34,6 +34,7 @@ set(SOURCES
   src/hotkeys.c
   src/util.c
   src/offsets.c
+  src/extrudeface.c
 )
 
 # main dll (version.dll)

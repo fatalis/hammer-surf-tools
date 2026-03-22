@@ -25,6 +25,11 @@ A mod of [Hammer++](https://ficool2.github.io/HammerPlusPlus-Website/index.html)
 - Requires compiling with `vbspplusplus.exe` from the [Tools++ compilers](https://ficool2.github.io/HammerPlusPlus-Website/tools.html) (for `func_detail_illusionary`)
 - **Usage**: Select worldbrush rotated ramps and press `Alt + Shift + A`.
 
+### Face Extruder
+- Allows you extend a brush by face. Useful for extending rotated ramps.
+- **Usage**: Point at the end of a ramp in 3D view and press `Alt + Shift + E`. Move the mouse in either 3D or 2D views to extrude.
+Press the hotkey again to stop. Intrude/shrinking isn't currently supported.
+
 ## About Angle Steepness Rating
 When you see ratings like `5/10` with the angle measure tools:
 

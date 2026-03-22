@@ -3,6 +3,7 @@
 #include "contextmenu.h"
 #include "hotkeys.h"
 #include "rampgenui.h"
+#include "extrudeface.h"
 
 #ifdef USING_HOOK_AFXWNDPROC
 AfxWndProc_t orig_AfxWndProc;
@@ -24,9 +25,14 @@ static CMapDoc *active_map_doc;
 SetActiveMapDoc_t orig_SetActiveMapDoc;
 // hook because GetActiveMapDoc is compiled away
 void hook_SetActiveMapDoc(void *doc) {
-    /* log_msg("[hook] SetActiveMapDoc %p\n", doc); */
+    // log_msg("[hook] SetActiveMapDoc %p\n", doc);
     orig_SetActiveMapDoc(doc);
-    active_map_doc = doc;
+
+    if (doc != active_map_doc) {
+        rampgen_close();
+        extrude_face_close();
+        active_map_doc = doc;
+    }
 }
 
 CMapDoc *GetActiveMapDoc() {
@@ -114,6 +120,7 @@ void hook_Selection3D_RenderTool2D(void *this_, void *pRender) {
 Selection3D_OnMouseMove3D_t orig_Selection3D_OnMouseMove3D;
 
 bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT nFlags, const Vec2 *vPoint) {
+    extrude_face_mouse_move_3d(pView, vPoint);
     return orig_Selection3D_OnMouseMove3D(this_, pView, nFlags, vPoint);
 }
 #endif
@@ -122,6 +129,7 @@ bool hook_Selection3D_OnMouseMove3D(Selection3D *this_, CMapView3D *pView, UINT 
 Selection3D_OnMouseMove2D_t orig_Selection3D_OnMouseMove2D;
 
 bool hook_Selection3D_OnMouseMove2D(Selection3D *this_, CMapView2D *pView, UINT nFlags, const Vec2 *vPoint) {
+    extrude_face_mouse_move_2d(pView, vPoint);
     return orig_Selection3D_OnMouseMove2D(this_, pView, nFlags, vPoint);
 }
 #endif
@@ -131,6 +139,7 @@ CHistory_MarkUndoPosition_t CHistory_MarkUndoPosition;
 
 void hook_CHistory_MarkUndoPosition(CHistory *this_, const CMapObjectList* pSelection, const char *pszName, bool bFromOpposite) {
     rampgen_close();
+    extrude_face_close();
     CHistory_MarkUndoPosition(this_, pSelection, pszName, bFromOpposite);
 }
 #endif

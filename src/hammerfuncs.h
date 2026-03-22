@@ -104,7 +104,8 @@ extern CSelection_SelectObjectList_t CSelection_SelectObjectList;
 #endif
 
 #ifdef USING_MAPVIEW3D_NEARESTOBJECTAT
-typedef CMapClass *(*CMapView3D_NearestObjectAt_t)(CMapView3D *this_, const Vec2 *vPoint, ULONG *ulFace);
+// unk and unk2 added in hammer++
+typedef CMapClass *(*CMapView3D_NearestObjectAt_t)(CMapView3D *this_, const Vec2 *vPoint, ULONG *ulFace, int unk, void *unk2);
 extern CMapView3D_NearestObjectAt_t CMapView3D_NearestObjectAt;
 #endif
 

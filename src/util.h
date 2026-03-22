@@ -80,6 +80,20 @@ static inline char *NormalSurfString(Vec3 *normal, const char *pfx, bool *out_su
     return surf_string;
 }
 
+typedef struct {
+    int delay_ms;
+    uint64_t last_call;
+} Debounce;
+
+static inline bool debounce_should_run(Debounce *d) {
+    uint64_t now = GetTickCount64();
+    if (now - d->last_call >= d->delay_ms) {
+        d->last_call = now;
+        return true;
+    }
+    return false;
+}
+
 int AfxMessageBoxF(unsigned int nType, const char* fmt, ...);
 CMapEntity *new_CMapEntity();
 CMapSolid *new_CMapSolid();
