@@ -47,6 +47,14 @@ CMapSolid *new_CMapSolid() {
     return ent;
 }
 
+CMapGroup *new_CMapGroup() {
+    CMapGroup *ent = ValveAlloc(CMAPGROUP_SIZE);
+    CMapClassMethods.CMapClass((CMapClass *)ent);
+    ent->vtable = CMapGroupMethods.CMapGroupVTable;
+    // skips initialization of m_vecLogicalPosition(COORD_NOTINIT, COORD_NOTINIT)
+    return ent;
+}
+
 CMapObjectList *CMapDoc_GetSelection(CMapDoc *doc) {
     return &doc->m_pSelection->m_SelectionList;
 }

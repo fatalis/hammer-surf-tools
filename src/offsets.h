@@ -9,6 +9,7 @@
 #define CMAPFACE_SIZE                      0x360
 #define CMAPENTITY_SIZE                    0x280
 #define CMAPSOLID_SIZE                     0x230
+#define CMAPGROUP_SIZE                     0x1A0
 #define VEC3POINTS_SIZE                    0x03C
 #define CCAMERA_SIZE                       0x328
 

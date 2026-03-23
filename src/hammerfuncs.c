@@ -88,3 +88,4 @@ CMapDocMethods_t    CMapDocMethods;
 CMapSolidMethods_t  CMapSolidMethods;
 CMapFaceMethods_t   CMapFaceMethods;
 CMapEntityMethods_t CMapEntityMethods;
+CMapGroupMethods_t  CMapGroupMethods;

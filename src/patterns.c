@@ -13,7 +13,7 @@ static void *resolve_rel(void *call_addr, const uint8_t *insn) {
         int32_t rel = *(int32_t *)(insn + 3);
         return call_addr + 7 + rel;
     }
-    ASSERT(false);
+    ASSERT("resolve_rel: unsupported opcode" && false);
     return nullptr;
 }
 
@@ -337,6 +337,42 @@ static Pattern_t patterns[] = {
         "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxx",
         (void **)&CMapSolidMethods.CMapSolid,
     },
+#endif
+#ifdef USING_CMAPCLASS_CMAPCLASS
+    {
+        // 48 89 4c 24 08  53  57  48 83 ec 38  48 8b d9   e8 7d 84 ed ff  90  48 8d 05
+        "CMapClass::CMapClass",
+        (const uint8_t[]){
+            0x48, 0x89, 0x4C, 0x24, 0x08,
+            0x53,
+            0x57,
+            0x48, 0x83, 0xEC, 0x38,
+            0x48, 0x8B, 0xD9,
+            0xE8, 0x7D, 0x84, 0xED, 0xFF,
+            0x90,
+            0x48, 0x8D, 0x05
+        },
+        "xxxxxxxxxxxxxxxxxxxxxxx",
+        (void **)&CMapClassMethods.CMapClass,
+    },
+#endif
+#ifdef USING_CMAPGROUP_CMAPGROUPVTABLE
+    {
+        // 90  48 8d 05 33 9a 88 00  49 89 07  41 c7 87 90 01 00 00 80 4f c3 47
+        "CMapGroup::CMapGroupVTable",
+        (const uint8_t[]){
+            0x90,
+            0x48, 0x8D, 0x05, 0x33, 0x9A, 0x88, 0x00,
+            0x49, 0x89, 0x07,
+            0x41, 0xC7, 0x87, 0x90, 0x01, 0x00, 0x00, 0x80, 0x4F, 0xC3, 0x47
+        },
+        "xxxx????xxxxxx????xxxx",
+        (void **)&CMapGroupMethods.CMapGroupVTable,
+        nullptr,
+        1,
+        PATTERN_REL,
+    },
+
 #endif
 #ifdef USING_CMAPSOLID_ADDPLANE
     {

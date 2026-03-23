@@ -122,6 +122,10 @@ typedef bool (*EnumChildrenCallback)(CMapClass *ent, void *param);
 #endif
 
 typedef struct {
+    #ifdef USING_CMAPCLASS_CMAPCLASS
+    void (*CMapClass)(CMapClass *this_);
+    #endif
+
     #ifdef USING_CMAPCLASS_ENUMCHILDREN
     bool (*EnumChildren)(void *this_, EnumChildrenCallback cb, void *param, MAPCLASSTYPE type);
     #endif
@@ -274,6 +278,19 @@ typedef struct {
 
 } CMapEntityMethods_t;
 extern CMapEntityMethods_t CMapEntityMethods;
+////////////////////////////////
+
+//
+//  CMapGroup
+//
+
+typedef struct {
+    #ifdef USING_CMAPGROUP_CMAPGROUPVTABLE
+    CMapGroupVTable *CMapGroupVTable;
+    #endif
+
+} CMapGroupMethods_t;
+extern CMapGroupMethods_t CMapGroupMethods;
 ////////////////////////////////
 
 #endif // HAMMERFUNCS_H

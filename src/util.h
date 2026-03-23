@@ -97,6 +97,7 @@ static inline bool debounce_should_run(Debounce *d) {
 int AfxMessageBoxF(unsigned int nType, const char* fmt, ...);
 CMapEntity *new_CMapEntity();
 CMapSolid *new_CMapSolid();
+CMapGroup *new_CMapGroup();
 CMapObjectList *CMapDoc_GetSelection(CMapDoc *doc);
 void *GetFaceEditSheet();
 HWND GetMainWndHwnd();

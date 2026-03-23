@@ -478,6 +478,12 @@ static_assert(sizeof(CCamera) == CCAMERA_SIZE, "CCamera size wrong");
 DEFINE_VECTOR(CCamera, CCameraVector);
 
 
+typedef void CMapGroupVTable;
+typedef struct HAMMER_ALIGN {
+    CMapGroupVTable *vtable;
+} CMapGroup; // incomplete sized type
+
+
 extern MAPCLASSTYPE CMapWorldType;
 extern MAPCLASSTYPE CMapEntityType;
 extern MAPCLASSTYPE CMapSolidType;
