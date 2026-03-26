@@ -178,19 +178,23 @@ static void commit(bool select) {
 
     if (doc && state.segment_list) {
         if (select) {
-            CMapGroup *group = new_CMapGroup();
-            ASSERT(group);
-
-            for (auto i = 0; i < arrlen(state.segment_list); i++) {
-                CMapSolid *seg = state.segment_list[i];
-                seg->base.vtable->SetParent(seg, nullptr); // removes from it's parent too
-                group->base.vtable->AddChild(group, (CMapClass *)seg);
-            }
-            doc->vtable->AddObjectToWorld(doc, group, nullptr);
-
+            // CMapGroup *group = new_CMapGroup();
+            // ASSERT(group);
+            //
+            // for (auto i = 0; i < arrlen(state.segment_list); i++) {
+            //     CMapSolid *seg = state.segment_list[i];
+            //     seg->base.vtable->SetParent(seg, nullptr); // removes from it's parent too
+            //     group->base.vtable->AddChild(group, (CMapClass *)seg);
+            // }
+            // doc->vtable->AddObjectToWorld(doc, group, nullptr);
+            //
+            // CMapObjectList list;
+            // list.items = (CMapClass **)&group;
+            // list.length = 1;
+            // CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
             CMapObjectList list;
-            list.items = (CMapClass **)&group;
-            list.length = 1;
+            list.items = (CMapClass **)state.segment_list;
+            list.length = (int)arrlen(state.segment_list);
             CSelection_SelectObjectList(doc->m_pSelection, &list, scClear | scSelect);
         }
 
