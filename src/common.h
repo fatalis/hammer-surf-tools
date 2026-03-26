@@ -384,6 +384,11 @@ static_assert(offsetof(CMapSolid, Faces) == CMAPSOLID_OFFSET_FACES, "CMapSolid::
 static_assert(sizeof(CMapSolid)          == CMAPSOLID_SIZE,         "CMapSolid size wrong");
 
 
+typedef struct HAMMER_ALIGN {
+    CMapClass base;
+} CMapGroup; // incomplete sized type
+
+
 // changed in hammer++, used to be just a vec3
 typedef struct HAMMER_ALIGN {
     Vec3 point;
@@ -476,12 +481,6 @@ typedef struct HAMMER_ALIGN {
 static_assert(offsetof(CCamera, m_ViewMatrix) ==   CCAMERA_OFFSET_MATRICES, "CCamera::m_ViewMatrix offset wrong");
 static_assert(sizeof(CCamera) == CCAMERA_SIZE, "CCamera size wrong");
 DEFINE_VECTOR(CCamera, CCameraVector);
-
-
-typedef void CMapGroupVTable;
-typedef struct HAMMER_ALIGN {
-    CMapGroupVTable *vtable;
-} CMapGroup; // incomplete sized type
 
 
 extern MAPCLASSTYPE CMapWorldType;
