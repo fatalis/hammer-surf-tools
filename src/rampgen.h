@@ -18,39 +18,35 @@ typedef enum {
     DIR_PLUS = 1
 } AppendDirection;
 
-// TODO: only use in rampgenui, rename to RampGenUIState
 typedef struct {
+    // ui
     CMapSolid *ramp;
-    float degrees;
-    int segments;
+    float ui_degrees;
+    int ui_segments;
     char curve;
     AppendDirection direction;
     float segment_width;
     float segment_gap;
-} RampGenCmd;
 
-// TODO: rename to RampGenState, rename ramp_orientation to something else
-typedef struct {
+    // overidden from ui
+    float degrees;
+    int segments;
+
+    // ramp data
+    Angle rotate_angle;
     Axis axis;
-    AppendDirection direction;
-    FaceOrientation orientation;
-    float segment_gap;
-    char curve;
+    FaceOrientation orientation; // surfing direction
     bool convex;
     int sign; // dir * facing * axis_sign
+    bool flip_edge; // whether to swap pivot/pivot_end when building the cut plane
     BoxCorner pivot;
     BoxCorner pivot_end;
     BoxCorner pivot_opposite;
     BoxCorner pivot_opposite_end;
-    Angle rotate_angle;
-    float degrees;
-    bool flip_edge; // whether to swap pivot/pivot_end when building the cut plane
-    CMapSolid **segment_list;
-} RampOrientation;
 
-void rampgen(RampGenCmd *cmd, RampOrientation *ori, bool initial, bool *generating);
-void rampgen_undo();
-CMapSolid *get_selected_ramp();
-bool ramp_orientation(RampGenCmd *cmd, RampOrientation *out_orientation);
+    CMapSolid **segment_list;
+} RampGenState;
+
+void rampgen(RampGenState *ramp);
 
 #endif // RAMPGEN_H

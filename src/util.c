@@ -50,7 +50,7 @@ CMapSolid *new_CMapSolid() {
 CMapGroup *new_CMapGroup() {
     CMapGroup *ent = ValveAlloc(CMAPGROUP_SIZE);
     CMapClassMethods.CMapClass((CMapClass *)ent);
-    ent->vtable = CMapGroupMethods.CMapGroupVTable;
+    ent->base.vtable = CMapGroupMethods.CMapGroupVTable;
     // skips initialization of m_vecLogicalPosition(COORD_NOTINIT, COORD_NOTINIT)
     return ent;
 }

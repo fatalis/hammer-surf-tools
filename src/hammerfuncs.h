@@ -286,7 +286,7 @@ extern CMapEntityMethods_t CMapEntityMethods;
 
 typedef struct {
     #ifdef USING_CMAPGROUP_CMAPGROUPVTABLE
-    CMapGroupVTable *CMapGroupVTable;
+    CMapClassVTable *CMapGroupVTable; // not a method but putting this here
     #endif
 
 } CMapGroupMethods_t;
