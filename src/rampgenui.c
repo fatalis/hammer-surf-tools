@@ -7,6 +7,7 @@ static RampGenState state;
 static HWND dlg;
 static bool generating;
 static bool can_undo;
+static bool window_initializing;
 
 static Axis orientation_to_axis(FaceOrientation ori) {
     if (ori == FACE_ORIENTATION_SOUTH_WALL || ori == FACE_ORIENTATION_NORTH_WALL) {
@@ -18,7 +19,7 @@ static Axis orientation_to_axis(FaceOrientation ori) {
     return AXIS_Z;
 }
 
-static void ui_init(CMapSolid *solid) {
+static void reset_ui(CMapSolid *solid) {
     state.ramp = solid;
     state.ui_degrees = 3.0f;
 #ifdef RAMPGEN_DEBUG
@@ -34,7 +35,7 @@ static void ui_init(CMapSolid *solid) {
     state.segment_width = orig_size.v[state.axis];
 }
 
-static bool ramp_state() {
+static bool init_ramp_state() {
     const float ideal_normal = 0.64f;
     CMapSolid *solid = state.ramp;
     float best_normal_delta;
@@ -165,8 +166,9 @@ static void rampgen_update() {
         rampgen_undo();
     }
 
-    ramp_state();
+    init_ramp_state();
     rampgen(&state);
+    can_undo = true;
 
     generating = false;
 }
@@ -227,9 +229,10 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
             }
             CheckDlgButton(hDlg, state.direction == DIR_PLUS ? IDC_DIRECTION_PLUS : IDC_DIRECTION_MINUS, BST_CHECKED);
 
+            window_initializing = false;
             can_undo = false;
+
             rampgen_update();
-            can_undo = true;
 
             return true;
 
@@ -237,6 +240,7 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
             NMHDR *hdr = (NMHDR*)lParam;
             if (hdr->code == UDN_DELTAPOS) {
                 if (hdr->idFrom == IDC_DEGREES || hdr->idFrom == IDC_SEGMENTS || hdr->idFrom == IDC_SEGMENT_WIDTH || hdr->idFrom == IDC_SEGMENT_GAP) {
+                    log_msg("delta %d\n", (int)window_initializing);
                     NMUPDOWN *ud = (NMUPDOWN*)lParam;
                     if (hdr->idFrom == IDC_DEGREES) {
                         state.ui_degrees = (float)(ud->iPos + ud->iDelta);
@@ -257,9 +261,10 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
             break;
 
         case WM_COMMAND:
-            if (HIWORD(wParam) == BN_CLICKED) {
-                int id = LOWORD(wParam);
+            int cmd = HIWORD(wParam);
+            int id = LOWORD(wParam);
 
+            if (cmd == BN_CLICKED) {
                 if (id == IDC_CURVE_LEFT || id == IDC_CURVE_RIGHT || id == IDC_CURVE_UP || id == IDC_CURVE_DOWN) {
                     if (id == IDC_CURVE_LEFT) {
                         state.curve = 'l';
@@ -285,6 +290,25 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
                     }
                     DestroyWindow(hDlg);
                     dlg = nullptr;
+                    return true;
+                }
+            } else if (cmd == EN_CHANGE && !window_initializing) {
+                char buf[16];
+                if (id == IDC_DEGREES_EDIT || id == IDC_SEGMENTS_EDIT || id == IDC_SEGMENT_WIDTH_EDIT || id == IDC_SEGMENT_GAP_EDIT) {
+                    GetWindowText(GetDlgItem(dlg, id), buf, sizeof(buf));
+                    int val = atoi(buf);
+
+                    if (id == IDC_DEGREES_EDIT) {
+                        state.ui_degrees = (float)val;
+                    } else if (id == IDC_SEGMENTS_EDIT) {
+                        state.ui_segments = val;
+                    } else if (id == IDC_SEGMENT_WIDTH_EDIT) {
+                        state.segment_width = (float)val;
+                    } else if (id == IDC_SEGMENT_GAP_EDIT) {
+                        state.segment_gap = (float)val;
+                    }
+
+                    rampgen_update();
                     return true;
                 }
             }
@@ -342,13 +366,14 @@ void do_ramp_generator() {
         return;
     }
 
-    ui_init(solid);
+    reset_ui(solid);
 
-    if (!ramp_state()) {
+    if (!init_ramp_state()) {
         AfxMessageBoxF(MB_OK, "Brush must have a surfable face running along x or y.");
         return;
     }
 
+    window_initializing = true;
     dlg = CreateDialogA(
         GetHInstance(),
         MAKEINTRESOURCE(IDD_RAMPGEN),
