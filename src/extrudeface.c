@@ -79,10 +79,13 @@ void do_extrude_face() {
 }
 
 void extrude_face_close() {
+    if (grab.grabbing) {
+        void *sheet = GetFaceEditSheet();
+        ASSERT(sheet);
+        orig_CFaceEditSheet_ClickFace(sheet, nullptr, -1, cfClear, -1);
+    }
+
     grab.grabbing = false;
-    void *sheet = GetFaceEditSheet();
-    ASSERT(sheet);
-    orig_CFaceEditSheet_ClickFace(sheet, nullptr, -1, cfClear, -1);
 }
 
 typedef void (*ClientToWorld_t)(void *this_, Vec3 *vWorld, const Vec2 *vClient);
