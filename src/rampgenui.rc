@@ -11,25 +11,25 @@ CAPTION "Ramp Generator"
 FONT 8, "MS Sans Serif"
 {
     LTEXT           "Degrees:", 0,              8, 10, 32,   9
-    EDITTEXT        IDC_DEGREES_EDIT,          40,  8,  24, 14, ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_DEGREES_EDIT,          40,  8,  24, 14, ES_AUTOHSCROLL
     CONTROL         "", IDC_DEGREES, UPDOWN_CLASS,
                     UDS_ARROWKEYS | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_SETBUDDYINT,
                     0,0,0,0
 
     LTEXT           "Segments:", 0,             80, 10, 36,  9
-    EDITTEXT        IDC_SEGMENTS_EDIT,         116,  8, 24, 14, ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SEGMENTS_EDIT,         116,  8, 24, 14, ES_AUTOHSCROLL
     CONTROL         "", IDC_SEGMENTS, UPDOWN_CLASS,
                     UDS_ARROWKEYS | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_SETBUDDYINT,
                     0,0,0,0
 
     LTEXT           "Segment Width:", 0,       152, 10, 56,  9
-    EDITTEXT        IDC_SEGMENT_WIDTH_EDIT,    208,  8, 28, 14, ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SEGMENT_WIDTH_EDIT,    208,  8, 28, 14, ES_AUTOHSCROLL
     CONTROL         "", IDC_SEGMENT_WIDTH, UPDOWN_CLASS,
                     UDS_ARROWKEYS | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_SETBUDDYINT,
                     0,0,0,0
 
     LTEXT           "Gap:", 0,                 152+100, 10, 56,  9
-    EDITTEXT        IDC_SEGMENT_GAP_EDIT,       208+65,  8, 28, 14, ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SEGMENT_GAP_EDIT,       208+65,  8, 28, 14, ES_AUTOHSCROLL
     CONTROL         "", IDC_SEGMENT_GAP, UPDOWN_CLASS,
                     UDS_ARROWKEYS | UDS_ALIGNRIGHT | UDS_AUTOBUDDY | UDS_SETBUDDYINT,
                     0,0,0,0

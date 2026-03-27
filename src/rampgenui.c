@@ -300,16 +300,16 @@ static INT_PTR dlg_proc(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
                 char buf[16];
                 if (id == IDC_DEGREES_EDIT || id == IDC_SEGMENTS_EDIT || id == IDC_SEGMENT_WIDTH_EDIT || id == IDC_SEGMENT_GAP_EDIT) {
                     GetWindowText(GetDlgItem(dlg, id), buf, sizeof(buf));
-                    int val = atoi(buf);
+                    float val = (float)atof(buf);
 
                     if (id == IDC_DEGREES_EDIT) {
-                        state.ui_degrees = (float)val;
+                        state.ui_degrees = val;
                     } else if (id == IDC_SEGMENTS_EDIT) {
-                        state.ui_segments = val;
+                        state.ui_segments = (int)val;
                     } else if (id == IDC_SEGMENT_WIDTH_EDIT) {
-                        state.segment_width = (float)val;
+                        state.segment_width = val;
                     } else if (id == IDC_SEGMENT_GAP_EDIT) {
-                        state.segment_gap = (float)val;
+                        state.segment_gap = val;
                     }
 
                     rampgen_update();
