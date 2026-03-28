@@ -39,22 +39,22 @@ static bool init_ramp_state() {
     const float ideal_normal = 0.64f;
     CMapSolid *solid = state.ramp;
     float best_normal_delta;
-    int best_face = -1;
+    CMapFace *best_face = nullptr;
 
-    for (auto i = 0; i < solid->Faces.length; i++) {
-        CMapFace *face = &solid->Faces.items[i];
+    CMapFace *face;
+    FOR_EACH_VEC_PTR(face, &solid->Faces) {
         FaceOrientation orientation = CMapFaceMethods.GetOrientation(face);
         float znorm = fabsf(face->plane.normal.z);
         float delta = fabsf(znorm - ideal_normal);
         Axis axis = orientation_to_axis(orientation);
-        if ((best_face == -1 || delta < best_normal_delta) && axis != AXIS_Z && znorm < SURF_NORMAL && znorm > 0.0f) {
-            best_face = i;
+        if ((!best_face || delta < best_normal_delta) && axis != AXIS_Z && znorm < SURF_NORMAL && znorm > 0.0f) {
+            best_face = face;
             best_normal_delta = delta;
         }
     }
 
-    if (best_face != -1) {
-        CMapFace *face = &solid->Faces.items[best_face];
+    if (best_face) {
+        CMapFace *face = best_face;
         FaceOrientation orientation = CMapFaceMethods.GetOrientation(face);
         Axis axis = orientation_to_axis(orientation);
         char curve = state.curve;

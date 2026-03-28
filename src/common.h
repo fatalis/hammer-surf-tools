@@ -17,6 +17,26 @@ void log_msg(const char *fmt, ...);
         DebugBreak(); \
     }} while(0)
 
+#define FOR_EACH_ARR_PTR(it, arr) \
+    for (ptrdiff_t _i = 0, _n = arrlen(arr); \
+         _i < _n && ((it) = &(arr)[_i], 1); \
+         ++_i)
+
+#define FOR_EACH_ARR_VAL(it, arr) \
+    for (ptrdiff_t _i = 0, _n = arrlen(arr); \
+         _i < _n && ((it) = (arr)[_i], 1); \
+         ++_i)
+
+#define FOR_EACH_VEC_PTR(it, arr) \
+    for (int _i = 0, _n = (arr)->length; \
+         _i < _n && ((it) = &(arr)->items[_i], 1); \
+         ++_i)
+
+#define FOR_EACH_VEC_VAL(it, arr) \
+    for (int _i = 0, _n = (arr)->length; \
+         _i < _n && ((it) = (arr)->items[_i], 1); \
+         ++_i)
+
 // minimum surf angle
 #define SURF_NORMAL 0.7f
 // an arbitrary cutoff for a very steep ramp that you can somewhat stay on
@@ -119,6 +139,27 @@ typedef enum {
     Notify_Clipped
 } Notify_Dependent_t;
 
+enum {
+    cfToggle    = 0x01,
+    cfSelect    = 0x02,
+    cfUnselect  = 0x04,
+    cfClear     = 0x08,
+    cfEdgeAlign = 0x10
+};
+
+enum {
+    id_SwitchModeStart = 0x100,
+    ModeLiftSelect,
+    ModeLift,
+    ModeSelect,
+    ModeApply,
+    ModeApplyAll,
+    ModeApplyLightmapScale,
+    ModeAlignToView,
+    id_SwitchModeEnd
+};
+
+
 typedef struct HAMMER_ALIGN CMapAtom {
     // vtable                    // 0x00
     void *CMapAtom_0x08;         // 0x08 somewhere here: m_pParent, m_eSelectionState
@@ -216,7 +257,7 @@ typedef struct {
     CMapAtom_SetRenderColor_t      SetRenderColor;             //  4
     CMapAtom_SetRenderColorRGB_t   SetRenderColorRGB;          //  5
     void                          *CMapClass_06;               //  6
-    CMapAtom_SetParent_t           _SetParent;                 //  7
+    CMapAtom_SetParent_t           SetParent;                  //  7
     CMapAtom_GetParent_t           _GetParent;                 //  8
     void                          *CMapClass_09;               //  9
     void                          *CMapClass_10;               // 10
@@ -242,7 +283,7 @@ typedef struct {
     CMapClass_RemoveChild_t        RemoveChild;                // 26
     CMapClass_UpdateChild_t        UpdateChild;                // 27
     CMapClass_GetParent_t          GetParent;                  // 28
-    CMapClass_SetParent_t          SetParent;                  // 29
+    void                          *CMapClass_29;               // 29
     CMapClass_ReplaceTargetName_t  ReplaceTargetName;          // 30
     CMapClass_OnAddToWorld_t       OnAddToWorld;               // 31
     CMapClass_OnClone_t            OnClone;                    // 32

@@ -13,10 +13,10 @@ HINSTANCE GetHInstance() {
 }
 
 MAPCLASSTYPE MAPCLASS_TYPE(const char* type_name) {
-    for (auto i = 0; i < S_Classes->length; i++) {
-        MCMSTRUCT e = S_Classes->items[i];
-        if (!strcmp(e.Type, type_name)) {
-            return e.Type;
+    MCMSTRUCT *e;
+    FOR_EACH_VEC_PTR(e, S_Classes) {
+        if (!strcmp(e->Type, type_name)) {
+            return e->Type;
         }
     }
 
@@ -103,8 +103,9 @@ void CMapEntity_SetKVOrigin(CMapEntity *ent) {
 
 bool IsAllWorldBrushes(CMapObjectList *selected) {
     int count = 0;
-    for (auto i = 0; i < selected->length; i++) {
-        if (CMapClass_IsWorldBrush(selected->items[i])) {
+    CMapClass *ent;
+    FOR_EACH_VEC_VAL(ent, selected) {
+        if (CMapClass_IsWorldBrush(ent)) {
             count++;
         }
     };

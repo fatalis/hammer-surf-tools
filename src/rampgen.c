@@ -113,27 +113,29 @@ static void rotate_all_segs(CMapDoc *doc, CMapSolid **segments, Angle rotate_ang
     debug("rotate all segs");
 
     Vec3 ref = BBoxTrueCenter((CMapClass **)segments);
-    for (auto i = 0; i < arrlen(segments); i++) {
+    CMapSolid *seg;
+    FOR_EACH_ARR_VAL(seg, segments) {
         Euler angles = EULER_ZERO;
         angles.v[rotate_angle] = degrees;
-        TransRotate(segments[i], &angles, &ref);
+        TransRotate(seg, &angles, &ref);
     }
 }
 
-static void move_back(CMapDoc *doc, Vec3 orig_pos, CMapSolid *seg, CMapSolid **segments, RampGenState *state) {
+static void move_back(CMapDoc *doc, Vec3 orig_pos, CMapSolid *end_seg, CMapSolid **segments, RampGenState *state) {
     debug("move_back: flip");
     Vec3 ref = VEC3_ZERO;
     Vec3 scale = VEC3_ONE;
     scale.v[state->axis] = -1.0f;
-    for (auto i = 0; i < arrlen(segments); i++) {;
-        TransScale(segments[i], &ref, &scale);
+    CMapSolid *seg;
+    FOR_EACH_ARR_VAL(seg, segments) {
+        TransScale(seg, &ref, &scale);
     }
 
     debug("move_back: move");
-    Vec3 moved = vec3Subtract(orig_pos, seg->base.point.m_Origin);
+    Vec3 moved = vec3Subtract(orig_pos, end_seg->base.point.m_Origin);
 
-    for (auto i = 0; i < arrlen(segments); i++) {;
-        TransMove(segments[i], &moved);
+    FOR_EACH_ARR_VAL(seg, segments) {
+        TransMove(seg, &moved);
     }
 }
 

@@ -33,26 +33,6 @@ CMapDoc *GetActiveMapDoc();
 #endif
 
 #ifdef USING_HOOK_CFACEEDITSHEET_CLICKFACE
-enum {
-    cfToggle    = 0x01,
-    cfSelect    = 0x02,
-    cfUnselect  = 0x04,
-    cfClear     = 0x08,
-    cfEdgeAlign = 0x10
-};
-
-enum {
-    id_SwitchModeStart = 0x100,
-    ModeLiftSelect,
-    ModeLift,
-    ModeSelect,
-    ModeApply,
-    ModeApplyAll,
-    ModeApplyLightmapScale,
-    ModeAlignToView,
-    id_SwitchModeEnd
-};
-
 typedef void (*CFaceEditSheet_ClickFace_t)(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode);
 extern CFaceEditSheet_ClickFace_t orig_CFaceEditSheet_ClickFace;
 void hook_CFaceEditSheet_ClickFace(void *this_, CMapSolid *pSolid, int faceIndex, int cmd, int clickMode);

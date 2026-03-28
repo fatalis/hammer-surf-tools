@@ -17,8 +17,8 @@ static CMapFace *best_surfable_face(CMapSolid *solid) {
     float best_normal_delta;
     const float ideal_normal = 0.64f;
 
-    for (auto i = 0; i < solid->Faces.length; i++) {
-        CMapFace *face = &solid->Faces.items[i];
+    CMapFace *face;
+    FOR_EACH_VEC_PTR(face, &solid->Faces) {
         float znorm = fabsf(face->plane.normal.z);
         float delta = fabsf(znorm - ideal_normal);
         if ((!best || delta < best_normal_delta) && znorm < SURF_NORMAL && znorm > 0.0f) {
@@ -64,9 +64,9 @@ void do_anglefix() {
     int n_unsurfable = 0;
     int n_unneeded = 0;
 
-    for (auto n_item = 0; n_item < selected->length; n_item++)  {
-        CMapSolid *item = (CMapSolid *)selected->items[n_item];
-        ASSERT(item);
+    CMapClass *it;
+    FOR_EACH_VEC_VAL(it, selected) {
+        CMapSolid *item = (CMapSolid *)it;
 
         CMapFace *surfable_face = best_surfable_face(item);
         if (!surfable_face) {
@@ -102,8 +102,8 @@ void do_anglefix() {
 
         // change original brush to playerclip
 
-        for (auto i = 0; i < item->Faces.length; i++) {
-            CMapFace *face = &item->Faces.items[i];
+        CMapFace *face;
+        FOR_EACH_VEC_PTR(face, &item->Faces) {
             CMapFaceMethods.SetTexture(face, "tools/toolsplayerclip", false);
             CMapFaceMethods.InitializeTextureAxes(face, TEXTURE_ALIGN_FACE, INIT_TEXTURE_ALL | INIT_TEXTURE_FORCE);
 #ifdef WHOLE_BRUSH_ANGLEFIX

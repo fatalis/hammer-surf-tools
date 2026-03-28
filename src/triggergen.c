@@ -97,13 +97,15 @@ void do_trigger_generator() {
     CHistory_MarkUndoPosition(GetHistory(), CMapDoc_GetSelection(doc), "Trigger Generation", false);
 
     CMapClass *items[stored_faces->length];
-    for (auto i = 0; i < stored_faces->length; i++) {
-        StoredFace *sf = &stored_faces->items[i];
+    int n_stored_faces = 0;
+    StoredFace *sf;
+    FOR_EACH_VEC_PTR(sf, stored_faces) {
         CMapFace *face = sf->pMapFace;
         ASSERT(face);
 
         CMapEntity *ent = create_trigger(face);
-        items[i] = (CMapClass *)ent;
+        items[n_stored_faces] = (CMapClass *)ent;
+        n_stored_faces++;
     }
 
     CMapObjectList list;

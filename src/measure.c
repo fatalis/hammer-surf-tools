@@ -36,12 +36,12 @@ void measure_render_2d(void *this_, void *pRender) {
     }
 
     int lines = 1;
-    auto n = solid->Faces.length;
-    for (auto face_idx = 0; face_idx < n; face_idx++) {
-        CMapFace *face = &solid->Faces.items[face_idx];
-
+    int n_face = 0;
+    CMapFace *face;
+    FOR_EACH_VEC_PTR(face, &solid->Faces) {
         char buf[64];
-        snprintf(buf, sizeof(buf), "face %d ", face_idx);
+        snprintf(buf, sizeof(buf), "face %d ", n_face);
+        n_face++;
 
         bool surfable;
         char *str = NormalSurfString(&face->plane.normal, buf, &surfable);

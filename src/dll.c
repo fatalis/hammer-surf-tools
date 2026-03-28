@@ -42,6 +42,7 @@ static DWORD WINAPI hook_init_thread(LPVOID param) {
 
     if (!surf_tools_init()) {
         log_msg("[hook] error: surf_tools_init failed\n");
+        MH_DisableHook(MH_ALL_HOOKS);
         return 1;
     }
 
