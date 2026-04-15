@@ -92,7 +92,7 @@ static Pattern_t patterns[] = {
             0x49, 0x8B, 0xE9,
             0x4D, 0x8B, 0xF0,
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxx?xxx",
         (void **)&CMapClassMethods.EnumChildren
     },
 #endif
@@ -111,6 +111,7 @@ static Pattern_t patterns[] = {
     },
 #endif
 #ifdef USING_CRENDER_DRAWTEXT
+    // 48 89 5c 24 10 48 89 6c 24 18 56 57 41 56 48 81 ec 30 01 00 00 ?? 8b ?? 48 8b f9
     {
         "CRender::DrawText",
         (const uint8_t[]){
@@ -120,9 +121,10 @@ static Pattern_t patterns[] = {
             0x57,
             0x41, 0x56,
             0x48, 0x81, 0xec, 0x30, 0x01, 0x00, 0x00,
-            0x45, 0x8b, 0xf0
+            0x45, 0x8b, 0xf0,
+            0x48, 0x8b, 0xf9
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxx?x?xxx",
         (void **)&CRender_DrawText
     },
 #endif
@@ -157,7 +159,7 @@ static Pattern_t patterns[] = {
             0x48, 0x8B, 0xD3,
             0x48, 0x8B, 0xC8
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx????xxxxxx",
         (void **)&CMapDocMethods.DeleteObject
     },
 #endif
@@ -178,17 +180,17 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_SCRIPTDATAPTR
     {
-        // 48 89 5c 24 18     56     57      41 56    48 81 ec 40 01 00 00        48 8b c2
+        // 48 89 4c 02 48  48 8d 0d ?? ?? ?? ??  c7 44 02 18 1f 00 00 00
         "ScriptDataPtr",
         (const uint8_t[]){
-            0x48, 0x89, 0x48, 0x48,
-            0x48, 0x8D, 0x0D, 0x47, 0x1F, 0xAB, 0x00,
-            0xC7, 0x40, 0x18, 0x1F, 0x00, 0x00, 0x00
+            0x48, 0x89, 0x4C, 0x02, 0x48,
+            0x48, 0x8D, 0x0D, 0x15, 0x2C, 0xAC, 0x00,
+            0xC7, 0x44, 0x02, 0x18, 0x1F, 0x00, 0x00, 0x00
         },
-        "xxxxxxx????xxxxxxx",
+        "xxxxxxxx????xxxxxxxx",
         (void **)&ScriptDataPtr,
         nullptr,
-        4,
+        5,
         PATTERN_REL,
     },
 #endif
@@ -340,7 +342,7 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_CMAPCLASS_CMAPCLASS
     {
-        // 48 89 4c 24 08  53  57  48 83 ec 38  48 8b d9   e8 7d 84 ed ff  90  48 8d 05
+        // 48 89 4c 24 08  53  57  48 83 ec 38  48 8b d9   e8 ?? ?? ?? ??  90  48 8d 05
         "CMapClass::CMapClass",
         (const uint8_t[]){
             0x48, 0x89, 0x4C, 0x24, 0x08,
@@ -352,7 +354,7 @@ static Pattern_t patterns[] = {
             0x90,
             0x48, 0x8D, 0x05
         },
-        "xxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxx????xxxx",
         (void **)&CMapClassMethods.CMapClass,
     },
 #endif
@@ -394,7 +396,7 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_CSOLIDFACES_MAKEFACE
     {
-        // 48 89 5c 24 08  48 89 74 24 10  57  48 83 ec 20  8b 71 10  ba 01 00 00 00  48 8b d9  e8 ?? ?? ?? ??  8b 43 10 8b ce  2b c6  ff c8  48 69 f9 60 03 00 00
+        // 48 89 5c 24 08  48 89 74 24 10  57  48 83 ec 20  8b 71 10  ba 01 00 00 00  48 8b d9  e8 ?? ?? ?? ??  8b ce  f7 d1  03 4b 10  48 69 fe 60 03 00 00
         "CSolidFaces::MakeFace",
         (const uint8_t[]){
             0x48, 0x89, 0x5C, 0x24, 0x08,
@@ -404,14 +406,13 @@ static Pattern_t patterns[] = {
             0x8B, 0x71, 0x10,
             0xBA, 0x01, 0x00, 0x00, 0x00,
             0x48, 0x8B, 0xD9,
-            0xE8, 0xB1, 0x67, 0xF2, 0xFF,
-            0x8B, 0x43, 0x10,
+            0xE8, 0x01, 0x75, 0xF2, 0xFF,
             0x8B, 0xCE,
-            0x2B, 0xC6,
-            0xFF, 0xC8,
-            0x48, 0x69, 0xF9, 0x60, 0x03, 0x00, 0x00
+            0xF7, 0xD1,
+            0x03, 0x4B, 0x10,
+            0x48, 0x69, 0xFE, 0x60, 0x03, 0x00, 0x00
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxx",
         (void **)&CSolidFaces_MakeFace,
     },
 #endif
@@ -453,25 +454,26 @@ static Pattern_t patterns[] = {
             0x41, 0x57,
             0x48, 0x8D, 0xA8, 0xA8, 0xFE, 0xFF, 0xFF
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxx?xxx",
         (void **)&CMapSolidMethods.CreateFromPlanes,
     },
 #endif
 #ifdef USING_CMAPFACE_CREATEFACE
     {
-        // 48 89 5c 24 10  48 89 6c 24 18  48 89 74 24 20  57  41 54  41 57  48 83 ec 20  48 8d b9 c8 01 00 00
+        // 48 89 5c 24 10  48 89 6c 24 18  56  57  41 54  41 55  41 56  48 83 ec 20  48 8d b9 c8 01 00 00
         "CMapFace::CreateFace",
         (const uint8_t[]){
             0x48, 0x89, 0x5C, 0x24, 0x10,
             0x48, 0x89, 0x6C, 0x24, 0x18,
-            0x48, 0x89, 0x74, 0x24, 0x20,
+            0x56,
             0x57,
             0x41, 0x54,
-            0x41, 0x57,
+            0x41, 0x55,
+            0x41, 0x56,
             0x48, 0x83, 0xEC, 0x20,
             0x48, 0x8D, 0xB9, 0xC8, 0x01, 0x00, 0x00
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         (void **)&CMapFaceMethods.CreateFace,
     },
 #endif
@@ -493,14 +495,14 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_CMAPFACE_GETORIENTATION
     {
-        // 48 83 ec 58  f3 0f 10 89 90 01 00 00  0f 29 74 24 40
+        // 48 83 ec ??  f3 0f 10 89 90 01 00 00  0f 29 74 24
         "CMapFace::GetOrientation",
         (const uint8_t[]){
             0x48, 0x83, 0xEC, 0x58,
             0xF3, 0x0F, 0x10, 0x89, 0x90, 0x01, 0x00, 0x00,
-            0x0F, 0x29, 0x74, 0x24, 0x40
+            0x0F, 0x29, 0x74, 0x24
         },
-        "xxxxxxxxxxxxxxxxx",
+        "xxx?xxxxxxxxxxxx",
         (void **)&CMapFaceMethods.GetOrientation
     },
 #endif
@@ -538,21 +540,20 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_CHISTORY_UNDO
     {
-        // 48 89 5c 24 08  48 89 74 24 10  57  48 83 ec 20  48 8b fa  49 8b f0  48 8b 11  48 8b d9  4c 8d 42 2c  48 85 d2
+        // 48 89 5c 24 10  48 89 74 24 18  57  48 83 ec 20  49 8b f0  48 8b fa  48 8b d9  48 8b 11  48 85 d2
         "CHistory::Undo",
         (const uint8_t[]){
-            0x48, 0x89, 0x5C, 0x24, 0x08,
-            0x48, 0x89, 0x74, 0x24, 0x10,
+            0x48, 0x89, 0x5C, 0x24, 0x10,
+            0x48, 0x89, 0x74, 0x24, 0x18,
             0x57,
             0x48, 0x83, 0xEC, 0x20,
-            0x48, 0x8B, 0xFA,
             0x49, 0x8B, 0xF0,
-            0x48, 0x8B, 0x11,
+            0x48, 0x8B, 0xFA,
             0x48, 0x8B, 0xD9,
-            0x4C, 0x8D, 0x42, 0x2C,
+            0x48, 0x8B, 0x11,
             0x48, 0x85, 0xD2
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         (void **)&CHistory_Undo
     },
 #endif
@@ -700,24 +701,23 @@ static Pattern_t patterns[] = {
 #endif
 #ifdef USING_HOOK_CHISTORY_MARKUNDOPOSITION
     {
-        // 48 89 5c 24 10  55  56  57  41 54  41 55  41 56  41 57  48 83 ec 20  49 8b d8  48 8b ea  48 8b f1  48 8b 41 30
+        // 48 89 5c 24 10  48 89 6c 24 20  56  57  41 54  41 56  41 57  48 83 ec 30  49 8b e8  48 8b f2  4c 8b f9  48 8b 41 30
         "CHistory::MarkUndoPosition",
         (const uint8_t[]){
             0x48, 0x89, 0x5C, 0x24, 0x10,
-            0x55,
+            0x48, 0x89, 0x6C, 0x24, 0x20,
             0x56,
             0x57,
             0x41, 0x54,
-            0x41, 0x55,
             0x41, 0x56,
             0x41, 0x57,
-            0x48, 0x83, 0xEC, 0x20,
-            0x49, 0x8B, 0xD8,
-            0x48, 0x8B, 0xEA,
-            0x48, 0x8B, 0xF1,
+            0x48, 0x83, 0xEC, 0x30,
+            0x49, 0x8B, 0xE8,
+            0x48, 0x8B, 0xF2,
+            0x4C, 0x8B, 0xF9,
             0x48, 0x8B, 0x41, 0x30
         },
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         (void **)&CHistory_MarkUndoPosition,
         hook_CHistory_MarkUndoPosition
     },
