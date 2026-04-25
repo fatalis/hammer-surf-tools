@@ -16,7 +16,7 @@ A mod of [Hammer++](https://ficool2.github.io/HammerPlusPlus-Website/index.html)
 - **Usage**: Select a start segment that’s not rotated, then press `Alt + Shift + R`.
 
 ### Trigger Generator
-- Creates triggers by extruding from selected faces.  
+- Creates triggers by extruding from selected faces.
 - For now they are hardcoded to be 2 unit tall `trigger_teleport`.
 - You can press `Alt + Enter` after to set the teleport destination in bulk.
 - **Usage**: Select some faces with the texture tool, then press `Alt + Shift + T`.
@@ -40,15 +40,15 @@ When you see ratings like `5/10` with the angle measure tools:
 
 ## Notes
 - There’s also a context menu in **Tools → Surf Tools** and in the right-click context menu.
-- Support for Hammer++ builds beyond 8870 will be added when they're released.
+- Support for Hammer++ builds beyond 8871 will be added when they're released.
 
 ## Installation
-1. Make sure you have [Hammer++](https://ficool2.github.io/HammerPlusPlus-Website/index.html) Build 8870.
+1. Make sure you have [Hammer++](https://ficool2.github.io/HammerPlusPlus-Website/index.html) Build 8871.
 2. Download the latest hammer-surf-tools_\*.zip file from https://github.com/fatalis/hammer-surf-tools/releases/latest
 3. Extract `version.dll` to the directory where you have `hammerplusplus.exe`.
 
 ### Linux
-- Use this environment variable:  
+- Use this environment variable:
 ```bash
 WINEDLLOVERRIDES="version=n,b"
 ```
