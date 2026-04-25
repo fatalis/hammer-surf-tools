@@ -3,7 +3,7 @@
 
 // used by CI to name each build/release
 // this is the current guaranteed working/recommend version
-#define TARGET_HAMMERPLUSPLUS_BUILD "8870"
+#define TARGET_HAMMERPLUSPLUS_BUILD "8871"
 
 #include "offsets.h"
 
